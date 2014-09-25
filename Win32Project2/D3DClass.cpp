@@ -78,7 +78,7 @@ void D3DClass::InitD3D(HWND hWnd)
 	ZeroMemory(&viewport, sizeof(D3D11_VIEWPORT));
 
 	viewport.TopLeftX = 0;
-	viewport.TopLeftY = 0;
+	viewport.TopLeftY = 0s
 	viewport.Width = SCREEN_WIDTH;
 	viewport.Height = SCREEN_HEIGHT;
 
