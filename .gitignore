@@ -39,3 +39,6 @@ Icon
 .Bin/
 *.exe
 *.pdb
+*.opensdf
+*.sdf
+*.suo
