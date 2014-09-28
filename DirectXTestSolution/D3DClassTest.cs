@@ -15,10 +15,13 @@ namespace DirectXTestSolution
             Form1 form1 = new Form1();
            
             D3DClass d3dClass = new D3DClass();
+            WindowConfiguration wc = new  WindowConfiguration();
+            wc.Height = 600;
+            wc.Width = 800;
 
             try
             {
-                d3dClass.InitializeWithForm(form1);
+                d3dClass.Initialize(form1.Handle, wc);
             }
             catch (Exception e)
             {

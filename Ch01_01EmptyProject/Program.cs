@@ -25,8 +25,12 @@ namespace Ch01_01EmptyProject
             form.Width = FORM_WIDTH;
             form.Height = FORM_HEIGHT;
 
+          WindowConfiguration wc = new WindowConfiguration();
+            wc.Width = FORM_WIDTH;
+            wc.Height = FORM_HEIGHT;
+
             var d3d = new D3DClass();
-            d3d.InitializeWithForm(form);
+            d3d.Initialize(form.Handle, wc);
             d3d.StartRender(form);
             d3d.CleanD3D();
 
