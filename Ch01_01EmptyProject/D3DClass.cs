@@ -44,15 +44,9 @@ namespace Ch01_01EmptyProject
         private DepthStencilView depthStencilView;
 
         DeviceContext context;
-
-
-        private bool IsStopped = false;
-
         WindowConfiguration windowConfig;
         private RenderForm MainForm { get; set; }
-
-        private TimerTick tt;
-
+        
         public void Initialize(IntPtr formWindowHandle, WindowConfiguration windowConfig)
         {
             this.windowConfig = windowConfig;
@@ -65,14 +59,7 @@ namespace Ch01_01EmptyProject
 #if DEBUG
             deviceFlags = DeviceCreationFlags.Debug;
 #endif
-            try
-            {
-                device = new Device(driverType, deviceFlags);
-            }
-            catch (Exception)
-            {
-                throw;
-            }
+            CreateDevice(deviceFlags, driverType);
 
             //CHECK AntiAliasing quality suport code coud be here
 
@@ -81,23 +68,72 @@ namespace Ch01_01EmptyProject
 
             CreateSwapChain(swapChainDescription);
 
-            using (var dxgi = device.QueryInterface<SharpDX.DXGI.Device>())
-            using (var adapter = dxgi.Adapter)
-            using (var factory = adapter.GetParent<Factory>())
-            {
-                swapChain = new SwapChain(factory, device, swapChainDescription);
-            }
-
-            //CreateResourceViewFromBackBuffer();
-            //RenderToBackBuffer();
+            swapChainDescription = CreateSwapChain(swapChainDescription);
 
             backBuffer = Texture2D.FromSwapChain<Texture2D>(swapChain, 0);
 
             CreateRenderTargetViewForTarget();
 
+            var depthBuffer = CreateDepthBuffer(windowConfig);
+
+            context = device.ImmediateContext;
+
+            var depthStencilBuffer = new Texture2D(device, depthBuffer);
+            depthStencilView = new DepthStencilView(device, depthStencilBuffer);
+
+            BindBuffersToOutputStageOfPipeline(context, depthStencilView);
+
+            CreateViewPort(windowConfig);
+        }
+
+        private SharpDX.DXGI.SwapChainDescription CreateSwapChain(SwapChainDescription swapChainDescription)
+        {
+            try
+            {
+                using (var dxgi = device.QueryInterface<SharpDX.DXGI.Device>())
+                using (var adapter = dxgi.Adapter)
+                using (var factory = adapter.GetParent<Factory>())
+                {
+                    swapChain = new SwapChain(factory, device, swapChainDescription);
+                }
+                return swapChainDescription;
+            }
+            catch (Exception)
+            {
+                
+                throw;
+            }
+        }
+
+        private void CreateDevice(DeviceCreationFlags deviceFlags, DriverType driverType)
+        {
+            try
+            {
+                device = new Device(driverType, deviceFlags);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
+        private void CreateViewPort(WindowConfiguration windowConfig)
+        {
+            Viewport vp = new Viewport();
+            vp.X = 0;
+            vp.Y = 0;
+            vp.Width = windowConfig.Width;
+            vp.Height = windowConfig.Height;
+            vp.MinDepth = 0;
+            vp.MaxDepth = 1;
+
+            context.Rasterizer.SetViewport(vp);
+        }
+
+        private static Texture2DDescription CreateDepthBuffer(WindowConfiguration windowConfig)
+        {
             var depthBuffer = new Texture2DDescription();
             depthBuffer.Format = Format.D24_UNorm_S8_UInt;
-            // number of textures in array
             depthBuffer.ArraySize = 1;
             depthBuffer.MipLevels = 1;
             depthBuffer.Width = windowConfig.Width;
@@ -111,23 +147,7 @@ namespace Ch01_01EmptyProject
             depthBuffer.BindFlags = BindFlags.DepthStencil;
             depthBuffer.CpuAccessFlags = 0;
             depthBuffer.OptionFlags = 0;
-
-            context = device.ImmediateContext;
-
-            var depthStencilBuffer = new Texture2D(device, depthBuffer);
-            depthStencilView = new DepthStencilView(device, depthStencilBuffer);
-
-            BindBuffersToOutputStageOfPipeline(context, depthStencilView);
-
-            Viewport vp = new Viewport();
-            vp.X = 0;
-            vp.Y = 0;
-            vp.Width = windowConfig.Width;
-            vp.Height = windowConfig.Height;
-            vp.MinDepth = 0;
-            vp.MaxDepth = 1;
-
-            context.Rasterizer.SetViewport(vp);
+            return depthBuffer;
         }
 
         public void Run(Form1 form)
@@ -145,18 +165,6 @@ namespace Ch01_01EmptyProject
             backBuffer.Dispose();
         }
 
-        private void CreateSwapChain(SwapChainDescription swapChainSetup)
-        {
-            try
-            {
-                Device.CreateWithSwapChain(DriverType.Hardware, DeviceCreationFlags.None, swapChainSetup, out device, out swapChain);
-            }
-            catch (Exception)
-            {
-
-                throw;
-            }
-        }
         #endregion
 
         #region HelperMethodsNotIncludedInExampleResources
