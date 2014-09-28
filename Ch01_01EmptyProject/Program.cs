@@ -31,7 +31,7 @@ namespace Ch01_01EmptyProject
 
             var d3d = new D3DClass();
             d3d.Initialize(form.Handle, wc);
-            d3d.StartRender(form);
+            d3d.Run(form);
             d3d.CleanD3D();
 
         }

@@ -16,7 +16,7 @@ using System.Windows.Forms;
 
 namespace Ch01_01EmptyProject
 {
-   public class WindowConfiguration
+    public class WindowConfiguration
     {
         int width;
 
@@ -34,13 +34,17 @@ namespace Ch01_01EmptyProject
         }
     }
 
-    public class D3DClass : ID3DApp
+    public class D3DClass
     {
         #region BaseMethodsIncludedInExamples
         Device device;
         SwapChain swapChain;
         private Texture2D backBuffer;
         private RenderTargetView renderTargetView;
+        private DepthStencilView depthStencilView;
+
+        DeviceContext context;
+
 
         private bool IsStopped = false;
 
@@ -67,16 +71,15 @@ namespace Ch01_01EmptyProject
             }
             catch (Exception)
             {
-                //MessageBox(0, L"Direct3D Feature Level 11 unsupported.", 0, 0);
                 throw;
             }
-            //CHECK AntiAliasing quality suport code coud be here
 
+            //CHECK AntiAliasing quality suport code coud be here
 
             ModeDescription modeDescription = CreateModeDescription();
             SwapChainDescription swapChainDescription = SwapChainDescription(formWindowHandle, ref modeDescription);
 
-            //CreateSwapChain(swapChainDescription);
+            CreateSwapChain(swapChainDescription);
 
             using (var dxgi = device.QueryInterface<SharpDX.DXGI.Device>())
             using (var adapter = dxgi.Adapter)
@@ -109,10 +112,10 @@ namespace Ch01_01EmptyProject
             depthBuffer.CpuAccessFlags = 0;
             depthBuffer.OptionFlags = 0;
 
-            DeviceContext context = device.ImmediateContext;
+            context = device.ImmediateContext;
 
             var depthStencilBuffer = new Texture2D(device, depthBuffer);
-            DepthStencilView depthStencilView = new DepthStencilView(device, depthStencilBuffer);
+            depthStencilView = new DepthStencilView(device, depthStencilBuffer);
 
             BindBuffersToOutputStageOfPipeline(context, depthStencilView);
 
@@ -124,22 +127,14 @@ namespace Ch01_01EmptyProject
             vp.MinDepth = 0;
             vp.MaxDepth = 1;
 
-
             context.Rasterizer.SetViewport(vp);
         }
 
-        public void StartRender(Form1 form)
+        public void Run(Form1 form)
         {
             RenderLoop.Run(form, () =>
             {
-                //BindBuffersToOutputStageOfPipeline();
-
-                //CalculateFrameStats();
-                //UpdateScene(tt.);
-                //  DrawScene();
-
-                swapChain.Present(0, PresentFlags.None);
-
+                DrawScene();
             });
         }
         public void CleanD3D()
@@ -161,7 +156,7 @@ namespace Ch01_01EmptyProject
 
                 throw;
             }
-        } 
+        }
         #endregion
 
         #region HelperMethodsNotIncludedInExampleResources
@@ -221,154 +216,34 @@ namespace Ch01_01EmptyProject
             swapChainSetup.Usage = Usage.RenderTargetOutput;
             return swapChainSetup;
         }
-        
+
         #endregion
-    
+
         #region Id3DApp Interface methods
-
-        public GameTimer Timer
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        Device ID3DApp.device
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public DeviceContext DeviceContext
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
 
         public void Run()
         {
             Application.Run(MainForm);
         }
 
-        public bool Init()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnResize()
-        {
-            throw new NotImplementedException();
-        }
-
         public void UpdateScene(float deltaT)
         {
+            //Called every frame - should be used to update app over time, eq. processing animations...
             throw new NotImplementedException();
         }
 
         public void DrawScene()
         {
-            throw new NotImplementedException();
+            //I shloud check if context and swapchain are available
+            //assert(md3dImmediateContext); 
+            //assert(mSwapChain);
+            context.ClearRenderTargetView(renderTargetView, Color.Blue);
+
+            context.ClearDepthStencilView(depthStencilView, DepthStencilClearFlags.Depth, 1, 0);
+
+            swapChain.Present(0, PresentFlags.None);
         }
 
-        public void OnMouseDown()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnMouseUp()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnMouseMove()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool InitMainWindow()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool InitDirect3D()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void CalculateFrameStats()
-        {
-            throw new NotImplementedException();
-        }
-
-        public object MessageProcessing()
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool IsApplicationPaused
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public int IsApplicationMinimized
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public bool IsApplicationMaximized
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public int IsApplicationResized
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        } 
         #endregion
     }
 }
