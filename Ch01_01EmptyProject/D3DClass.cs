@@ -22,8 +22,11 @@ namespace Ch01_01EmptyProject
         private Texture2D backBuffer;
         private RenderTargetView renderTargetView;
 
+        private TimerTick tt;
+
         public void InitializeWithForm(Form1 form)
         {
+
             var deviceFlags = DeviceCreationFlags.None;
 
             bool enforceSoftwareRendering = false;
@@ -65,6 +68,7 @@ namespace Ch01_01EmptyProject
 
             var depthBuffer = new Texture2DDescription();
             depthBuffer.Format = Format.D24_UNorm_S8_UInt;
+            // number of textures in array
             depthBuffer.ArraySize = 1;
             depthBuffer.MipLevels = 1;
             depthBuffer.Width = form.ClientSize.Width;
@@ -79,45 +83,23 @@ namespace Ch01_01EmptyProject
             depthBuffer.CpuAccessFlags = 0;
             depthBuffer.OptionFlags = 0;
 
-            Texture2D DepthBuffer = new Texture2D(device, new
- Texture2DDescription()
-            {
-                Format = SharpDX.DXGI.Format.D24_UNorm_S8_UInt,
-                ArraySize = 1,
-                MipLevels = 1,
-                Width = (int)form.ClientSize.Width,
-                Height = (int)form.ClientSize.Height,
-                SampleDescription = swapChain.Description.SampleDescription,
-                BindFlags = BindFlags.DepthStencil,
-            });
             var context = device.ImmediateContext;
-            var DepthStencilView = new DepthStencilView(
-device,
-DepthBuffer,
-new DepthStencilViewDescription()
-{
-    Dimension =
-    (swapChain.Description.SampleDescription.Count > 1 ||
-    swapChain.Description.SampleDescription.Quality > 0)
-    ? DepthStencilViewDimension.Texture2DMultisampled :
-    DepthStencilViewDimension.Texture2D
-});
-            // Set the OutputMerger targets
-            context.OutputMerger.SetTargets(DepthStencilView,
-            renderTargetView);
+
+            var depthStencilBuffer = new Texture2D(device, depthBuffer);
+            DepthStencilView depthStencilView = new DepthStencilView(device, depthStencilBuffer);
+
+            context.OutputMerger.SetTargets(depthStencilView, renderTargetView);
+
+            Viewport vp = new Viewport();
+            vp.X = 0;
+            vp.Y = 0;
+            vp.Width = form.ClientSize.Width;
+            vp.Height = form.ClientSize.Height;
+            vp.MinDepth = 0;
+            vp.MaxDepth = 1;
 
 
-
-            //var depthStencilBuffer = new Texture2D(device, depthBuffer);
-            //DepthStencilView depthStencilView = new DepthStencilView(device, depthStencilBuffer);
-
-
-            ////Set OutputMerger targets
-            //context.OutputMerger.SetTargets(depthStencilView, renderTargetView);
-
-
-
-
+            context.Rasterizer.SetViewport(vp);
         }
 
         private static DriverType GetDriverTypeForRenderingWhichSupportsDx11(bool enforceSoftwareRendering)
@@ -133,11 +115,38 @@ new DepthStencilViewDescription()
             }
         }
 
+        public void Run()
+        {
+            tt = new TimerTick();
+            tt.Reset();
+
+            wh`le (true) //msq.message != WM_QUIT
+            {
+                tt.Tick();
+                if (!appPaused)
+                {
+                    CalculateFrameStats();
+                    UpdateScene(tt.ElapsedTime());
+                    DrawScene();
+                }
+                else
+	{
+                //Sleep(100)        
+	}
+            }
+            // return msg.wParam
+        }
+
         public void StartRender(Form1 form)
         {
             RenderLoop.Run(form, () =>
             {
-                BindBuffersToOutputStageOfPipeline();
+                //BindBuffersToOutputStageOfPipeline();
+                
+                  CalculateFrameStats();
+                  UpdateScene(tt.);
+                    DrawScene();
+                
                 swapChain.Present(0, PresentFlags.None);
 
             });
@@ -145,7 +154,6 @@ new DepthStencilViewDescription()
 
         private void BindBuffersToOutputStageOfPipeline()
         {
-            //Viewport v = new Viewport(0, 0, 40, 40);
             device.ImmediateContext.ClearRenderTargetView(renderTargetView, Color.Blue);
         }
 
@@ -210,3 +218,4 @@ new DepthStencilViewDescription()
         }
     }
 }
+
