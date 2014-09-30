@@ -3,38 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 using SharpDX;
 using SharpDX.Windows;
 using SharpDX.DXGI;
 using SharpDX.Direct3D11;
+using SharpDX.D3DCompiler;
 
 //Resolve name conflicts
 using Device = SharpDX.Direct3D11.Device;
+using Ch01_01EmptyProject.System;
+
 using SharpDX.Direct3D;
 using System.Windows.Forms;
 
 namespace Ch01_01EmptyProject
 {
-    public class WindowConfiguration
-    {
-        int width;
-
-        public int Width
-        {
-            get { return width; }
-            set { width = value; }
-        }
-        int height;
-
-        public int Height
-        {
-            get { return height; }
-            set { height = value; }
-        }
-    }
-
-    public class D3DClass
+    public class D3D : IDisposable
     {
         #region BaseMethodsIncludedInExamples
         Device device;
@@ -45,9 +29,11 @@ namespace Ch01_01EmptyProject
 
         DeviceContext context;
         WindowConfiguration windowConfig;
+        private Texture2DDescription depthBuffer;
+        private Texture2D depthStencilBuffer;
         private RenderForm MainForm { get; set; }
-        
-        public void Initialize(IntPtr formWindowHandle, WindowConfiguration windowConfig)
+
+        public void Initialize(WindowConfiguration windowConfig)
         {
             this.windowConfig = windowConfig;
 
@@ -64,9 +50,7 @@ namespace Ch01_01EmptyProject
             //CHECK AntiAliasing quality suport code coud be here
 
             ModeDescription modeDescription = CreateModeDescription();
-            SwapChainDescription swapChainDescription = SwapChainDescription(formWindowHandle, ref modeDescription);
-
-            CreateSwapChain(swapChainDescription);
+            SwapChainDescription swapChainDescription = SwapChainDescription(windowConfig.FormWindowHandle, ref modeDescription);
 
             swapChainDescription = CreateSwapChain(swapChainDescription);
 
@@ -74,11 +58,11 @@ namespace Ch01_01EmptyProject
 
             CreateRenderTargetViewForTarget();
 
-            var depthBuffer = CreateDepthBuffer(windowConfig);
+            depthBuffer = CreateDepthBuffer(windowConfig);
 
             context = device.ImmediateContext;
 
-            var depthStencilBuffer = new Texture2D(device, depthBuffer);
+            depthStencilBuffer = new Texture2D(device, depthBuffer);
             depthStencilView = new DepthStencilView(device, depthStencilBuffer);
 
             BindBuffersToOutputStageOfPipeline(context, depthStencilView);
@@ -98,10 +82,10 @@ namespace Ch01_01EmptyProject
                 }
                 return swapChainDescription;
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                
-                throw;
+
+                throw new Exception("", e);
             }
         }
 
@@ -111,9 +95,9 @@ namespace Ch01_01EmptyProject
             {
                 device = new Device(driverType, deviceFlags);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw new NotSupportedException("", e);
             }
         }
 
@@ -133,38 +117,40 @@ namespace Ch01_01EmptyProject
         private static Texture2DDescription CreateDepthBuffer(WindowConfiguration windowConfig)
         {
             var depthBuffer = new Texture2DDescription();
-            depthBuffer.Format = Format.D24_UNorm_S8_UInt;
-            depthBuffer.ArraySize = 1;
-            depthBuffer.MipLevels = 1;
-            depthBuffer.Width = windowConfig.Width;
-            depthBuffer.Height = windowConfig.Height;
-
-            // no MSAA
-            depthBuffer.SampleDescription.Count = 1;
-            depthBuffer.SampleDescription.Quality = 0;
-
-            depthBuffer.Usage = ResourceUsage.Default;
-            depthBuffer.BindFlags = BindFlags.DepthStencil;
-            depthBuffer.CpuAccessFlags = 0;
-            depthBuffer.OptionFlags = 0;
-            return depthBuffer;
-        }
-
-        public void Run(Form1 form)
-        {
-            RenderLoop.Run(form, () =>
+            try
             {
-                DrawScene();
-            });
+                depthBuffer.Format = Format.D24_UNorm_S8_UInt;
+                depthBuffer.ArraySize = 1;
+                depthBuffer.MipLevels = 1;
+                depthBuffer.Width = windowConfig.Width;
+                depthBuffer.Height = windowConfig.Height;
+
+                // no MSAA
+                depthBuffer.SampleDescription.Count = 1;
+                depthBuffer.SampleDescription.Quality = 0;
+
+                depthBuffer.Usage = ResourceUsage.Default;
+                depthBuffer.BindFlags = BindFlags.DepthStencil;
+                depthBuffer.CpuAccessFlags = 0;
+                depthBuffer.OptionFlags = 0;
+                return depthBuffer;
+            }
+            catch (Exception e)
+            {
+                throw new Exception("", e);
+            }
         }
-        public void CleanD3D()
+
+        public void Dispose()
         {
+            depthStencilView.Dispose();
+            depthStencilBuffer.Dispose();
+
             device.Dispose();
             swapChain.Dispose();
             renderTargetView.Dispose();
             backBuffer.Dispose();
         }
-
         #endregion
 
         #region HelperMethodsNotIncludedInExampleResources
@@ -183,7 +169,15 @@ namespace Ch01_01EmptyProject
 
         private void CreateRenderTargetViewForTarget()
         {
-            renderTargetView = new RenderTargetView(device, backBuffer);
+            try
+            {
+                renderTargetView = new RenderTargetView(device, backBuffer);
+            }
+            catch (Exception e)
+            {
+
+                throw new Exception("", e);
+            }
         }
 
         private void BindBuffersToOutputStageOfPipeline(DeviceContext context, DepthStencilView depthStencilView)
@@ -198,13 +192,21 @@ namespace Ch01_01EmptyProject
 
         private ModeDescription CreateModeDescription()
         {
-            ModeDescription modeDescription = new ModeDescription();
+            try
+            {
+                ModeDescription modeDescription = new ModeDescription();
 
-            modeDescription.Width = windowConfig.Width;
-            modeDescription.Height = windowConfig.Height;
-            modeDescription.RefreshRate = new Rational(60, 1);
-            modeDescription.Format = Format.R8G8B8A8_UNorm;
-            return modeDescription;
+                modeDescription.Width = windowConfig.Width;
+                modeDescription.Height = windowConfig.Height;
+                modeDescription.RefreshRate = new Rational(60, 1);
+                modeDescription.Format = Format.R8G8B8A8_UNorm;
+                return modeDescription;
+            }
+            catch (Exception e)
+            {
+                
+                throw new Exception("", e);
+            }
         }
 
         private static SwapChainDescription SwapChainDescription(IntPtr formWindowHandle, ref ModeDescription modeDescription)
@@ -229,18 +231,13 @@ namespace Ch01_01EmptyProject
 
         #region Id3DApp Interface methods
 
-        public void Run()
-        {
-            Application.Run(MainForm);
-        }
-
         public void UpdateScene(float deltaT)
         {
             //Called every frame - should be used to update app over time, eq. processing animations...
             throw new NotImplementedException();
         }
 
-        public void DrawScene()
+        public void BeginScene()
         {
             //I shloud check if context and swapchain are available
             //assert(md3dImmediateContext); 
@@ -248,7 +245,10 @@ namespace Ch01_01EmptyProject
             context.ClearRenderTargetView(renderTargetView, Color.Blue);
 
             context.ClearDepthStencilView(depthStencilView, DepthStencilClearFlags.Depth, 1, 0);
+        }
 
+        public void PresentRenderedScene()
+        {
             swapChain.Present(0, PresentFlags.None);
         }
 

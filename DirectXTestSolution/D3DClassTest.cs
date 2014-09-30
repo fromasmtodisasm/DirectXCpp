@@ -14,7 +14,7 @@ namespace DirectXTestSolution
         {
             Form1 form1 = new Form1();
            
-            D3DClass d3dClass = new D3DClass();
+            D3D d3dClass = new D3D();
             WindowConfiguration wc = new  WindowConfiguration();
             wc.Height = 600;
             wc.Width = 800;

@@ -1,11 +1,11 @@
-﻿namespace Ch01_01EmptyProject
+﻿namespace Ch01_01EmptyProject.System
 {
     partial class Form1
     {
         /// <summary>
         /// Required designer variable.
         /// </summary>
-        private System.ComponentModel.IContainer components = null;
+        private global::System.ComponentModel.IContainer components = null;
 
         /// <summary>
         /// Clean up any resources being used.
@@ -28,12 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.components = new global::System.ComponentModel.Container();
+            this.AutoScaleMode = global::System.Windows.Forms.AutoScaleMode.Font;
             this.Text = "Form1";
         }
 
         #endregion
     }
 }
-

@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SharpDX;
 
-namespace Ch01_01EmptyProject
+namespace Ch01_01EmptyProject.System
 {
     public class GameTimer
     {
@@ -21,7 +21,6 @@ namespace Ch01_01EmptyProject
         public GameTimer()
         {
             tt = new TimerTick();
-           
         }
 
         private void Start()
@@ -42,12 +41,8 @@ namespace Ch01_01EmptyProject
                 return;
             }
             tt.Tick();
-
-           
         }
-        
-       public void Reset() { throw new NotImplementedException(); }
-       
-    
+
+        public void Reset() { throw new NotImplementedException(); }
     }
 }
