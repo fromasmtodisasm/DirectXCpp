@@ -56,6 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphic\D3DInitializeHelper.cs" />
     <Compile Include="Graphic\Graphic.cs" />
     <Compile Include="Graphic\ID3DApp.cs" />
     <Compile Include="Graphic\D3DClass.cs" />

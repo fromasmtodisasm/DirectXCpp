@@ -14,7 +14,6 @@ namespace Ch01_01EmptyProject.System
         private static int FORM_WIDTH = 800;
         private static int FORM_HEIGHT = 600;
         private Form1 form;
-        private D3D d3d;
         private Graphic.Graphic graphic;
 
         public System()

@@ -20,9 +20,8 @@ namespace Ch01_01EmptyProject.Graphic
        {
            try
            {
-               d3d = new D3D();
-               d3d.Initialize(windowConfig);
-               //shader = new Shader();
+               d3d = new D3D(windowConfig);
+                //shader = new Shader();
            }
            catch (Exception e)
            {
