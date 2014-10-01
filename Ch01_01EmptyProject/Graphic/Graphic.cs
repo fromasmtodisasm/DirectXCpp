@@ -21,7 +21,7 @@ namespace Ch01_01EmptyProject.Graphic
            try
            {
                d3d = new D3D(windowConfig);
-                //shader = new Shader();
+               shader = new Shader(d3d.Device);
            }
            catch (Exception e)
            {
@@ -37,7 +37,7 @@ namespace Ch01_01EmptyProject.Graphic
         public void Render()
         {
             d3d.BeginScene();
-            //shader.Render();
+            shader.Render(d3d.DeviceContext);
             d3d.PresentRenderedScene();
         }
 

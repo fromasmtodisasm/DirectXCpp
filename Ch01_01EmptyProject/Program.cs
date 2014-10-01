@@ -20,9 +20,9 @@ namespace Ch01_01EmptyProject
                 system = new System.System();
                 system.Run();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                throw;
+                throw new Exception("", e);
             }
             finally
             {

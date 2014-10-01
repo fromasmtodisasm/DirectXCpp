@@ -21,7 +21,19 @@ namespace Ch01_01EmptyProject.Graphic
     public class D3D : IDisposable
     {
         private Device device;
-        private DeviceContext context;
+
+        public Device Device
+        {
+            get { return device; }
+            set { device = value; }
+        }
+        private DeviceContext deviceContext;
+
+        public DeviceContext DeviceContext
+        {
+            get { return deviceContext; }
+            set { deviceContext = value; }
+        }
         private SwapChain swapChain;
         private Texture2D backBuffer;
         private RenderTargetView renderTargetView;
@@ -43,7 +55,7 @@ namespace Ch01_01EmptyProject.Graphic
 #endif
             device = initializeHelper.CreateDevice(deviceFlags, driverType);
 
-            context = device.ImmediateContext;
+            deviceContext = device.ImmediateContext;
             //CHECK AntiAliasing quality suport code coud be here
 
             ModeDescription modeDescription = initializeHelper.CreateModeDescription();
@@ -60,9 +72,9 @@ namespace Ch01_01EmptyProject.Graphic
             depthStencilBuffer = new Texture2D(device, depthBuffer);
             depthStencilView = new DepthStencilView(device, depthStencilBuffer);
 
-            initializeHelper.BindBuffersToOutputStageOfPipeline(renderTargetView, depthStencilView, context);
+            initializeHelper.BindBuffersToOutputStageOfPipeline(renderTargetView, depthStencilView, deviceContext);
 
-            initializeHelper.CreateViewPort(context);
+            initializeHelper.CreateViewPort(deviceContext);
         }
 
         public void BeginScene()
@@ -70,9 +82,9 @@ namespace Ch01_01EmptyProject.Graphic
             //I shloud check if context and swapchain are available
             //assert(md3dImmediateContext); 
             //assert(mSwapChain);
-            context.ClearRenderTargetView(renderTargetView, Color.Blue);
+            deviceContext.ClearRenderTargetView(renderTargetView, Color.Blue);
 
-            context.ClearDepthStencilView(depthStencilView, DepthStencilClearFlags.Depth, 1, 0);
+            deviceContext.ClearDepthStencilView(depthStencilView, DepthStencilClearFlags.Depth, 1, 0);
         }
 
         public void UpdateScene(float deltaT)

@@ -56,10 +56,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphic\D3DInitializeHelper.cs" />
+    <Compile Include="Graphic\D3D\D3DInitializeHelper.cs" />
     <Compile Include="Graphic\Graphic.cs" />
-    <Compile Include="Graphic\ID3DApp.cs" />
-    <Compile Include="Graphic\D3DClass.cs" />
+    <Compile Include="Graphic\D3D\ID3DApp.cs" />
+    <Compile Include="Graphic\D3D\D3DClass.cs" />
     <Compile Include="Graphic\IGraphic.cs" />
     <Compile Include="Graphic\Shader.cs" />
     <Compile Include="System\Form1.cs">
@@ -85,6 +85,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Content Include="Graphic\Shaders\VertexShader.fx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -98,9 +99,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Graphic\Shaders\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

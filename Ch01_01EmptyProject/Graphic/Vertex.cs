@@ -10,12 +10,17 @@ using SharpDX.Direct3D11;
 using Device = SharpDX.Direct3D11.Device;
 using SharpDX.Direct3D;
 using System.Windows.Forms;
+using System.Runtime.InteropServices;
 
 namespace Ch01_01EmptyProject
 {
-    struct Vertex
+    [StructLayout(LayoutKind.Sequential)]
+    public struct Vertex
     {
         public Vector3 Position;
         public Vector4 Color;
     }
+     
+   
+
 }
