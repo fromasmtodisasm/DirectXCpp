@@ -10,7 +10,7 @@ namespace Ch01_01EmptyProject.System
 {
     public class System : IDisposable
     {
-        private static string PROGRAM_TITLE = "D3DRendering - Empty Project";
+        private static string PROGRAM_TITLE = "D3DRendering - Cube drawing";
         private static int FORM_WIDTH = 800;
         private static int FORM_HEIGHT = 600;
         private Form1 form;

@@ -9,6 +9,7 @@ using SharpDX.DXGI;
 using SharpDX.Direct3D11;
 using SharpDX.D3DCompiler;
 using Ch01_01EmptyProject.System;
+using System.Windows.Forms;
 
 namespace Ch01_01EmptyProject.Graphic
 {
@@ -16,18 +17,22 @@ namespace Ch01_01EmptyProject.Graphic
     {
         private D3D d3d;
         private Shader shader;
+        private Model model;
         public Graphic(WindowConfiguration windowConfig)
-       {
-           try
-           {
-               d3d = new D3D(windowConfig);
-               shader = new Shader(d3d.Device);
-           }
-           catch (Exception e)
-           {
-               throw new Exception(("Could not initialize Direct3D: " + e.ToString()));
-           }
-       }
+        {
+            try
+            {
+                d3d = new D3D(windowConfig);
+                model = new Model(d3d.Device);
+                shader = new Shader(d3d.Device);
+            }
+            
+            catch (Exception ex)
+            {
+                MessageBox.Show("Could not initialize Direct3D\n'" + ex.Message + "'");
+                //throw new Exception("Could not initialize Direct3D: "+ ex.Message);
+            }
+        }
 
         public void Frame()
         {
@@ -37,16 +42,16 @@ namespace Ch01_01EmptyProject.Graphic
         public void Render()
         {
             d3d.BeginScene();
-            shader.Render(d3d.DeviceContext);
-            d3d.PresentRenderedScene();
+            model.Render(d3d.DeviceContext);
+            //shader.Render(d3d.DeviceContext);
+            //d3d.PresentRenderedScene();
         }
 
         public void Dispose()
         {
+            shader.Dispose();
+            model.Dispose();
             d3d.Dispose();
-            //shader.Dispose();
         }
-
-      
     }
 }

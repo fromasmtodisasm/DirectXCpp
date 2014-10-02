@@ -9,6 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
+//using Effect = SharpDX.Direct3D11.Effect;
 using Device = SharpDX.Direct3D11.Device;
 using Buffer = SharpDX.Direct3D11.Buffer;
 
@@ -128,113 +129,85 @@ namespace Ch01_01EmptyProject.Graphic
     //}
 
 
-
-
-
-
-    public class Shader : IDisposable
+    public class Shader : IDisposable, IRenderable
     {
         private Buffer vertexBuffer;
         private Vertex[] vertices;
         private Buffer indicesBuffer;
         private int[] indices;
-        //Vertex VSMain(Vertex input)
-        //{
-        //    return output;
-        //}
+        private CompilationResult vertexShaderBytecode;
+        private CompilationResult pixelShaderBytecode;
+        private InputLayout inputLayout;
+        private VertexShader vertexShader;
 
         public Shader(Device device)
         {
+            string vertexShaderFileName = @"C:\Users\jamesss\Documents\GitHub\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\VertexShader.fx";
+            //string vertexShaderFileName = @"./Shaders/VertexShader.fx";
 
-            InputElement[] inputElementsDesc = SpecifyInputLayoutDescriptionForVertex();
+            vertexShaderBytecode = GetCompiledShader(vertexShaderFileName);
 
-            string SpriteFX = @"Texture2D SpriteTex;
-
-struct VertexIn {
-float3 PosNdc : POSITION;
-float2 Tex : TEXCOORD;
-float4 Color : COLOR;
-};
-struct VertexOut {
-float4 PosNdc : SV_POSITION;
-float2 Tex : TEXCOORD;
-float4 Color : COLOR;
-};
-";
-            //byte[] shaderByteCode = ShaderByteCode.;
-
-            var il = new InputLayout(device, shaderByteCode, inputElementsDesc);
-          
-            vertices = new Vertex[]
-            {
-                 new Vertex(){Position = new Vector3(-1, -1, -1),Color = (Vector4)Color.White},
-                 new Vertex(){Position = new Vector3(-1, 1, -1), Color = (Vector4)Color.Black},
-                 new Vertex(){Position = new Vector3(+1, +1, -1), Color = (Vector4)Color.Red},
-                 new Vertex(){Position = new Vector3(+1, -1, -1), Color = (Vector4)Color.Green},
-                 new Vertex(){Position = new Vector3(-1, -1, +1), Color = (Vector4)Color.Blue},
-                 new Vertex(){Position = new Vector3(-1, +1, +1), Color = (Vector4)Color.Yellow},
-                 new Vertex(){Position = new Vector3(+1, +1, +1), Color = (Vector4)Color.Cyan},
-                 new Vertex(){Position = new Vector3(+1, -1, +1), Color = (Vector4)Color.Magenta},
-            };
-
-            //BufferDescription bufferDescription;
-            //bufferDescription.Usage = ResourceUsage.Immutable;
-            //bufferDescription.SizeInBytes = sizeof(vertices) * 8;
-
-            vertexBuffer = Buffer.Create(device, BindFlags.VertexBuffer, vertices);
-
-
-
-            indices = new int[24]
-            {
-                0, 1, 2 ,//Triangle 0
-                0, 2, 3, //Triangle 1
-                0, 3, 4,//Triangle 2
-                0, 4, 5,//Triangle 3
-                0, 5, 6,//Triangle 4
-                0, 6, 7,//Triangle 5
-                0, 7, 8,//Triangle 6
-                0, 8, 1//Triangle 7
-            };
-
-            indicesBuffer = Buffer.Create(device, BindFlags.IndexBuffer, indices);
-
-
-                //"Simple.hlsl", "VSMain", "vs_5_0", shaderFlags)
-           //var vertexShaderBytecode = ShaderBytecode.Compile()
-            //var inputLayoutDescriptionForVertex = SpecifyInputLayoutDescriptionForVertex();
+            //effect = new Effect(device, vertexShaderBytecode.Bytecode.Data, EffectFlags.None);
 
             //vertexShader = new VertexShader(device, vertexShaderBytecode);
 
+            //var inputElementDesc = SpecifyInputLayoutDescriptionForVertex();
 
+            //CreateInputLayout(device, inputElementDesc);
 
+            //vertexShaderBytecode.Dispose();
         }
 
-        internal void Render(DeviceContext deviceContext)
+        public CompilationResult GetCompiledShader(string vertexShaderFileName)
         {
-            int firstSlot = 0;
-            int numBuffers = 1;
-
-            Buffer[] vertexBuffers = new Buffer[]{vertexBuffer};
-            int[] stride = new int[] {Utilities.SizeOf<Vertex>()};
-            int[] offset = new int[] { 0 };
-
-            //var vertexBufferBinding = new VertexBufferBinding(vertexBuffer, Utilities.SizeOf<Vertex>(), 0);
-
-            //bound vertex buffer to an input slot of the device, in order to feed the vertices to the pipeline output
-            deviceContext.InputAssembler.SetVertexBuffers(firstSlot, vertexBuffers, stride, offset);
-            deviceContext.InputAssembler.SetIndexBuffer(indicesBuffer, Format.R32_UInt, 0);
-            
-            deviceContext.InputAssembler.PrimitiveTopology = deviceContext.InputAssembler.PrimitiveTopology;
-            
-            deviceContext.Draw(vertices.Length, 0);
-            deviceContext.DrawIndexed(indices.Length, 0, 0);
-
+            try
+            {
+                var vertexShaderBytes = ShaderBytecode.CompileFromFile(vertexShaderFileName, "fx_5_0", ShaderFlags.None);
+                return vertexShaderBytes;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Vertex shader compile failed :" + ex.Message);
+            }
         }
 
+        public void Render(DeviceContext deviceContext)
+        {
+            try
+            {
+                deviceContext.InputAssembler.InputLayout = inputLayout;
+                deviceContext.VertexShader.Set(vertexShader);
+
+                //deviceContext.Draw(vertices.Length, 0);
+                deviceContext.DrawIndexed(indices.Length, 0, 0);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception("D3D failed to render shaders" + ex);
+            }
+        }
+
+        private void CreateInputLayout(Device device, InputElement[] inputElementDesc)
+        {
+            try
+            {
+                inputLayout = new InputLayout(device, vertexShaderBytecode, inputElementDesc);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception("D3D could not create input Layout: " + ex);
+            }
+        }
+
+        // Now setup the layout of the data that goes into the shader.
+        // It needs to match the VertexType structure in the Model and in the shader.
         private static InputElement[] SpecifyInputLayoutDescriptionForVertex()
         {
-            var vertexDescription = new InputElement[]
+            try
+            {
+                return new InputElement[]
             {
             new InputElement()
             {
@@ -246,43 +219,59 @@ float4 Color : COLOR;
             Classification = InputClassification.PerVertexData,
             InstanceDataStepRate = 0,
             },
-          new InputElement()
-          {
-            SemanticName = "NORMAL",
-            SemanticIndex = 0,
-            Format = Format.R32G32B32_Float,
-            Slot = 0,
-            AlignedByteOffset = 12,
-            Classification = InputClassification.PerVertexData,
-            InstanceDataStepRate = 0,
-          },
-            new InputElement()
+             new InputElement()
             {
-            SemanticName = "TEXCOORD",
+            SemanticName = "COLOR",
             SemanticIndex = 0,
             Format = Format.R32G32B32_Float,
             Slot = 0,
-            AlignedByteOffset = 24,
-            Classification = InputClassification.PerVertexData,
-            InstanceDataStepRate = 0,
-            },
-            new InputElement()
-            {
-            SemanticName = "TEXCOORD",
-            SemanticIndex = 0,
-            Format = Format.R32G32B32_Float,
-            Slot = 0,
-            AlignedByteOffset = 32,
+            AlignedByteOffset = 0,
             Classification = InputClassification.PerVertexData,
             InstanceDataStepRate = 0,
             }
+          //new InputElement()
+          //{
+          //  SemanticName = "NORMAL",
+          //  SemanticIndex = 0,
+          //  Format = Format.R32G32B32_Float,
+          //  Slot = 0,
+          //  AlignedByteOffset = 12,
+          //  Classification = InputClassification.PerVertexData,
+          //  InstanceDataStepRate = 0,
+          //},
+          //  new InputElement()
+          //  {
+          //  SemanticName = "TEXCOORD",
+          //  SemanticIndex = 0,
+          //  Format = Format.R32G32B32_Float,
+          //  Slot = 0,
+          //  AlignedByteOffset = 24,
+          //  Classification = InputClassification.PerVertexData,
+          //  InstanceDataStepRate = 0,
+          //  },
+          //  new InputElement()
+          //  {
+          //  SemanticName = "TEXCOORD",
+          //  SemanticIndex = 0,
+          //  Format = Format.R32G32B32_Float,
+          //  Slot = 0,
+          //  AlignedByteOffset = 32,
+          //  Classification = InputClassification.PerVertexData,
+          //  InstanceDataStepRate = 0,
+          //  }
         };
-            return vertexDescription;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("D3D couldnt create input elements" + ex);
+            }
+
         }
 
         public void Dispose()
         {
-            throw new NotImplementedException();
+            inputLayout.Dispose();
+            vertexShader.Dispose();
         }
     }
 }

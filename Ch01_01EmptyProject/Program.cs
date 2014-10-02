@@ -20,10 +20,6 @@ namespace Ch01_01EmptyProject
                 system = new System.System();
                 system.Run();
             }
-            catch (Exception e)
-            {
-                throw new Exception("", e);
-            }
             finally
             {
                 system.Dispose();

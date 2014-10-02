@@ -59,8 +59,10 @@
     <Compile Include="Graphic\D3D\D3DInitializeHelper.cs" />
     <Compile Include="Graphic\Graphic.cs" />
     <Compile Include="Graphic\D3D\ID3DApp.cs" />
-    <Compile Include="Graphic\D3D\D3DClass.cs" />
+    <Compile Include="Graphic\D3D\D3D11.cs" />
     <Compile Include="Graphic\IGraphic.cs" />
+    <Compile Include="Graphic\IRenderable.cs" />
+    <Compile Include="Graphic\Model.cs" />
     <Compile Include="Graphic\Shader.cs" />
     <Compile Include="System\Form1.cs">
       <SubType>Form</SubType>
@@ -85,6 +87,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Content Include="Graphic\Shaders\PixelShader.fx" />
     <Content Include="Graphic\Shaders\VertexShader.fx" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

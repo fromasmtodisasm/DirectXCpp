@@ -40,9 +40,9 @@ namespace Ch01_01EmptyProject.Graphic
            {
                return new Device(driverType, deviceFlags);
            }
-           catch (Exception e)
+           catch (Exception ex)
            {
-               throw new NotSupportedException("", e);
+               throw new NotSupportedException(ex.Message);
            }
        }
 
@@ -57,10 +57,10 @@ namespace Ch01_01EmptyProject.Graphic
                    return new SwapChain(factory, device, swapChainDescription);
                }
            }
-           catch (Exception e)
+           catch (Exception ex)
            {
 
-               throw new Exception("", e);
+               throw new Exception("D3D Could not create Swap Chain: " + ex);
            }
        }
 
@@ -70,10 +70,10 @@ namespace Ch01_01EmptyProject.Graphic
             {
                  return new RenderTargetView(device, backBuffer);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
 
-                throw new Exception("", e);
+                throw new Exception(ex.Message);
             }
         }
 
@@ -88,10 +88,10 @@ namespace Ch01_01EmptyProject.Graphic
             {
                 return Texture2D.FromSwapChain<Texture2D>(swapChain, 0);
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
                 
-                throw new Exception("", e);
+                throw new Exception("D3D couldnt create resource: " + ex);
             }
         }
 
@@ -107,10 +107,10 @@ namespace Ch01_01EmptyProject.Graphic
                 modeDescription.Format = Format.R8G8B8A8_UNorm;
                 return modeDescription;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
 
-                throw new Exception("", e);
+                throw new Exception("D3D could not create ModeDecription for swapChain: ", ex);
             }
         }
 
@@ -133,10 +133,10 @@ namespace Ch01_01EmptyProject.Graphic
                 swapChainSetup.Usage = Usage.RenderTargetOutput;
                 return swapChainSetup;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
 
-                throw new Exception("", e);
+                throw new Exception("" + ex);
             }
         }
         public void CreateViewPort(DeviceContext context)
@@ -173,9 +173,9 @@ namespace Ch01_01EmptyProject.Graphic
                 depthBuffer.OptionFlags = 0;
                 return depthBuffer;
             }
-            catch (Exception e)
+            catch (Exception ex)
             {
-                throw new Exception("", e);
+                throw new Exception("D3D Could not create DepthBuffer: " + ex);
             }
         }
    }
