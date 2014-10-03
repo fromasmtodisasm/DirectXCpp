@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Ch01_01EmptyProject.System
+namespace Ch01_01EmptyProject
 {
     public partial class Form1 : Form
     {

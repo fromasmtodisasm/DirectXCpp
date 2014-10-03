@@ -7,12 +7,12 @@ using System.Text;
 using System.Threading.Tasks;
 //Resolve name conflicts
 using Device = SharpDX.Direct3D11.Device;
-using Ch01_01EmptyProject.System;
+using Ch01_01EmptyProject;
 using SharpDX.Direct3D11;
 using SharpDX;
 
 
-namespace Ch01_01EmptyProject.Graphic
+namespace Ch01_01EmptyProject
 {
    public class D3DInitializeHelper
     {

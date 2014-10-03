@@ -8,7 +8,7 @@ namespace Ch01_01EmptyProject
 {
     static class Program
     {
-        private static System.System system;
+        private static System system;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
@@ -17,7 +17,7 @@ namespace Ch01_01EmptyProject
         {
             try
             {
-                system = new System.System();
+                system = new System();
                 system.Run();
             }
             finally

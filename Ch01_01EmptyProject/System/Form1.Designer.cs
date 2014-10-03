@@ -1,4 +1,4 @@
-﻿namespace Ch01_01EmptyProject.System
+﻿namespace Ch01_01EmptyProject
 {
     partial class Form1
     {

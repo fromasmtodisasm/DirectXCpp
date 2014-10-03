@@ -11,12 +11,12 @@ using SharpDX.D3DCompiler;
 
 //Resolve name conflicts
 using Device = SharpDX.Direct3D11.Device;
-using Ch01_01EmptyProject.System;
+using Ch01_01EmptyProject;
 
 using SharpDX.Direct3D;
 using System.Windows.Forms;
 
-namespace Ch01_01EmptyProject.Graphic
+namespace Ch01_01EmptyProject
 {
     public class D3D : IDisposable
     {
@@ -49,16 +49,14 @@ namespace Ch01_01EmptyProject.Graphic
 
                 var initializeHelper = new D3DInitializeHelper(windowConfig);
 
-                bool enforceSoftwareRendering = false;
-
-                DriverType driverType = initializeHelper.GetDriverTypeForRenderingWhichSupportsDx11(enforceSoftwareRendering);
+                DriverType driverType = DriverType.Reference; //initializeHelper.GetDriverTypeForRenderingWhichSupportsDx11(false);
 #if DEBUG
                 deviceFlags = DeviceCreationFlags.Debug;
 #endif
                 device = initializeHelper.CreateDevice(deviceFlags, driverType);
 
                 deviceContext = device.ImmediateContext;
-                //CHECK AntiAliasing quality suport code coud be here
+                //CHECK AntiAliasing quality suport code could be here
 
                 ModeDescription modeDescription = initializeHelper.CreateModeDescription();
                 SwapChainDescription swapChainDescription = initializeHelper.SwapChainDescription(ref modeDescription);
@@ -80,8 +78,7 @@ namespace Ch01_01EmptyProject.Graphic
             }
             catch (Exception ex)
             {
-
-                throw new Exception("D3D could not initialize"  + ex);
+                throw new Exception("D3D11 could not initialize: "  + ex);
             }
         }
 

@@ -9,7 +9,7 @@ using SharpDX.DXGI;
 using SharpDX.Direct3D11;
 using SharpDX.D3DCompiler;
 
-namespace Ch01_01EmptyProject.Graphic
+namespace Ch01_01EmptyProject
 {
     interface IGraphic
     {

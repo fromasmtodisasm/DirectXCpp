@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace Ch01_01EmptyProject.System
+namespace Ch01_01EmptyProject
 {
     public class System : IDisposable
     {
@@ -14,7 +14,7 @@ namespace Ch01_01EmptyProject.System
         private static int FORM_WIDTH = 800;
         private static int FORM_HEIGHT = 600;
         private Form1 form;
-        private Graphic.Graphic graphic;
+        private Graphic graphic;
 
         public System()
         {
@@ -30,7 +30,7 @@ namespace Ch01_01EmptyProject.System
             wc.Height = FORM_HEIGHT;
             wc.FormWindowHandle = form.Handle;
 
-            graphic = new Graphic.Graphic(wc);
+            graphic = new Graphic(wc);
         }
 
         public void Run()
@@ -43,7 +43,7 @@ namespace Ch01_01EmptyProject.System
 
         private void Frame()
         {
-            graphic.Render();
+            graphic.Frame();
         }
 
         public void Dispose()

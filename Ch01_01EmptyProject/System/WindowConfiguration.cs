@@ -11,7 +11,7 @@ using Device = SharpDX.Direct3D11.Device;
 using SharpDX.Direct3D;
 using System.Windows.Forms;
 
-namespace Ch01_01EmptyProject.System
+namespace Ch01_01EmptyProject
 {
     public class WindowConfiguration
     {

@@ -12,22 +12,22 @@ namespace DirectXTestSolution
         [TestMethod]
         public void CreateSwapChainWithoutException()
         {
-            Form1 form1 = new Form1();
+            //Form1 form1 = new Form1();
            
-            D3D d3dClass = new D3D();
-            WindowConfiguration wc = new  WindowConfiguration();
-            wc.Height = 600;
-            wc.Width = 800;
+            //D3D d3dClass = new D3D();
+            //WindowConfiguration wc = new  WindowConfiguration();
+            //wc.Height = 600;
+            //wc.Width = 800;
 
-            try
-            {
-                d3dClass.Initialize(form1.Handle, wc);
-            }
-            catch (Exception e)
-            {
-                Assert.Fail(e.ToString());
-                throw;
-            }
+            //try
+            //{
+            //    d3dClass.Initialize(form1.Handle, wc);
+            //}
+            //catch (Exception e)
+            //{
+            //    Assert.Fail(e.ToString());
+            //    throw;
+            //}
         }
     }
 }

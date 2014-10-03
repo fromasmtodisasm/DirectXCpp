@@ -8,10 +8,11 @@ using SharpDX.Windows;
 using SharpDX.DXGI;
 using SharpDX.Direct3D11;
 using SharpDX.D3DCompiler;
-using Ch01_01EmptyProject.System;
+using Ch01_01EmptyProject;
 using System.Windows.Forms;
+using System.Threading;
 
-namespace Ch01_01EmptyProject.Graphic
+namespace Ch01_01EmptyProject
 {
     public class Graphic : IGraphic, IDisposable
     {
@@ -26,25 +27,26 @@ namespace Ch01_01EmptyProject.Graphic
                 model = new Model(d3d.Device);
                 shader = new Shader(d3d.Device);
             }
-            
+
             catch (Exception ex)
             {
                 MessageBox.Show("Could not initialize Direct3D\n'" + ex.Message + "'");
-                //throw new Exception("Could not initialize Direct3D: "+ ex.Message);
+               
+                //throw new Exception("Could not initialize Direct3D: " + ex.Message);
             }
         }
 
         public void Frame()
         {
-            Render();
+            //Render();
         }
 
         public void Render()
         {
             d3d.BeginScene();
             model.Render(d3d.DeviceContext);
-            //shader.Render(d3d.DeviceContext);
-            //d3d.PresentRenderedScene();
+            shader.Render(d3d.DeviceContext);
+            d3d.PresentRenderedScene();
         }
 
         public void Dispose()

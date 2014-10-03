@@ -16,7 +16,7 @@ namespace Ch01_01EmptyProject
     //which is several separate classes in rastertek
    public interface ID3DApp
     {
-        System.GameTimer Timer { get; set; }
+        GameTimer Timer { get; set; }
 
         Device device { get; set; }
         DeviceContext DeviceContext { get; set; }

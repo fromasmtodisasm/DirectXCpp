@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using SharpDX;
 
-namespace Ch01_01EmptyProject.System
+namespace Ch01_01EmptyProject
 {
     public class GameTimer
     {
