@@ -96,6 +96,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphic\Camera.cs" />
     <Compile Include="Graphic\D3D\D3DInitializeHelper.cs" />
     <Compile Include="Graphic\Graphic.cs" />
     <Compile Include="Graphic\D3D\ID3DApp.cs" />
@@ -127,10 +128,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Content Include="Graphic\Shaders\PixelShader.fx" />
     <Content Include="Graphic\Shaders\VertexShader.fx" />
-    <None Include="Graphic\Shaders\Color.ps" />
-    <None Include="Graphic\Shaders\Color.vs" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

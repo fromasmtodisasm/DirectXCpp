@@ -21,25 +21,40 @@ namespace Ch01_01EmptyProject
     public class D3D : IDisposable
     {
         private Device device;
-
-        public Device Device
-        {
-            get { return device; }
-            set { device = value; }
-        }
         private DeviceContext deviceContext;
 
-        public DeviceContext DeviceContext
-        {
-            get { return deviceContext; }
-            set { deviceContext = value; }
-        }
         private SwapChain swapChain;
         private Texture2D backBuffer;
         private RenderTargetView renderTargetView;
         private DepthStencilView depthStencilView;
         private Texture2DDescription depthBuffer;
         private Texture2D depthStencilBuffer;
+        private Matrix worldMatrix;
+
+        public Matrix WorldMatrix
+        {
+            get { return worldMatrix; }
+            set { worldMatrix = value; }
+        }
+        private Matrix projectionMatrix;
+
+        public Matrix ProjectionMatrix
+        {
+            get { return projectionMatrix; }
+            set { projectionMatrix = value; }
+        }
+
+        public Device Device
+        {
+            get { return device; }
+            set { device = value; }
+        }
+
+        public DeviceContext DeviceContext
+        {
+            get { return deviceContext; }
+            set { deviceContext = value; }
+        }
 
         public D3D(WindowConfiguration windowConfig)
         {
@@ -75,14 +90,19 @@ namespace Ch01_01EmptyProject
                 initializeHelper.BindBuffersToOutputStageOfPipeline(renderTargetView, depthStencilView, deviceContext);
 
                 initializeHelper.CreateViewPort(deviceContext);
+            
+                //Initialize matrixes
+                worldMatrix = Matrix.Identity;
+                projectionMatrix = Matrix.Identity;
+
             }
             catch (Exception ex)
             {
-                throw new Exception("D3D11 could not initialize: "  + ex);
+                throw new Exception("D3D11 could not initialize: " + ex);
             }
         }
 
-        public void BeginScene()
+        public void BeginScene() //DrawScene ?
         {
             try
             {
@@ -95,11 +115,12 @@ namespace Ch01_01EmptyProject
             }
             catch (Exception ex)
             {
-                
-                throw new Exception("D3D scene failed to start: " + ex);
+
+                throw new Exception("D3D scene failed to draw: " + ex);
             }
         }
 
+        [Obsolete("Method is redudant with camera render, preserved cause of book examples")]
         public void UpdateScene(float deltaT)
         {
             //Called every frame - should be used to update app over time, eq. processing animations...
