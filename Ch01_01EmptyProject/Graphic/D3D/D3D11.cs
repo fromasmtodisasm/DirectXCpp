@@ -94,8 +94,9 @@ namespace Ch01_01EmptyProject
             
                 //Initialize matrixes
                 worldMatrix = Matrix.Identity;
-                projectionMatrix = Matrix.Identity;
-
+               
+                // Setup and create the projection matrix.
+                projectionMatrix = Matrix.PerspectiveFovLH((float)(Math.PI / 4), (float)(windowConfig.Width) / windowConfig.Height, 0.1f, 1000.0f);
             }
             catch (Exception ex)
             {
@@ -103,15 +104,11 @@ namespace Ch01_01EmptyProject
             }
         }
 
-        public void BeginScene() //DrawScene ?
+        public void DrawScene() 
         {
             try
             {
-                //I shloud check if context and swapchain are available
-                //assert(md3dImmediateContext); 
-                //assert(mSwapChain);
                 deviceContext.ClearRenderTargetView(renderTargetView, Color.Blue);
-
                 deviceContext.ClearDepthStencilView(depthStencilView, DepthStencilClearFlags.Depth, 1, 0);
             }
             catch (Exception ex)

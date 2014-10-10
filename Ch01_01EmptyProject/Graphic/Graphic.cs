@@ -43,7 +43,7 @@ namespace Ch01_01EmptyProject
 
         public void Render()
         {
-            d3d.BeginScene();
+            d3d.DrawScene();
             
             camera.Render(d3d.DeviceContext);
 

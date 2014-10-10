@@ -104,10 +104,10 @@ namespace Ch01_01EmptyProject
 
             // Compile Vertex and Pixel shaders, given in the accompanying
             // shader file
-            var vertexShaderByteCode = ShaderBytecode.CompileFromFile(@"C:\Users\jamesss\Documents\GitHub\DirectXCpp\Ch01_01EmptyProject\System\week8.fx", "VS", "vs_4_0");
+            var vertexShaderByteCode = ShaderBytecode.CompileFromFile(@"C:\Users\jamesss\Documents\GitHub\DirectXCpp\Ch01_01EmptyProject\GreenHornEngine\week8.fx", "VS", "vs_4_0");
             var vertexShader = new VertexShader(device, vertexShaderByteCode);
 
-            var pixelShaderByteCode = ShaderBytecode.CompileFromFile(@"C:\Users\jamesss\Documents\GitHub\DirectXCpp\Ch01_01EmptyProject\System\week8.fx", "PS", "ps_4_0");
+            var pixelShaderByteCode = ShaderBytecode.CompileFromFile(@"C:\Users\jamesss\Documents\GitHub\DirectXCpp\Ch01_01EmptyProject\GreenHornEngine\week8.fx", "PS", "ps_4_0");
             var pixelShader = new PixelShader(device, pixelShaderByteCode);
 
             var signature = ShaderSignature.GetInputSignature(vertexShaderByteCode);

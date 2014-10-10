@@ -90,9 +90,9 @@
     <Compile Include="ShaderTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Ch01_01EmptyProject\Ch01_01EmptyProject.csproj">
+    <ProjectReference Include="..\Ch01_01EmptyProject\DirectXEngineSharpDx.csproj">
       <Project>{72e8363d-3281-4c61-9b97-e1d5b4dc20dd}</Project>
-      <Name>Ch01_01EmptyProject</Name>
+      <Name>DirectXEngineSharpDx</Name>
     </ProjectReference>
   </ItemGroup>
   <Choose>

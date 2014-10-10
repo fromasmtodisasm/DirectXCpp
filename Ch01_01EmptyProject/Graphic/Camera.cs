@@ -12,6 +12,13 @@ namespace Ch01_01EmptyProject
     {
         private Matrix V;
 
+        private float PositionX;
+        private float PositionY;
+        private float PositionZ;
+        private float RotationX;
+        private float RotationY;
+        private float RotationZ;
+
         public Matrix ViewMatrix
         {
             get { return V; }
@@ -22,22 +29,30 @@ namespace Ch01_01EmptyProject
         {
             try
             {
-                float theta = 1.5f * (float)Math.PI;
-                float phi = 0.25f * (float)Math.PI;
-                float radius = 5.0f;
+                 PositionX = 0; PositionY = 0; PositionZ = -10;
+                // Setup the position of the camera in the world.
+                var position = new Vector3(PositionX, PositionY, PositionZ);
 
-                //Convert spherical to cartesian coords
-                float x = radius * (float)Math.Sin(phi) * (float)Math.Cos(theta);
-                float y = radius * (float)Math.Cos(phi);
-                float z = radius * (float)Math.Sin(phi) * (float)Math.Sin(theta);
+                // Setup where the camera is looking by default.
+                var lookAt = new Vector3(0, 0, 1);
 
-                //Build the view matrix
-                Vector3 cameraPos = new Vector3(x, y, z);
-                Vector3 cameraTarget = new Vector3();
-                Vector3 cameraUp = new Vector3(0.0f, 1.0f, 0.0f);
+                // Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
+                var pitch = RotationX * 0.0174532925f;
+                var yaw = RotationY * 0.0174532925f;
+                var roll = RotationZ * 0.0174532925f;
 
-                //view matrix
-                V = Matrix.LookAtLH(cameraPos, cameraTarget, cameraUp);
+                // Create the rotation matrix from the yaw, pitch, and roll values.
+                var rotationMatrix = Matrix.RotationYawPitchRoll(yaw, pitch, roll);
+
+                // Transform the lookAt and up vector by the rotation matrix so the view is correctly rotated at the origin.
+                lookAt = Vector3.TransformCoordinate(lookAt, rotationMatrix);
+                var up = Vector3.TransformCoordinate(Vector3.UnitY, rotationMatrix);
+
+                // Translate the rotated camera position to the location of the viewer.
+                lookAt = position + lookAt;
+
+                // Finally create the view matrix from the three updated vectors.
+                V = Matrix.LookAtLH(position, lookAt, up);
             }
             catch (Exception ex)
             {

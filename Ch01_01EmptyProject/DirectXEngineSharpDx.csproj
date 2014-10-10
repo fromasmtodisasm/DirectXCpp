@@ -108,7 +108,7 @@
     <Compile Include="System\GameTimer.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="System\System.cs" />
+    <Compile Include="System\GreenHornEngine.cs" />
     <Compile Include="System\SystemTime.cs" />
     <Compile Include="Graphic\Structures\Vertex.cs" />
     <Compile Include="Graphic\Structures\Vertex2.cs" />

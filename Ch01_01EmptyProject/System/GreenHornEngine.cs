@@ -8,7 +8,7 @@ using System.Windows.Forms;
 
 namespace Ch01_01EmptyProject
 {
-    public class System : IDisposable
+    public class GreenHornEngine : IDisposable
     {
         private static string PROGRAM_TITLE = "D3DRendering - Cube drawing";
         private static int FORM_WIDTH = 800;
@@ -16,7 +16,7 @@ namespace Ch01_01EmptyProject
         private Form1 form;
         private Graphic graphic;
 
-        public System()
+        public GreenHornEngine()
         {
             // Create the window to render to
             form = new Form1();

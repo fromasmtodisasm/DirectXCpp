@@ -8,7 +8,7 @@ namespace Ch01_01EmptyProject
 {
     static class Program
     {
-        private static System system;
+        private static GreenHornEngine system;
         private static bool USER_ERROR = true;
         /// <summary>
         /// The main entry point for the application.
@@ -20,7 +20,7 @@ namespace Ch01_01EmptyProject
             {
                 try
                 {
-                    system = new System();
+                    system = new GreenHornEngine();
                     system.Run();
                 }
 
@@ -37,7 +37,7 @@ namespace Ch01_01EmptyProject
             {
                 try
                 {
-                    system = new System();
+                    system = new GreenHornEngine();
                     system.Run();
                 }
                 finally
