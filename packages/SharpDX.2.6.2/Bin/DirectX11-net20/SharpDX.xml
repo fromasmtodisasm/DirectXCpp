@@ -3172,7 +3172,7 @@
             <summary>
             Gets random <c>float</c> number within range.
             </summary>
-            <param name="random">Current <see cref="T:System.Random"/>.</param>
+            <param name="random">A <see cref="T:System.Random"/> instance.</param>
             <param name="min">Minimum.</param>
             <param name="max">Maximum.</param>
             <returns>Random <c>float</c> number.</returns>
@@ -3181,7 +3181,7 @@
             <summary>
             Gets random <c>double</c> number within range.
             </summary>
-            <param name="random">Current <see cref="T:System.Random"/>.</param>
+            <param name="random">A <see cref="T:System.Random"/> instance.</param>
             <param name="min">Minimum.</param>
             <param name="max">Maximum.</param>
             <returns>Random <c>double</c> number.</returns>
@@ -3190,14 +3190,14 @@
             <summary>
             Gets random <c>long</c> number.
             </summary>
-            <param name="random">Current <see cref="T:System.Random"/>.</param>
+            <param name="random">A <see cref="T:System.Random"/> instance.</param>
             <returns>Random <c>long</c> number.</returns>
         </member>
         <member name="M:SharpDX.RandomUtil.NextLong(System.Random,System.Int64,System.Int64)">
             <summary>
             Gets random <c>long</c> number within range.
             </summary>
-            <param name="random">Current <see cref="T:System.Random"/>.</param>
+            <param name="random">A <see cref="T:System.Random"/> instance.</param>
             <param name="min">Minimum.</param>
             <param name="max">Maximum.</param>
             <returns>Random <c>long</c> number.</returns>
@@ -3206,7 +3206,7 @@
             <summary>
             Gets random <see cref="T:SharpDX.Vector2"/> within range.
             </summary>
-            <param name="random">Current <see cref="T:System.Random"/>.</param>
+            <param name="random">A <see cref="T:System.Random"/> instance.</param>
             <param name="min">Minimum.</param>
             <param name="max">Maximum.</param>
             <returns>Random <see cref="T:SharpDX.Vector2"/>.</returns>
@@ -3215,7 +3215,7 @@
             <summary>
             Gets random <see cref="T:SharpDX.Vector3"/> within range.
             </summary>
-            <param name="random">Current <see cref="T:System.Random"/>.</param>
+            <param name="random">A <see cref="T:System.Random"/> instance.</param>
             <param name="min">Minimum.</param>
             <param name="max">Maximum.</param>
             <returns>Random <see cref="T:SharpDX.Vector3"/>.</returns>
@@ -3224,7 +3224,7 @@
             <summary>
             Gets random <see cref="T:SharpDX.Vector4"/> within range.
             </summary>
-            <param name="random">Current <see cref="T:System.Random"/>.</param>
+            <param name="random">A <see cref="T:System.Random"/> instance.</param>
             <param name="min">Minimum.</param>
             <param name="max">Maximum.</param>
             <returns>Random <see cref="T:SharpDX.Vector4"/>.</returns>
@@ -3233,14 +3233,14 @@
             <summary>
             Gets random opaque <see cref="T:SharpDX.Color"/>.
             </summary>
-            <param name="random">Current <see cref="T:System.Random"/>.</param>
+            <param name="random">A <see cref="T:System.Random"/> instance.</param>
             <returns>Random <see cref="T:SharpDX.Color"/>.</returns>
         </member>
         <member name="M:SharpDX.RandomUtil.NextColor(System.Random,System.Single,System.Single)">
             <summary>
             Gets random opaque <see cref="T:SharpDX.Color"/>.
             </summary>
-            <param name="random">Current <see cref="T:System.Random"/>.</param>
+            <param name="random">A <see cref="T:System.Random"/> instance.</param>
             <param name="minBrightness">Minimum brightness.</param>
             <param name="maxBrightness">Maximum brightness</param>
             <returns>Random <see cref="T:SharpDX.Color"/>.</returns>
@@ -3249,7 +3249,7 @@
             <summary>
             Gets random <see cref="T:SharpDX.Color"/>.
             </summary>
-            <param name="random">Current <see cref="T:System.Random"/>.</param>   
+            <param name="random">A <see cref="T:System.Random"/> instance.</param>
             <param name="minBrightness">Minimum brightness.</param>
             <param name="maxBrightness">Maximum brightness</param>
             <param name="alpha">Alpha value.</param>
@@ -3259,7 +3259,7 @@
             <summary>
             Gets random <see cref="T:SharpDX.Color"/>.
             </summary>
-            <param name="random">Current <see cref="T:System.Random"/>.</param>
+            <param name="random">A <see cref="T:System.Random"/> instance.</param>
             <param name="minBrightness">Minimum brightness.</param>
             <param name="maxBrightness">Maximum brightness</param>
             <param name="minAlpha">Minimum alpha.</param>
@@ -3270,7 +3270,7 @@
             <summary>
             Gets random <see cref="T:SharpDX.Point"/>.
             </summary>
-            <param name="random">Current <see cref="T:System.Random"/>.</param>
+            <param name="random">A <see cref="T:System.Random"/> instance.</param>
             <param name="min">Minimum.</param>
             <param name="max">Maximum.</param>
             <returns>Random <see cref="T:SharpDX.Point"/>.</returns>
@@ -3279,7 +3279,7 @@
             <summary>
             Gets random <see cref="T:System.TimeSpan"/>.
             </summary>
-            <param name="random">Current <see cref="T:System.Random"/>.</param>
+            <param name="random">A <see cref="T:System.Random"/> instance.</param>
             <param name="min">Minimum.</param>
             <param name="max">Maximum.</param>
             <returns>Random <see cref="T:System.TimeSpan"/>.</returns>
@@ -3289,7 +3289,7 @@
             Task utility for threading.
             </summary>
         </member>
-        <member name="M:SharpDX.Threading.TaskUtil.Run(System.Action,System.String)">
+        <member name="M:SharpDX.Threading.TaskUtil.Run(SharpDX.Action,System.String)">
             <summary>
             Runs the specified action in a thread.
             </summary>
@@ -44658,6 +44658,13 @@
             <param name="value">The value.</param>
             <returns>The result of the conversion.</returns>
         </member>
+        <member name="T:SharpDX.Func`1">
+            <summary>
+            Encapsulates a method that has no parameters and returns a value of the type specified by the TResult parameter.
+            </summary>
+            <typeparam name="TResult">The type of the return value of the method that this delegate encapsulates. This type parameter is covariant. That is, you can use either the type you specified or any type that is more derived.</typeparam>
+            <returns>The return value of the method that this delegate encapsulates.</returns>
+        </member>
         <member name="T:SharpDX.GetValueFastDelegate`1">
             <summary>
             A Delegate to get a property value from an object.
@@ -45170,7 +45177,7 @@
             <param name="source">The enumerable source.</param>
             <returns><c>true</c> if there is an element in this enumeration, <c>false</c> otherwise</returns>
         </member>
-        <member name="M:SharpDX.Utilities.SelectMany``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,System.Collections.Generic.IEnumerable{``1}})">
+        <member name="M:SharpDX.Utilities.SelectMany``2(System.Collections.Generic.IEnumerable{``0},SharpDX.Func{``0,System.Collections.Generic.IEnumerable{``1}})">
             <summary>
             Select elements from an enumeration.
             </summary>

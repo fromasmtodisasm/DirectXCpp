@@ -11,7 +11,6 @@ using SharpDX.Direct3D11;
 using SharpDX.Direct3D;
 using SharpDX.DXGI;
 using SharpDX.Windows;
-//using SharpDX.Direct3D10.E;
 
 using Effect = SharpDX.Direct3D11.Effect;
 
@@ -32,44 +31,58 @@ namespace Ch01_01EmptyProject
         private Effect effect;
         private Device device;
         private PixelShader pixelShader;
-        private CompilationResult vertexShaderBytecode;
-        private CompilationResult pixelShaderBytecode;
+        private CompilationResult vertexShaderByteCode;
+        private CompilationResult pixelShaderByteCode;
         private Buffer constantMatrixBuffer;
         private EffectMatrixVariable fxWorldViewProjection;
+
+        struct SHADER_GLOBALS
+        {
+            Matrix worldViewProjection;
+            public SHADER_GLOBALS(Matrix worldViewProjection)
+            {
+                this.worldViewProjection = worldViewProjection;
+            }
+        }
 
         public Shader(Device device)
         {
             this.device = device;
 
-            string vertexShaderFileName = @"C:\Users\jamesss\Documents\GitHub\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\VertexShader.fx";
+            string vertexShaderFileName = @"Graphic\Shaders\VertexShader.fx";
+        
+            vertexShaderByteCode = ShaderBytecode.CompileFromFile(vertexShaderFileName, "VS", "vs_5_0");
+            pixelShaderByteCode = ShaderBytecode.CompileFromFile(vertexShaderFileName, "PS", "ps_5_0");
 
+            vertexShader = new VertexShader(device, vertexShaderByteCode);
+            pixelShader = new PixelShader(device, pixelShaderByteCode);
 
-            vertexShaderBytecode = GetCompiledShader(vertexShaderFileName);
-
-            effect = CreateEffect(device);
+            //vertexShaderByteCode = GetCompiledShader(vertexShaderFileName);
+            //effect = CreateEffect(device);
 
             //Get data from effect
-            try
-            {
-                fxWorldViewProjection = effect.GetVariableByName("gWorldViewProj").AsMatrix();
 
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("D3D failed to retrieve data from effect: " + ex);
-            }
+            //try
+            //{
+            //    fxWorldViewProjection = effect.GetVariableByName("gWorldViewProj").AsMatrix();
+            //}
+            //catch (Exception ex)
+            //{
+            //    throw new Exception("D3D failed to retrieve data from effect: " + ex);
+            //}
 
             InputElement[] inputElementDesc = SpecifyInputLayoutDescriptionForVertex();
 
             CreateInputLayout(inputElementDesc);
 
-            vertexShaderBytecode.Dispose();
+
 
             // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
             var matrixBufferDesc = new BufferDescription()
             {
                 Usage = ResourceUsage.Dynamic,
-                SizeInBytes = Utilities.SizeOf<Matrix>(),
+                //or size of constant buffer
+                SizeInBytes = Utilities.SizeOf<Matrix>(), 
                 BindFlags = BindFlags.ConstantBuffer,
                 CpuAccessFlags = CpuAccessFlags.Write,
                 OptionFlags = ResourceOptionFlags.None,
@@ -83,23 +96,63 @@ namespace Ch01_01EmptyProject
             try
             {
                 deviceContext.InputAssembler.InputLayout = inputLayout;
-                deviceContext.VertexShader.Set(vertexShader);
-                deviceContext.PixelShader.Set(pixelShader);
 
-                fxWorldViewProjection.SetMatrix(worldViewProj);
-
-                EffectTechnique technique = effect.GetTechniqueByName("P0");
-                EffectTechniqueDescription techDesc = technique.Description;
-
-                for (int i = 0; i < techDesc.PassCount; i++)
+                try
                 {
-                    //if constant buffers needs to change, do it here(?)
-                    int flags = 0;
-                    //on current technique update constant buffers bind the shader program to pipeline and apply render stats and pass sets
-                    technique.GetPassByIndex(i).Apply(deviceContext, flags);
-
-                    deviceContext.DrawIndexed(indices.Length, 0, 0);
+                    deviceContext.VertexShader.SetConstantBuffer(0, constantMatrixBuffer);
                 }
+                catch (Exception ex)
+                {
+                     throw new Exception("D3D failed to set constant buffer" + ex);
+                }
+
+                try
+                {
+                    deviceContext.VertexShader.Set(vertexShader);
+                    deviceContext.PixelShader.Set(pixelShader);
+                }
+                catch (Exception ex)
+                {
+                    
+                    throw new Exception("D3D failed to set Vertex and Pixel shader: " + ex);
+                }
+
+                try
+                {
+                    //Matrix shaderGlobals = worldViewProj;
+                    SHADER_GLOBALS shaderGlobals = new SHADER_GLOBALS(worldViewProj);
+                    deviceContext.UpdateSubresource(ref shaderGlobals, constantMatrixBuffer);
+
+                }
+                catch (Exception ex)
+                {
+                    
+                    throw new Exception("D3D failed to pass data to shader" + ex);
+                }
+
+                try
+                {
+                    deviceContext.Draw(indices.Length, 0);
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("D3D failed to draw scene: " + ex);
+                }
+
+                //fxWorldViewProjection.SetMatrix(worldViewProj);
+
+                //EffectTechnique technique = effect.GetTechniqueByName("P0");
+                //EffectTechniqueDescription techDesc = technique.Description;
+
+                //for (int i = 0; i < techDesc.PassCount; i++)
+                //{
+                //    //if constant buffers needs to change, do it here(?)
+                //    int flags = 0;
+                //    //on current technique update constant buffers bind the shader program to pipeline and apply render stats and pass sets
+                //    technique.GetPassByIndex(i).Apply(deviceContext, flags);
+
+                //    deviceContext.DrawIndexed(indices.Length, 0, 0);
+                //}
             }
             catch (Exception ex)
             {
@@ -109,6 +162,9 @@ namespace Ch01_01EmptyProject
 
         public void Dispose()
         {
+            vertexShaderByteCode.Dispose();
+            pixelShaderByteCode.Dispose();
+     
             constantMatrixBuffer.Dispose();
             inputLayout.Dispose();
             pixelShader.Dispose();
@@ -119,8 +175,9 @@ namespace Ch01_01EmptyProject
         {
             try
             {
-                var inputLayout = new InputLayout(device, ShaderSignature.GetInputSignature(vertexShaderBytecode), inputElementDesc);
-                //var inputLayout = new InputLayout(device, vertexShaderBytecode.Data, inputElementDesc);
+                var signature = ShaderSignature.GetInputSignature(vertexShaderByteCode);
+                inputLayout = new InputLayout(device, signature, inputElementDesc);
+                signature.Dispose();
             }
             catch (Exception ex)
             {
@@ -161,7 +218,7 @@ namespace Ch01_01EmptyProject
         {
             try
             {
-                return new Effect(device, vertexShaderBytecode, EffectFlags.None);
+                return new Effect(device, vertexShaderByteCode, EffectFlags.None);
 
             }
             catch (Exception ex)

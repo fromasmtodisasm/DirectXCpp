@@ -32,15 +32,13 @@ namespace Ch01_01EmptyProject
 
             catch (Exception ex)
             {
-                MessageBox.Show("Could not initialize Direct3D\n'" + ex.Message + "'");
-               
-                //throw new Exception("Could not initialize Direct3D: " + ex.Message);
+                throw new Exception("Could not initialize Direct3D: " + ex.Message);
             }
         }
 
         public void Frame()
         {
-            //Render();
+            Render();
         }
 
         public void Render()

@@ -60,15 +60,16 @@ namespace Ch01_01EmptyProject
         {
             try
             {
-                var deviceFlags = DeviceCreationFlags.None;
+                var deviceFlags = DeviceCreationFlags.Debug;
 
                 var initializeHelper = new D3DInitializeHelper(windowConfig);
 
-                DriverType driverType = DriverType.Reference; //initializeHelper.GetDriverTypeForRenderingWhichSupportsDx11(false);
+                DriverType driverType = DriverType.Hardware; //initializeHelper.GetDriverTypeForRenderingWhichSupportsDx11(false);
 #if DEBUG
-                deviceFlags = DeviceCreationFlags.Debug;
+                //deviceFlags = DeviceCreationFlags.Debug;
 #endif
-                device = initializeHelper.CreateDevice(deviceFlags, driverType);
+                //device = initializeHelper.CreateDevice(deviceFlags, driverType);
+                device = new Device(driverType, deviceFlags);
 
                 deviceContext = device.ImmediateContext;
                 //CHECK AntiAliasing quality suport code could be here
@@ -115,18 +116,11 @@ namespace Ch01_01EmptyProject
             }
             catch (Exception ex)
             {
-
                 throw new Exception("D3D scene failed to draw: " + ex);
             }
         }
 
-        [Obsolete("Method is redudant with camera render, preserved cause of book examples")]
-        public void UpdateScene(float deltaT)
-        {
-            //Called every frame - should be used to update app over time, eq. processing animations...
-            throw new NotImplementedException();
-        }
-
+        //re/check rastertek example cause of naming
         public void PresentRenderedScene()
         {
             try
@@ -135,7 +129,6 @@ namespace Ch01_01EmptyProject
             }
             catch (SharpDX.SharpDXException ex)
             {
-
                 throw new Exception("D3D Could not present scene: " + ex.Message);
             }
         }
@@ -144,11 +137,13 @@ namespace Ch01_01EmptyProject
         {
             depthStencilView.Dispose();
             depthStencilBuffer.Dispose();
-
+            backBuffer.Dispose();
+            deviceContext.ClearState();
+            deviceContext.Flush();
+            deviceContext.Dispose();
             device.Dispose();
             swapChain.Dispose();
             renderTargetView.Dispose();
-            backBuffer.Dispose();
         }
     }
 }

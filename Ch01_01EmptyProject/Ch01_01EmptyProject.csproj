@@ -78,12 +78,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>External\SharpDX.DXGI.dll</HintPath>
     </Reference>
-    <Reference Include="SharpDX.Toolkit">
-      <HintPath>External\SharpDX.Toolkit.dll</HintPath>
-    </Reference>
-    <Reference Include="SharpDX.Toolkit.Graphics">
-      <HintPath>External\SharpDX.Toolkit.Graphics.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -116,9 +110,11 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="System\System.cs" />
     <Compile Include="System\SystemTime.cs" />
-    <Compile Include="Graphic\Vertex.cs" />
-    <Compile Include="Graphic\Vertex2.cs" />
+    <Compile Include="Graphic\Structures\Vertex.cs" />
+    <Compile Include="Graphic\Structures\Vertex2.cs" />
+    <Compile Include="System\TestDirectX11Dra.cs" />
     <Compile Include="System\WindowConfiguration.cs" />
+    <Content Include="System\week8.fx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -128,7 +124,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Content Include="Graphic\Shaders\VertexShader.fx" />
+    <Content Include="Graphic\Shaders\VertexShader.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

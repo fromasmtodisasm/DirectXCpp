@@ -14,15 +14,15 @@ using SharpDX;
 
 namespace Ch01_01EmptyProject
 {
-   public class D3DInitializeHelper
+    public class D3DInitializeHelper
     {
-       private WindowConfiguration windowConfig;
-       public D3DInitializeHelper(WindowConfiguration windowConfig)
-       {
-           this.windowConfig = windowConfig;
-       } 
-       
-       public DriverType GetDriverTypeForRenderingWhichSupportsDx11(bool enforceSoftwareRendering)
+        private WindowConfiguration windowConfig;
+        public D3DInitializeHelper(WindowConfiguration windowConfig)
+        {
+            this.windowConfig = windowConfig;
+        }
+
+        public DriverType GetDriverTypeForRenderingWhichSupportsDx11(bool enforceSoftwareRendering)
         {
             FeatureLevel highestDirectXVersionSupported = Device.GetSupportedFeatureLevel();
             if (highestDirectXVersionSupported < FeatureLevel.Level_11_0 && enforceSoftwareRendering)
@@ -34,52 +34,59 @@ namespace Ch01_01EmptyProject
                 return DriverType.Hardware;
             }
         }
-       public Device CreateDevice(DeviceCreationFlags deviceFlags, DriverType driverType)
-       {
-           try
-           {
-               return new Device(driverType, deviceFlags);
-           }
-           catch (Exception ex)
-           {
-               throw new NotSupportedException(ex.Message);
-           }
-       }
+        public Device CreateDevice(DeviceCreationFlags deviceFlags, DriverType driverType)
+        {
+            try
+            {
+                return new Device(driverType, deviceFlags);
+            }
+            catch (Exception ex)
+            {
+                throw new NotSupportedException("D3D Initialize couldnt create device : " + ex.Message);
+            }
+        }
 
-       public SwapChain CreateSwapChain(Device device, SwapChainDescription swapChainDescription)
-       {
-           try
-           {
-               using (var dxgi = device.QueryInterface<SharpDX.DXGI.Device>())
-               using (var adapter = dxgi.Adapter)
-               using (var factory = adapter.GetParent<Factory>())
-               {
-                   return new SwapChain(factory, device, swapChainDescription);
-               }
-           }
-           catch (Exception ex)
-           {
-
-               throw new Exception("D3D Could not create Swap Chain: " + ex);
-           }
-       }
+        public SwapChain CreateSwapChain(Device device, SwapChainDescription swapChainDescription)
+        {
+            try
+            {
+                using (var dxgi = device.QueryInterface<SharpDX.DXGI.Device>())
+                using (var adapter = dxgi.Adapter)
+                using (var factory = adapter.GetParent<Factory>())
+                {
+                    return new SwapChain(factory, device, swapChainDescription);
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("D3D Could not create Swap Chain: " + ex);
+            }
+        }
 
         public RenderTargetView CreateRenderTargetViewForTarget(Device device, Texture2D backBuffer)
         {
             try
             {
-                 return new RenderTargetView(device, backBuffer);
+                return new RenderTargetView(device, backBuffer);
             }
             catch (Exception ex)
             {
 
-                throw new Exception(ex.Message);
+                throw new Exception("D3D Couldnt create render Target: " + ex.Message);
             }
         }
 
         public void BindBuffersToOutputStageOfPipeline(RenderTargetView renderTargetView, DepthStencilView depthStencilView, DeviceContext context)
         {
-            context.OutputMerger.SetTargets(depthStencilView, renderTargetView);
+            try
+            {
+                context.OutputMerger.SetTargets(depthStencilView, renderTargetView);
+            }
+            catch (Exception ex)
+            {
+                
+                throw new Exception("Couldnt bind buffers to output pipeline stage: " + ex);
+            }
         }
 
         public Texture2D CreateResourceViewFromBackBuffer(SwapChain swapChain)
@@ -90,7 +97,7 @@ namespace Ch01_01EmptyProject
             }
             catch (Exception ex)
             {
-                
+
                 throw new Exception("D3D couldnt create resource: " + ex);
             }
         }
@@ -135,21 +142,27 @@ namespace Ch01_01EmptyProject
             }
             catch (Exception ex)
             {
-
-                throw new Exception("" + ex);
+                throw new Exception("Couldnt Create SwapChainDescription: " + ex);
             }
         }
         public void CreateViewPort(DeviceContext context)
         {
-            Viewport vp = new Viewport();
-            vp.X = 0;
-            vp.Y = 0;
-            vp.Width = windowConfig.Width;
-            vp.Height = windowConfig.Height;
-            vp.MinDepth = 0;
-            vp.MaxDepth = 1;
+            try
+            {
+                Viewport vp = new Viewport();
+                vp.X = 0;
+                vp.Y = 0;
+                vp.Width = windowConfig.Width;
+                vp.Height = windowConfig.Height;
+                vp.MinDepth = 0;
+                vp.MaxDepth = 1;
 
-            context.Rasterizer.SetViewport(vp);
+                context.Rasterizer.SetViewport(vp);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Couldnt create ViewPort: " + ex);
+            }
         }
 
         public Texture2DDescription CreateDepthBuffer()
@@ -178,5 +191,5 @@ namespace Ch01_01EmptyProject
                 throw new Exception("D3D Could not create DepthBuffer: " + ex);
             }
         }
-   }
+    }
 }
