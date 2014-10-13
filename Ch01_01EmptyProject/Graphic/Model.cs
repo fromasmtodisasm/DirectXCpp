@@ -53,7 +53,7 @@ namespace Ch01_01EmptyProject
             }
             catch (Exception ex)
             {
-                throw new Exception("D3D failed to render model: " + ex);
+                throw new Exception("D3D11 failed to render model: " + ex);
             }
         }
 
@@ -92,6 +92,5 @@ namespace Ch01_01EmptyProject
                  new Vertex(){Position = new Vector3(+1, -1, +1), Color = (Vector4)Color.Magenta},
             };
         }
-
     }
 }

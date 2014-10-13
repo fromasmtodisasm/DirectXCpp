@@ -103,7 +103,7 @@ namespace Ch01_01EmptyProject
                 }
                 catch (Exception ex)
                 {
-                     throw new Exception("D3D failed to set constant buffer" + ex);
+                     throw new Exception("D3D11 failed to set constant buffer" + ex);
                 }
 
                 try
@@ -114,7 +114,7 @@ namespace Ch01_01EmptyProject
                 catch (Exception ex)
                 {
                     
-                    throw new Exception("D3D failed to set Vertex and Pixel shader: " + ex);
+                    throw new Exception("D3D11 failed to set Vertex and Pixel shader: " + ex);
                 }
 
                 try
@@ -127,7 +127,7 @@ namespace Ch01_01EmptyProject
                 catch (Exception ex)
                 {
                     
-                    throw new Exception("D3D failed to pass data to shader" + ex);
+                    throw new Exception("D3D11 failed to pass data to shader" + ex);
                 }
 
                 try
@@ -136,7 +136,7 @@ namespace Ch01_01EmptyProject
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("D3D failed to draw scene: " + ex);
+                    throw new Exception("D3D11 failed to draw scene: " + ex);
                 }
 
                 //fxWorldViewProjection.SetMatrix(worldViewProj);
@@ -156,7 +156,7 @@ namespace Ch01_01EmptyProject
             }
             catch (Exception ex)
             {
-                throw new Exception("D3D failed to render shaders: " + ex);
+                throw new Exception("D3D11 failed to render shaders: " + ex);
             }
         }
 
@@ -181,7 +181,7 @@ namespace Ch01_01EmptyProject
             }
             catch (Exception ex)
             {
-                throw new Exception("D3D could not create input Layout: " + ex);
+                throw new Exception("D3D11 could not create input Layout: " + ex);
             }
         }
 
@@ -223,7 +223,7 @@ namespace Ch01_01EmptyProject
             }
             catch (Exception ex)
             {
-                throw new Exception("D3D effect deploy failed: " + ex);
+                throw new Exception("D3D11 effect deploy failed: " + ex);
             }
         }
 

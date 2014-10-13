@@ -11,14 +11,13 @@ using SharpDX.D3DCompiler;
 
 //Resolve name conflicts
 using Device = SharpDX.Direct3D11.Device;
-using Ch01_01EmptyProject;
 
 using SharpDX.Direct3D;
 using System.Windows.Forms;
 
 namespace Ch01_01EmptyProject
 {
-    public class D3D : IDisposable
+    public class D3D11 : ID3D
     {
         private Device device;
         private DeviceContext deviceContext;
@@ -29,20 +28,6 @@ namespace Ch01_01EmptyProject
         private DepthStencilView depthStencilView;
         private Texture2DDescription depthBuffer;
         private Texture2D depthStencilBuffer;
-        private Matrix worldMatrix;
-
-        public Matrix WorldMatrix
-        {
-            get { return worldMatrix; }
-            set { worldMatrix = value; }
-        }
-        private Matrix projectionMatrix;
-
-        public Matrix ProjectionMatrix
-        {
-            get { return projectionMatrix; }
-            set { projectionMatrix = value; }
-        }
 
         public Device Device
         {
@@ -56,7 +41,7 @@ namespace Ch01_01EmptyProject
             set { deviceContext = value; }
         }
 
-        public D3D(WindowConfiguration windowConfig)
+        public D3D11(WindowConfiguration windowConfig)
         {
             try
             {
@@ -68,8 +53,7 @@ namespace Ch01_01EmptyProject
 #if DEBUG
                 //deviceFlags = DeviceCreationFlags.Debug;
 #endif
-                //device = initializeHelper.CreateDevice(deviceFlags, driverType);
-                device = new Device(driverType, deviceFlags);
+                device = initializeHelper.CreateDevice(deviceFlags, driverType);
 
                 deviceContext = device.ImmediateContext;
                 //CHECK AntiAliasing quality suport code could be here
@@ -85,18 +69,13 @@ namespace Ch01_01EmptyProject
 
                 depthBuffer = initializeHelper.CreateDepthBuffer();
 
-                depthStencilBuffer = new Texture2D(device, depthBuffer);
+                depthStencilBuffer = initializeHelper.CreateDepthStencilBuffer(device, depthBuffer);
+
                 depthStencilView = new DepthStencilView(device, depthStencilBuffer);
 
                 initializeHelper.BindBuffersToOutputStageOfPipeline(renderTargetView, depthStencilView, deviceContext);
 
                 initializeHelper.CreateViewPort(deviceContext);
-            
-                //Initialize matrixes
-                worldMatrix = Matrix.Identity;
-               
-                // Setup and create the projection matrix.
-                projectionMatrix = Matrix.PerspectiveFovLH((float)(Math.PI / 4), (float)(windowConfig.Width) / windowConfig.Height, 0.1f, 1000.0f);
             }
             catch (Exception ex)
             {
@@ -104,7 +83,8 @@ namespace Ch01_01EmptyProject
             }
         }
 
-        public void DrawScene() 
+        //RenderScene
+        public void DrawScene()
         {
             try
             {
@@ -113,7 +93,7 @@ namespace Ch01_01EmptyProject
             }
             catch (Exception ex)
             {
-                throw new Exception("D3D scene failed to draw: " + ex);
+                throw new Exception("D3D11 scene failed to draw: " + ex);
             }
         }
 
@@ -126,7 +106,7 @@ namespace Ch01_01EmptyProject
             }
             catch (SharpDX.SharpDXException ex)
             {
-                throw new Exception("D3D Could not present scene: " + ex.Message);
+                throw new Exception("D3D11 Could not present scene: " + ex.Message);
             }
         }
 

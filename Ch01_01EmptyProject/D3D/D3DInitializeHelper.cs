@@ -17,6 +17,7 @@ namespace Ch01_01EmptyProject
     public class D3DInitializeHelper
     {
         private WindowConfiguration windowConfig;
+       
         public D3DInitializeHelper(WindowConfiguration windowConfig)
         {
             this.windowConfig = windowConfig;
@@ -42,7 +43,7 @@ namespace Ch01_01EmptyProject
             }
             catch (Exception ex)
             {
-                throw new NotSupportedException("D3D Initialize couldnt create device : " + ex.Message);
+                throw new NotSupportedException("D3D11 Initialize couldnt create device : " + ex.Message);
             }
         }
 
@@ -59,7 +60,7 @@ namespace Ch01_01EmptyProject
             }
             catch (Exception ex)
             {
-                throw new Exception("D3D Could not create Swap Chain: " + ex);
+                throw new Exception("D3D11 Could not create Swap Chain: " + ex);
             }
         }
 
@@ -72,7 +73,7 @@ namespace Ch01_01EmptyProject
             catch (Exception ex)
             {
 
-                throw new Exception("D3D Couldnt create render Target: " + ex.Message);
+                throw new Exception("D3D11 Couldnt create render Target: " + ex.Message);
             }
         }
 
@@ -84,7 +85,6 @@ namespace Ch01_01EmptyProject
             }
             catch (Exception ex)
             {
-                
                 throw new Exception("Couldnt bind buffers to output pipeline stage: " + ex);
             }
         }
@@ -97,8 +97,7 @@ namespace Ch01_01EmptyProject
             }
             catch (Exception ex)
             {
-
-                throw new Exception("D3D couldnt create resource: " + ex);
+                throw new Exception("D3D11 couldnt create resource: " + ex);
             }
         }
 
@@ -116,8 +115,7 @@ namespace Ch01_01EmptyProject
             }
             catch (Exception ex)
             {
-
-                throw new Exception("D3D could not create ModeDecription for swapChain: ", ex);
+                throw new Exception("D3D11 could not create ModeDecription for swapChain: ", ex);
             }
         }
 
@@ -165,6 +163,19 @@ namespace Ch01_01EmptyProject
             }
         }
 
+        public Texture2D CreateDepthStencilBuffer(Device device, Texture2DDescription depthBuffer)
+        {
+            try
+            {
+                return new Texture2D(device, depthBuffer);
+            }
+            catch (Exception ex)
+            {
+
+                throw new Exception("failed to create depth stencil buffer: " , ex);
+            }
+        }
+
         public Texture2DDescription CreateDepthBuffer()
         {
             var depthBuffer = new Texture2DDescription();
@@ -188,7 +199,7 @@ namespace Ch01_01EmptyProject
             }
             catch (Exception ex)
             {
-                throw new Exception("D3D Could not create DepthBuffer: " + ex);
+                throw new Exception("D3D11 Could not create DepthBuffer: " + ex);
             }
         }
     }
