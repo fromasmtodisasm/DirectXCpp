@@ -1,5 +1,9 @@
 ﻿//rewriten from hlsl 3.0 - http://msdn.microsoft.com/en-us/library/windows/desktop/bb509647%28v=vs.85%29.aspx
 
+float4x4 World;
+float4x4 View;
+float4x4 Projection;
+
 float4x4 WorldInverseTranspose;
 
 float3 DuffuseLightDirection = float3(1, 0, 0);

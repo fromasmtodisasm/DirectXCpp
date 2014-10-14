@@ -34,7 +34,7 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	return output;
 }
 
-float4 PixelShaderFunction(VertexShaderOutput input) : SV_TARGET 
+float4 PixelShaderFunction(VertexShaderOutput input) : SV_TARGET
 {
 	return AmbientColor * AmbientIntensity;
 }
@@ -45,8 +45,5 @@ technique11 Ambient
 	{
 		SetVertexShader(CompileShader(vs_5_0, VertexShaderFunction()));
 		SetPixelShader(CompileShader(ps_5_0, PixelShaderFunction()));
-
-		/*	VertexShader = compile vs_3_0 VertexShaderFunction();
-		PixelShader = compile ps_3_0 PixelShaderFunction();*/
 	}
 }
