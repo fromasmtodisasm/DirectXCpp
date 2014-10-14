@@ -36,65 +36,115 @@ namespace Ch01_01EmptyProject
         private Buffer constantMatrixBuffer;
         private EffectMatrixVariable fxWorldViewProjection;
 
-        struct SHADER_GLOBALS
+        public struct WorldViewProj
         {
-            Matrix worldViewProjection;
-            public SHADER_GLOBALS(Matrix worldViewProjection)
-            {
-                this.worldViewProjection = worldViewProjection;
-            }
+            public Matrix worldMatrix;
+            public Matrix viewMatrix;
+            public Matrix projectionMatrix;
+        }
+
+        public WorldViewProj SetWorldViewMatrix(Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix)
+        {
+            var wwp = new WorldViewProj();
+            wwp.projectionMatrix = projectionMatrix;
+            wwp.viewMatrix = viewMatrix;
+            wwp.worldMatrix = worldMatrix;
+
+            return wwp;
         }
 
         public Shader(Device device)
         {
-            this.device = device;
-
-            string vertexShaderFileName = @"Graphic\Shaders\VertexShader.fx";
-        
-            vertexShaderByteCode = ShaderBytecode.CompileFromFile(vertexShaderFileName, "VS", "vs_5_0");
-            pixelShaderByteCode = ShaderBytecode.CompileFromFile(vertexShaderFileName, "PS", "ps_5_0");
-
-            vertexShader = new VertexShader(device, vertexShaderByteCode);
-            pixelShader = new PixelShader(device, pixelShaderByteCode);
-
-            //vertexShaderByteCode = GetCompiledShader(vertexShaderFileName);
-            //effect = CreateEffect(device);
-
-            //Get data from effect
-
-            //try
-            //{
-            //    fxWorldViewProjection = effect.GetVariableByName("gWorldViewProj").AsMatrix();
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw new Exception("D3D failed to retrieve data from effect: " + ex);
-            //}
-
-            InputElement[] inputElementDesc = SpecifyInputLayoutDescriptionForVertex();
-
-            CreateInputLayout(inputElementDesc);
-
-
-
-            // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
-            var matrixBufferDesc = new BufferDescription()
+            try
             {
-                Usage = ResourceUsage.Dynamic,
-                //or size of constant buffer
-                SizeInBytes = Utilities.SizeOf<Matrix>(), 
-                BindFlags = BindFlags.ConstantBuffer,
-                CpuAccessFlags = CpuAccessFlags.Write,
-                OptionFlags = ResourceOptionFlags.None,
-                StructureByteStride = 0
-            };
-            constantMatrixBuffer = new Buffer(device, matrixBufferDesc);
+                this.device = device;
+
+                string vertexShaderFileName = @"Graphic\Shaders\AmbientLighting.fx";
+
+                try
+                {
+                    vertexShaderByteCode = ShaderBytecode.CompileFromFile(vertexShaderFileName, "VertexShaderFunction", "vs_5_0");
+                }
+                catch (Exception ex)
+                {
+
+                    throw new Exception("vertexShaderByteCode: " + ex); 
+                }
+                try
+                {
+                    pixelShaderByteCode = ShaderBytecode.CompileFromFile(vertexShaderFileName, "PixelShaderFunction", "ps_5_0");
+                }
+                catch (Exception ex)
+                {
+
+                    throw new Exception("vertexShaderByteCode: " + ex); 
+                }
+
+                 try
+                {
+                    vertexShader = new VertexShader(device, vertexShaderByteCode);
+                }
+                catch (Exception ex)
+                {
+
+                    throw new Exception("vertexShader: " + ex); 
+                }
+                
+                try
+                {
+                    pixelShader = new PixelShader(device, pixelShaderByteCode);
+                }
+                catch (Exception ex)
+                {
+                    
+                    throw new Exception("pixelShader: " + ex);
+                }
+
+
+                InputElement[] inputElementDesc = SpecifyInputLayoutDescriptionForVertex();
+
+                CreateInputLayout(inputElementDesc);
+
+                // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
+                var matrixBufferDesc = new BufferDescription()
+                {
+                    Usage = ResourceUsage.Dynamic,
+                    //or size of constant buffer
+                    SizeInBytes = Utilities.SizeOf<Matrix>(),
+                    BindFlags = BindFlags.ConstantBuffer,
+                    CpuAccessFlags = CpuAccessFlags.Write,
+                    OptionFlags = ResourceOptionFlags.None,
+                    StructureByteStride = 0
+                };
+                constantMatrixBuffer = new Buffer(device, matrixBufferDesc);
+            }
+            catch (Exception ex)
+            {
+                
+                throw new Exception("Could not initialize the shader: " + ex);
+            }
         }
 
-        public void Render(DeviceContext deviceContext, Matrix worldViewProj)
+        private void SetShaderParameters(DeviceContext deviceContext, WorldViewProj worldViewProj)
+        {
+            worldViewProj.worldMatrix.Transpose();
+            worldViewProj.viewMatrix.Transpose();
+            worldViewProj.projectionMatrix.Transpose();
+
+            DataStream mappedResource;
+            deviceContext.MapSubresource(constantMatrixBuffer, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out mappedResource);
+
+            mappedResource.Write(worldViewProj);
+
+            deviceContext.UnmapSubresource(constantMatrixBuffer, 0);
+        }
+
+
+        public void Render(DeviceContext deviceContext, WorldViewProj worldViewProj)
         {
             try
             {
+                SetShaderParameters(deviceContext, worldViewProj);
                 deviceContext.InputAssembler.InputLayout = inputLayout;
 
                 try
@@ -103,7 +153,7 @@ namespace Ch01_01EmptyProject
                 }
                 catch (Exception ex)
                 {
-                     throw new Exception("D3D11 failed to set constant buffer" + ex);
+                    throw new Exception("D3D11 failed to set constant buffer" + ex);
                 }
 
                 try
@@ -113,46 +163,28 @@ namespace Ch01_01EmptyProject
                 }
                 catch (Exception ex)
                 {
-                    
+
                     throw new Exception("D3D11 failed to set Vertex and Pixel shader: " + ex);
                 }
 
-                try
-                {
-                    //Matrix shaderGlobals = worldViewProj;
-                    SHADER_GLOBALS shaderGlobals = new SHADER_GLOBALS(worldViewProj);
-                    deviceContext.UpdateSubresource(ref shaderGlobals, constantMatrixBuffer);
+                //try
+                //{
+                //    deviceContext.UpdateSubresource(ref worldViewProj, constantMatrixBuffer);
+                //}
+                //catch (Exception ex)
+                //{
 
-                }
-                catch (Exception ex)
-                {
-                    
-                    throw new Exception("D3D11 failed to pass data to shader" + ex);
-                }
+                //    throw new Exception("D3D11 failed to pass data to shader" + ex);
+                //}
 
                 try
                 {
-                    deviceContext.Draw(indices.Length, 0);
+                    deviceContext.Draw(36, 0);
                 }
                 catch (Exception ex)
                 {
                     throw new Exception("D3D11 failed to draw scene: " + ex);
                 }
-
-                //fxWorldViewProjection.SetMatrix(worldViewProj);
-
-                //EffectTechnique technique = effect.GetTechniqueByName("P0");
-                //EffectTechniqueDescription techDesc = technique.Description;
-
-                //for (int i = 0; i < techDesc.PassCount; i++)
-                //{
-                //    //if constant buffers needs to change, do it here(?)
-                //    int flags = 0;
-                //    //on current technique update constant buffers bind the shader program to pipeline and apply render stats and pass sets
-                //    technique.GetPassByIndex(i).Apply(deviceContext, flags);
-
-                //    deviceContext.DrawIndexed(indices.Length, 0, 0);
-                //}
             }
             catch (Exception ex)
             {
@@ -164,7 +196,7 @@ namespace Ch01_01EmptyProject
         {
             vertexShaderByteCode.Dispose();
             pixelShaderByteCode.Dispose();
-     
+
             constantMatrixBuffer.Dispose();
             inputLayout.Dispose();
             pixelShader.Dispose();
@@ -184,11 +216,12 @@ namespace Ch01_01EmptyProject
                 throw new Exception("D3D11 could not create input Layout: " + ex);
             }
         }
-
+           
         // Now setup the layout of the data that goes into the shader.
         // It needs to match the VertexType structure in the Model and in the shader.
         private InputElement[] SpecifyInputLayoutDescriptionForVertex()
         {
+            
             return new InputElement[]
             {
             new InputElement()
@@ -201,16 +234,6 @@ namespace Ch01_01EmptyProject
             Classification = InputClassification.PerVertexData,
             InstanceDataStepRate = 0
             },
-             new InputElement()
-            {
-            SemanticName = "COLOR",
-            SemanticIndex = 0,
-            Format = Format.R32G32B32A32_Float,
-            Slot = 0,
-            AlignedByteOffset = 12,
-            Classification = InputClassification.PerVertexData,
-            InstanceDataStepRate = 0
-            }
             };
         }
 

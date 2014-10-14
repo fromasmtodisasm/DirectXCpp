@@ -20,7 +20,4 @@ namespace Ch01_01EmptyProject
         public Vector3 Position;
         public Vector4 Color;
     }
-     
-   
-
 }

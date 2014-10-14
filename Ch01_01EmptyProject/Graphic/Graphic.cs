@@ -21,22 +21,23 @@ namespace Ch01_01EmptyProject
         private Model model;
         private Camera camera;
         private WindowConfiguration windowConfig;
+        
         public Graphic(WindowConfiguration windowConfig)
         {
-            try
-            {
+            //try
+            //{
                 this.windowConfig = windowConfig;
-                
+
                 d3d = new D3D11(windowConfig);
                 camera = new Camera();
                 model = new Model(d3d.Device);
                 shader = new Shader(d3d.Device);
-            }
+            //}
 
-            catch (Exception ex)
-            {
-                throw new Exception("Could not initialize Direct3D: " + ex.Message);
-            }
+            //catch (Exception ex)
+            //{
+            //    throw new Exception("Could not initialize Direct3D: " + ex.Message);
+            //}
         }
 
         public void Frame()
@@ -53,18 +54,16 @@ namespace Ch01_01EmptyProject
             //Initialize matrixes
             var worldMatrix = Matrix.Identity;
 
+            var viewMatrix = camera.ViewMatrix;
+
             // Setup and create the projection matrix.
             var projectionMatrix = Matrix.PerspectiveFovLH((float)(Math.PI / 4), (float)(windowConfig.Width) / windowConfig.Height, 0.1f, 1000.0f);
 
-            // Get the world, view, and projection matrices from camera and d3d objects.
-         
-            var viewMatrix = camera.ViewMatrix;
-         
-            var worldViewProj = worldMatrix * viewMatrix * projectionMatrix;
-
             model.Render(d3d.DeviceContext);
-            shader.Render(d3d.DeviceContext, worldViewProj);
 
+            var constantMatrixBuffer = shader.SetWorldViewMatrix(worldMatrix, viewMatrix, projectionMatrix);
+            shader.Render(d3d.DeviceContext, constantMatrixBuffer);
+    
             d3d.PresentRenderedScene();
         }
 

@@ -82,14 +82,14 @@ namespace Ch01_01EmptyProject
         {
             return new Vertex[]
             {
-                 new Vertex(){Position = new Vector3(-1, -1, -1),Color = (Vector4)Color.White},
-                 new Vertex(){Position = new Vector3(-1, 1, -1), Color = (Vector4)Color.Black},
-                 new Vertex(){Position = new Vector3(+1, +1, -1), Color = (Vector4)Color.Red},
-                 new Vertex(){Position = new Vector3(+1, -1, -1), Color = (Vector4)Color.Green},
-                 new Vertex(){Position = new Vector3(-1, -1, +1), Color = (Vector4)Color.Blue},
-                 new Vertex(){Position = new Vector3(-1, +1, +1), Color = (Vector4)Color.Yellow},
-                 new Vertex(){Position = new Vector3(+1, +1, +1), Color = (Vector4)Color.Cyan},
-                 new Vertex(){Position = new Vector3(+1, -1, +1), Color = (Vector4)Color.Magenta},
+                 new Vertex(){Position = new Vector3(-10, -10, -10),Color = (Vector4)Color.White},
+                 new Vertex(){Position = new Vector3(-10, 10, -10), Color = (Vector4)Color.Black},
+                 new Vertex(){Position = new Vector3(+10, +10, -10), Color = (Vector4)Color.Red},
+                 new Vertex(){Position = new Vector3(+10, -10, -10), Color = (Vector4)Color.Green},
+                 new Vertex(){Position = new Vector3(-10, -10, +10), Color = (Vector4)Color.Blue},
+                 new Vertex(){Position = new Vector3(-10, +10, +10), Color = (Vector4)Color.Yellow},
+                 new Vertex(){Position = new Vector3(+10, +10, +10), Color = (Vector4)Color.Cyan},
+                 new Vertex(){Position = new Vector3(+10, -10, +10), Color = (Vector4)Color.Magenta},
             };
         }
     }

@@ -146,7 +146,7 @@ namespace Ch01_01EmptyProject
 
 
         private static GreenHornEngine system;
-        private static bool USER_ERROR = true;
+        private static bool USER_ERROR = false;
         /// <summary>
         /// The main entry point for the application.
         /// </summary>
