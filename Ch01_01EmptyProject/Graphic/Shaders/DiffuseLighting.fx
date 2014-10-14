@@ -6,11 +6,6 @@ float3 DuffuseLightDirection = float3(1, 0, 0);
 float4 DiffuseColor = float4(1, 1, 1, 1);
 float DiffuseIntensity = 1.0;
 
-
-float4x4 World;
-float4x4 View;
-float4x4 Projection;
-
 //white color !?
 float4 AmbientColor = float4(1, 1, 1, 1);
 float AmbientIntensity = 0.1;
@@ -41,6 +36,9 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 	output.Position = mul(viewPosition, Projection);
 
 	float4 normal = mul(input.Normal, WorldInverseTranspose);
+
+	//angle between surface normal vector and the light, which we use to compute intensity of light
+	// if direct , use 100% of intensity, if at the side, object is not enlighted at all
 	float4 lightIntensity = dot(normal, DiffuseLightDirection);
 	output.Color = saturate(DiffuseColor * DiffuseIntensity * lightIntensity);
 
@@ -52,14 +50,11 @@ float4 PixelShaderFunction(VertexShaderOutput input) : SV_TARGET
 	return saturate(input.Color + AmbientColor * AmbientIntensity);
 }
 
-technique11 Ambient
+technique11 Diffuse
 {
 	pass Pass1
 	{
 		SetVertexShader(CompileShader(vs_5_0, VertexShaderFunction()));
 		SetPixelShader(CompileShader(ps_5_0, PixelShaderFunction()));
-
-		/*	VertexShader = compile vs_3_0 VertexShaderFunction();
-		PixelShader = compile ps_3_0 PixelShaderFunction();*/
 	}
 }

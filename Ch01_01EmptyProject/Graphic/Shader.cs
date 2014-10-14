@@ -59,7 +59,7 @@ namespace Ch01_01EmptyProject
             {
                 this.device = device;
 
-                string vertexShaderFileName = @"Graphic\Shaders\AmbientLighting.fx";
+                string vertexShaderFileName = @"Graphic\Shaders\ColorShader.fx";
 
                 try
                 {
@@ -68,7 +68,7 @@ namespace Ch01_01EmptyProject
                 catch (Exception ex)
                 {
 
-                    throw new Exception("vertexShaderByteCode: " + ex); 
+                    throw new Exception("vertexShaderByteCode: " + ex);
                 }
                 try
                 {
@@ -77,26 +77,26 @@ namespace Ch01_01EmptyProject
                 catch (Exception ex)
                 {
 
-                    throw new Exception("vertexShaderByteCode: " + ex); 
+                    throw new Exception("vertexShaderByteCode: " + ex);
                 }
 
-                 try
+                try
                 {
                     vertexShader = new VertexShader(device, vertexShaderByteCode);
                 }
                 catch (Exception ex)
                 {
 
-                    throw new Exception("vertexShader: " + ex); 
+                    throw new Exception("vertexShader: " + ex);
                 }
-                
+
                 try
                 {
                     pixelShader = new PixelShader(device, pixelShaderByteCode);
                 }
                 catch (Exception ex)
                 {
-                    
+
                     throw new Exception("pixelShader: " + ex);
                 }
 
@@ -120,7 +120,7 @@ namespace Ch01_01EmptyProject
             }
             catch (Exception ex)
             {
-                
+
                 throw new Exception("Could not initialize the shader: " + ex);
             }
         }
@@ -216,12 +216,11 @@ namespace Ch01_01EmptyProject
                 throw new Exception("D3D11 could not create input Layout: " + ex);
             }
         }
-           
+
         // Now setup the layout of the data that goes into the shader.
         // It needs to match the VertexType structure in the Model and in the shader.
         private InputElement[] SpecifyInputLayoutDescriptionForVertex()
         {
-            
             return new InputElement[]
             {
             new InputElement()
@@ -242,7 +241,6 @@ namespace Ch01_01EmptyProject
             try
             {
                 return new Effect(device, vertexShaderByteCode, EffectFlags.None);
-
             }
             catch (Exception ex)
             {
