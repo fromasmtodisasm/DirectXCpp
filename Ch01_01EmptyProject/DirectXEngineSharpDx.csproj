@@ -136,6 +136,10 @@
     <Compile Include="Graphic\Structures\Vertex2.cs" />
     <Compile Include="System\TestDirectX11Dra.cs" />
     <Compile Include="System\WindowConfiguration.cs" />
+    <Content Include="Graphic\Shaders\TextureShader.fx">
+      <Generator>VertexShaderFunction</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Graphic\Shaders\SpecularLighting.fx">
       <Generator>VertexShaderFunction</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
