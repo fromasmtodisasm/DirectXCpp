@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using GraphicSystem = Ch01_01EmptyProject.Graphic.Graphic;
 
 namespace Ch01_01EmptyProject
 {
@@ -14,7 +15,7 @@ namespace Ch01_01EmptyProject
         private static int FORM_WIDTH = 800;
         private static int FORM_HEIGHT = 600;
         private Form1 form;
-        private Graphic graphic;
+        private GraphicSystem graphic;
 
         public GreenHornEngine()
         {
@@ -31,7 +32,7 @@ namespace Ch01_01EmptyProject
             wc.Height = FORM_HEIGHT;
             wc.FormWindowHandle = form.Handle;
 
-            graphic = new Graphic(wc);
+            graphic = new GraphicSystem(wc);
         }
 
         public void Run()

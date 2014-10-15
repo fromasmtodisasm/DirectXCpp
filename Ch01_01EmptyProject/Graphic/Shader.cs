@@ -12,11 +12,10 @@ using SharpDX.Direct3D;
 using SharpDX.DXGI;
 using SharpDX.Windows;
 
-
 using Device = SharpDX.Direct3D11.Device;
 using Buffer = SharpDX.Direct3D11.Buffer;
 
-namespace Ch01_01EmptyProject
+namespace Ch01_01EmptyProject.Graphic.Shaders
 {
     public class Shader
     {
@@ -59,14 +58,11 @@ namespace Ch01_01EmptyProject
             {
                 this.device = device;
 
-                string vertexShaderFileName = @"Graphic\Shaders\ColorShader2.fx";
-
-                string vsFunctionName = "ColorVertexShader";
-                string psFunctionName = "ColorPixelShader";
+                IShaderEffect shaderEffect = ShaderFactory.Create(ShaderName.Color);
 
                 try
                 {
-                    vertexShaderByteCode = ShaderBytecode.CompileFromFile(vertexShaderFileName, vsFunctionName, "vs_5_0");
+                    vertexShaderByteCode = ShaderBytecode.CompileFromFile(shaderEffect.EffectShaderFileName, shaderEffect.VsFunctionName, "vs_5_0");
                 }
                 catch (Exception ex)
                 {
@@ -75,7 +71,7 @@ namespace Ch01_01EmptyProject
                 }
                 try
                 {
-                    pixelShaderByteCode = ShaderBytecode.CompileFromFile(vertexShaderFileName, psFunctionName, "ps_5_0");
+                    pixelShaderByteCode = ShaderBytecode.CompileFromFile(shaderEffect.EffectShaderFileName, shaderEffect.PsFunctionName, "ps_5_0");
                 }
                 catch (Exception ex)
                 {
@@ -103,8 +99,10 @@ namespace Ch01_01EmptyProject
                     throw new Exception("pixelShader: " + ex);
                 }
 
+                // Now setup the layout of the data that goes into the shader.
+                // It needs to match the VertexType structure in the Model and in the shader.
 
-                InputElement[] inputElementDesc = SpecifyInputLayoutDescriptionForVertex();
+                InputElement[] inputElementDesc = VertexInputLayouts.Vertex();
 
                 CreateInputLayout(inputElementDesc);
 
@@ -131,8 +129,6 @@ namespace Ch01_01EmptyProject
                 {
                     throw new Exception("BufferDescription: " + ex);
                 }
-
-
             }
             catch (Exception ex)
             {
@@ -187,7 +183,6 @@ namespace Ch01_01EmptyProject
                 }
                 catch (Exception ex)
                 {
-
                     throw new Exception("D3D11 failed to pass data to shader" + ex);
                 }
 
@@ -226,36 +221,6 @@ namespace Ch01_01EmptyProject
             {
                 throw new Exception("D3D11 could not create input Layout: " + ex);
             }
-        }
-
-        // Now setup the layout of the data that goes into the shader.
-        // It needs to match the VertexType structure in the Model and in the shader.
-        private InputElement[] SpecifyInputLayoutDescriptionForVertex()
-        {
-            return new InputElement[]
-            {
-            new InputElement()
-            {
-            SemanticName = "POSITION",
-            SemanticIndex = 0,
-            Format = Format.R32G32B32A32_Float,
-            Slot = 0,
-            AlignedByteOffset = 0,
-            Classification = InputClassification.PerVertexData,
-            InstanceDataStepRate = 0
-            },
-           new InputElement()
-
-            {
-                SemanticName = "COLOR",
-                SemanticIndex = 0,
-                Format = Format.R32G32B32A32_Float,
-                Slot = 0,
-                AlignedByteOffset = 12,
-                Classification = InputClassification.PerVertexData,
-                InstanceDataStepRate = 0
-            }
-        };
         }
     }
 }

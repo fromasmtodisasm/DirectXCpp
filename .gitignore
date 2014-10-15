@@ -26,8 +26,7 @@ $RECYCLE.BIN/
 .LSOverride
 
 # Icon must ends with two \r.
-Icon
-
+Icon
 # Thumbnails
 ._*
 
@@ -37,9 +36,17 @@ Icon
 
 # Files created when  compiling
 .Bin/
+.bin/x86/
+bin/
+.obj/
 *.exe
 *.pdb
 *.opensdf
 *.sdf
 *.suo
+*.suo
+*.suo
+*.Cache
+*.resources
+*.force
 *.suo

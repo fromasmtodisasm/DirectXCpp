@@ -11,8 +11,9 @@ using SharpDX.D3DCompiler;
 using Ch01_01EmptyProject;
 using System.Windows.Forms;
 using System.Threading;
+using Ch01_01EmptyProject.Graphic.Shaders;
 
-namespace Ch01_01EmptyProject
+namespace Ch01_01EmptyProject.Graphic
 {
     public class Graphic : IGraphic, IDisposable
     {
