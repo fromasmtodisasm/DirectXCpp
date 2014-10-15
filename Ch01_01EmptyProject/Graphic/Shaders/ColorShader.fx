@@ -1,7 +1,7 @@
 ﻿//not vary per vertex, but can update content of buffer at runtime
 cbuffer CPerObject
 {
-	float4x4 gWorldViewProj;
+	float4x4 worldViewProj;
 }
 
 struct VertexIn
@@ -16,19 +16,19 @@ struct VertexOut
 	float4 Color : COLOR;
 };
 
-VertexOut VS(VertexIn vin)
+VertexOut VertexShaderFunction(VertexIn vin)
 {
 	VertexOut vout;
 	
 	//transform to homogenous clip space
-	vout.PosH = mul(float4(vin.Pos, 1.0f), gWorldViewProj);
+	vout.PosH = mul(float4(vin.Pos, 1.0f), worldViewProj);
 
 	vout.Color = vin.Color;
 
 	return vout;
 }
 
-float4 PS(VertexOut pin) : SV_TARGET
+float4 PixelShaderFunction(VertexOut pin) : SV_TARGET
 {
 	return pin.Color; 
 }
@@ -44,9 +44,8 @@ technique11 ColorTech
 {
 	pass P0
 	{
-		SetVertexShader(CompileShader(vs_5_0, VS() ));
-		SetPixelShader(CompileShader(ps_5_0, PS() ));
-
+		SetVertexShader(CompileShader(vs_5_0, VertexShaderFunction()));
+		SetPixelShader(CompileShader(ps_5_0, PixelShaderFunction()));
 		//SetRasterizerState(WireFrameRS);
 	}
 }

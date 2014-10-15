@@ -106,22 +106,31 @@ namespace Ch01_01EmptyProject
                 CreateInputLayout(inputElementDesc);
 
                 // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
-                var matrixBufferDesc = new BufferDescription()
+                try
                 {
-                    Usage = ResourceUsage.Dynamic,
-                    //or size of constant buffer
-                    SizeInBytes = Utilities.SizeOf<Matrix>(),
-                    BindFlags = BindFlags.ConstantBuffer,
-                    CpuAccessFlags = CpuAccessFlags.Write,
-                    OptionFlags = ResourceOptionFlags.None,
-                    StructureByteStride = 0
-                };
-                constantMatrixBuffer = new Buffer(device, matrixBufferDesc);
+                    var matrixBufferDesc = new BufferDescription()
+                           {
+                               Usage = ResourceUsage.Dynamic,
+                               //or size of constant buffer
+                               SizeInBytes = Utilities.SizeOf<Matrix>(),
+                               BindFlags = BindFlags.ConstantBuffer,
+                               CpuAccessFlags = CpuAccessFlags.Write,
+                               OptionFlags = ResourceOptionFlags.None,
+                               StructureByteStride = 0
+                           };
+                    constantMatrixBuffer = new Buffer(device, matrixBufferDesc);
+
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("BufferDescription: " + ex);
+                }
+            
+            
             }
             catch (Exception ex)
             {
-
-                throw new Exception("Could not initialize the shader: " + ex);
+                 throw new Exception("Could not initialize the shader: " + ex);
             }
         }
 
@@ -233,9 +242,18 @@ namespace Ch01_01EmptyProject
             Classification = InputClassification.PerVertexData,
             InstanceDataStepRate = 0
             },
-            };
+           new InputElement()
+            {
+                SemanticName = "COLOR",
+                SemanticIndex = 0,
+                Format = Format.R32G32B32A32_Float,
+                Slot = 0,
+                AlignedByteOffset = 12,
+                Classification = InputClassification.PerVertexData,
+                InstanceDataStepRate = 0
+            }
+        };
         }
-
         private Effect CreateEffect(Device device)
         {
             try

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Ch01_01EmptyProject.Graphic
+namespace Ch01_01EmptyProject
 {
     abstract class ShaderBase
     {
