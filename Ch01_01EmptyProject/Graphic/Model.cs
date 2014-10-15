@@ -9,15 +9,23 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 using SharpDX;
 using SharpDX.Direct3D11;
 using SharpDX.DXGI;
+using SharpDX.Direct3D;
+
 
 namespace Ch01_01EmptyProject
 {
-    class Model : IDisposable, IRenderable
+    class Model
     {
         private Buffer vertexBuffer;
         private Vertex[] vertices;
         private int[] indices;
         private Buffer indicesBuffer;
+
+        public int IndexCount
+        {
+            get;
+            private set;
+        }
 
         public Model(Device device)
         {
@@ -25,6 +33,8 @@ namespace Ch01_01EmptyProject
             {
                 vertices = CreateVertices();
                 indices = CreateIndices();
+
+                IndexCount = indices.Length;
 
                 vertexBuffer = Buffer.Create(device, BindFlags.VertexBuffer, vertices);
                 indicesBuffer = Buffer.Create(device, BindFlags.IndexBuffer, indices);
@@ -40,16 +50,16 @@ namespace Ch01_01EmptyProject
             try
             {
                 int firstSlot = 0;
-                Buffer[] vertexBuffers = new Buffer[] { vertexBuffer };
-                int[] stride = new int[] { Utilities.SizeOf<Vertex>() };
-                int[] offset = new int[] { 0 };
+                int stride = Utilities.SizeOf<Vertex>();
+                int offset = 0;
 
                 //bound vertex buffer to an input slot of the device, in order to feed the vertices to the pipeline output
                 //AND SET THEM AS ACTIVE
-                deviceContext.InputAssembler.SetVertexBuffers(firstSlot, vertexBuffers, stride, offset);
+                deviceContext.InputAssembler.SetVertexBuffers(firstSlot, new VertexBufferBinding(vertexBuffer, stride, offset));
+
                 deviceContext.InputAssembler.SetIndexBuffer(indicesBuffer, Format.R32_UInt, 0);
 
-                deviceContext.InputAssembler.PrimitiveTopology = deviceContext.InputAssembler.PrimitiveTopology;
+                deviceContext.InputAssembler.PrimitiveTopology = PrimitiveTopology.TriangleList;
             }
             catch (Exception ex)
             {
@@ -65,16 +75,26 @@ namespace Ch01_01EmptyProject
 
         private int[] CreateIndices()
         {
-            return new int[24]
+            return new int[]
             {
-                0, 1, 2 ,//Triangle 0
-                0, 2, 3, //Triangle 1
-                0, 3, 4,//Triangle 2
-                0, 4, 5,//Triangle 3
-                0, 5, 6,//Triangle 4
-                0, 6, 7,//Triangle 5
-                0, 7, 8,//Triangle 6
-                0, 8, 1//Triangle 7
+                //frontFace
+                0, 1, 2 ,
+                0, 2, 3, 
+                //backFace
+                4, 6, 5,
+                4, 1, 0,
+                //leftFace
+                4, 5, 1,
+                4, 1, 0,
+                //rightFace
+                3, 2, 6,
+                3, 6, 7,
+                //topFace
+                1, 5, 6,
+                1, 6, 2,
+                //bottomFace
+                4, 0, 3,
+                4, 3, 7,
             };
         }
 
@@ -82,14 +102,14 @@ namespace Ch01_01EmptyProject
         {
             return new Vertex[]
             {
-                 new Vertex(){Position = new Vector3(-10, -10, -10),Color = (Vector4)Color.White},
-                 new Vertex(){Position = new Vector3(-10, 10, -10), Color = (Vector4)Color.Black},
-                 new Vertex(){Position = new Vector3(+10, +10, -10), Color = (Vector4)Color.Red},
-                 new Vertex(){Position = new Vector3(+10, -10, -10), Color = (Vector4)Color.Green},
-                 new Vertex(){Position = new Vector3(-10, -10, +10), Color = (Vector4)Color.Blue},
-                 new Vertex(){Position = new Vector3(-10, +10, +10), Color = (Vector4)Color.Yellow},
-                 new Vertex(){Position = new Vector3(+10, +10, +10), Color = (Vector4)Color.Cyan},
-                 new Vertex(){Position = new Vector3(+10, -10, +10), Color = (Vector4)Color.Magenta},
+                 new Vertex(){Position = new Vector3(-1, -1, -1),Color = (Vector4)Color.White},
+                 new Vertex(){Position = new Vector3(-1, 1, -1), Color = (Vector4)Color.Black},
+                 new Vertex(){Position = new Vector3(+1, +1, -1), Color = (Vector4)Color.Red},
+                 new Vertex(){Position = new Vector3(+1, -1, -1), Color = (Vector4)Color.Green},
+                 new Vertex(){Position = new Vector3(-1, -1, +1), Color = (Vector4)Color.Blue},
+                 new Vertex(){Position = new Vector3(-1, +1, +1), Color = (Vector4)Color.Yellow},
+                 new Vertex(){Position = new Vector3(+1, +1, +1), Color = (Vector4)Color.Cyan},
+                 new Vertex(){Position = new Vector3(+1, -1, +1), Color = (Vector4)Color.Magenta},
             };
         }
     }
