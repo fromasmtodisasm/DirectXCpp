@@ -12,14 +12,13 @@ using SharpDX.Direct3D;
 using SharpDX.DXGI;
 using SharpDX.Windows;
 
-using Effect = SharpDX.Direct3D11.Effect;
 
 using Device = SharpDX.Direct3D11.Device;
 using Buffer = SharpDX.Direct3D11.Buffer;
 
 namespace Ch01_01EmptyProject
 {
-    public class Shader : IDisposable//, IRenderable
+    public class Shader
     {
         private Buffer vertexBuffer;
         private Vertex[] vertices;
@@ -28,14 +27,15 @@ namespace Ch01_01EmptyProject
 
         private InputLayout inputLayout;
         private VertexShader vertexShader;
-        private Effect effect;
+
         private Device device;
         private PixelShader pixelShader;
         private CompilationResult vertexShaderByteCode;
         private CompilationResult pixelShaderByteCode;
         private Buffer constantMatrixBuffer;
-        private EffectMatrixVariable fxWorldViewProjection;
+        private int indexCount;
 
+        [StructLayout(LayoutKind.Sequential)]
         public struct WorldViewProj
         {
             public Matrix worldMatrix;
@@ -59,11 +59,14 @@ namespace Ch01_01EmptyProject
             {
                 this.device = device;
 
-                string vertexShaderFileName = @"Graphic\Shaders\ColorShader.fx";
+                string vertexShaderFileName = @"Graphic\Shaders\ColorShader2.fx";
+
+              string vsFunctionName = "ColorVertexShader";
+              string psFunctionName = "ColorPixelShader";
 
                 try
                 {
-                    vertexShaderByteCode = ShaderBytecode.CompileFromFile(vertexShaderFileName, "VertexShaderFunction", "vs_5_0");
+                    vertexShaderByteCode = ShaderBytecode.CompileFromFile(vertexShaderFileName, vsFunctionName, "vs_5_0");
                 }
                 catch (Exception ex)
                 {
@@ -72,7 +75,7 @@ namespace Ch01_01EmptyProject
                 }
                 try
                 {
-                    pixelShaderByteCode = ShaderBytecode.CompileFromFile(vertexShaderFileName, "PixelShaderFunction", "ps_5_0");
+                    pixelShaderByteCode = ShaderBytecode.CompileFromFile(vertexShaderFileName, psFunctionName, "ps_5_0");
                 }
                 catch (Exception ex)
                 {
@@ -105,19 +108,22 @@ namespace Ch01_01EmptyProject
 
                 CreateInputLayout(inputElementDesc);
 
+                vertexShaderByteCode.Dispose();
+                pixelShaderByteCode.Dispose();
+
                 // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
                 try
                 {
                     var matrixBufferDesc = new BufferDescription()
-                           {
-                               Usage = ResourceUsage.Dynamic,
-                               //or size of constant buffer
-                               SizeInBytes = Utilities.SizeOf<Matrix>(),
-                               BindFlags = BindFlags.ConstantBuffer,
-                               CpuAccessFlags = CpuAccessFlags.Write,
-                               OptionFlags = ResourceOptionFlags.None,
-                               StructureByteStride = 0
-                           };
+                    {
+                        Usage = ResourceUsage.Dynamic,
+                        //or size of constant buffer
+                        SizeInBytes = Utilities.SizeOf<Matrix>(),
+                        BindFlags = BindFlags.ConstantBuffer,
+                        CpuAccessFlags = CpuAccessFlags.Write,
+                        OptionFlags = ResourceOptionFlags.None,
+                        StructureByteStride = 0
+                    };
                     constantMatrixBuffer = new Buffer(device, matrixBufferDesc);
 
                 }
@@ -125,12 +131,12 @@ namespace Ch01_01EmptyProject
                 {
                     throw new Exception("BufferDescription: " + ex);
                 }
-            
-            
+
+
             }
             catch (Exception ex)
             {
-                 throw new Exception("Could not initialize the shader: " + ex);
+                throw new Exception("Could not initialize the shader: " + ex);
             }
         }
 
@@ -149,7 +155,7 @@ namespace Ch01_01EmptyProject
         }
 
 
-        public void Render(DeviceContext deviceContext, WorldViewProj worldViewProj)
+        public void Render(DeviceContext deviceContext, WorldViewProj worldViewProj, int indexCount)
         {
             try
             {
@@ -176,19 +182,19 @@ namespace Ch01_01EmptyProject
                     throw new Exception("D3D11 failed to set Vertex and Pixel shader: " + ex);
                 }
 
-                //try
-                //{
-                //    deviceContext.UpdateSubresource(ref worldViewProj, constantMatrixBuffer);
-                //}
-                //catch (Exception ex)
-                //{
+                try
+                {
+                    deviceContext.UpdateSubresource(ref worldViewProj, constantMatrixBuffer);
+                }
+                catch (Exception ex)
+                {
 
-                //    throw new Exception("D3D11 failed to pass data to shader" + ex);
-                //}
+                    throw new Exception("D3D11 failed to pass data to shader" + ex);
+                }
 
                 try
                 {
-                    deviceContext.Draw(36, 0);
+                    deviceContext.DrawIndexed(indexCount, 0, 0);
                 }
                 catch (Exception ex)
                 {
@@ -203,9 +209,6 @@ namespace Ch01_01EmptyProject
 
         public void Dispose()
         {
-            vertexShaderByteCode.Dispose();
-            pixelShaderByteCode.Dispose();
-
             constantMatrixBuffer.Dispose();
             inputLayout.Dispose();
             pixelShader.Dispose();
@@ -253,29 +256,6 @@ namespace Ch01_01EmptyProject
                 InstanceDataStepRate = 0
             }
         };
-        }
-        private Effect CreateEffect(Device device)
-        {
-            try
-            {
-                return new Effect(device, vertexShaderByteCode, EffectFlags.None);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("D3D11 effect deploy failed: " + ex);
-            }
-        }
-
-        public CompilationResult GetCompiledShader(string vertexShaderFileName)
-        {
-            try
-            {
-                return ShaderBytecode.CompileFromFile(vertexShaderFileName, "fx_5_0", ShaderFlags.None);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Vertex shader compile failed :" + ex.Message);
-            }
         }
     }
 }

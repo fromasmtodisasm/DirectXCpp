@@ -24,6 +24,7 @@ namespace Ch01_01EmptyProject
             form.Text = PROGRAM_TITLE;
             form.Width = FORM_WIDTH;
             form.Height = FORM_HEIGHT;
+            form.FormBorderStyle = FormBorderStyle.FixedToolWindow;
 
             WindowConfiguration wc = new WindowConfiguration();
             wc.Width = FORM_WIDTH;

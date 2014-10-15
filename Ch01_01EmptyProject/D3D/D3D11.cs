@@ -88,8 +88,8 @@ namespace Ch01_01EmptyProject
         {
             try
             {
-                deviceContext.ClearRenderTargetView(renderTargetView, Color.Blue);
                 deviceContext.ClearDepthStencilView(depthStencilView, DepthStencilClearFlags.Depth, 1, 0);
+                deviceContext.ClearRenderTargetView(renderTargetView, Color.Blue);
             }
             catch (Exception ex)
             {

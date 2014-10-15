@@ -51,6 +51,7 @@ namespace Ch01_01EmptyProject
 
             camera.Render(d3d.DeviceContext);
 
+            //WORLD VIEW PROJECTION COMPUATION
             //Initialize matrixes
             var worldMatrix = Matrix.Identity;
 
@@ -58,11 +59,16 @@ namespace Ch01_01EmptyProject
 
             // Setup and create the projection matrix.
             var projectionMatrix = Matrix.PerspectiveFovLH((float)(Math.PI / 4), (float)(windowConfig.Width) / windowConfig.Height, 0.1f, 1000.0f);
-
+            var wwp = new Shader.WorldViewProj();
+            wwp.projectionMatrix = projectionMatrix;
+            wwp.viewMatrix = viewMatrix;
+            wwp.worldMatrix = worldMatrix;
+            
+            
             model.Render(d3d.DeviceContext);
 
-            var constantMatrixBuffer = shader.SetWorldViewMatrix(worldMatrix, viewMatrix, projectionMatrix);
-            shader.Render(d3d.DeviceContext, constantMatrixBuffer);
+            //var constantMatrixBuffer = shader.SetWorldViewMatrix(worldMatrix, viewMatrix, projectionMatrix);
+            shader.Render(d3d.DeviceContext, wwp, model.IndexCount);
     
             d3d.PresentRenderedScene();
         }
