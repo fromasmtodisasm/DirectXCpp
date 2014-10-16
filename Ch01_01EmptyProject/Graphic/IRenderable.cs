@@ -5,6 +5,6 @@ namespace Ch01_01EmptyProject
 {
     interface IRenderable
     {
-        void Render(DeviceContext deviceContext);
+        void Render();
     }
 }

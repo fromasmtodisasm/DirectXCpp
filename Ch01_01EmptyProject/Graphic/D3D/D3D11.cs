@@ -15,9 +15,9 @@ using Device = SharpDX.Direct3D11.Device;
 using SharpDX.Direct3D;
 using System.Windows.Forms;
 
-namespace Ch01_01EmptyProject
+namespace Ch01_01EmptyProject.Graphic
 {
-    public class D3D11 : ID3D
+    public class D3D11 : IGraphicComposite
     {
         private Device device;
         private DeviceContext deviceContext;
@@ -83,8 +83,12 @@ namespace Ch01_01EmptyProject
             }
         }
 
-        //RenderScene
-        public void DrawScene()
+        public void Render()
+        {
+            DrawScene();
+        }
+
+        private void DrawScene()
         {
             try
             {
@@ -97,7 +101,7 @@ namespace Ch01_01EmptyProject
             }
         }
 
-        //re/check rastertek example cause of naming
+        //EndScene
         public void PresentRenderedScene()
         {
             try

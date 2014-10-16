@@ -5,17 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using GraphicSystem = Ch01_01EmptyProject.Graphic.Graphic;
+using Ch01_01EmptyProject.Graphic;
 
 namespace Ch01_01EmptyProject
 {
     public class GreenHornEngine : IDisposable
     {
         private static string PROGRAM_TITLE = "D3DRendering - Cube drawing";
-        private static int FORM_WIDTH = 800;
-        private static int FORM_HEIGHT = 600;
+        private static int FORM_WIDTH = 1024;
+        private static int FORM_HEIGHT = 768;
         private Form1 form;
-        private GraphicSystem graphic;
+        private D3DGraphic graphic;
 
         public GreenHornEngine()
         {
@@ -32,7 +32,7 @@ namespace Ch01_01EmptyProject
             wc.Height = FORM_HEIGHT;
             wc.FormWindowHandle = form.Handle;
 
-            graphic = new GraphicSystem(wc);
+            graphic = new D3DGraphic(wc);
         }
 
         public void Run()
@@ -45,7 +45,7 @@ namespace Ch01_01EmptyProject
 
         private void Frame()
         {
-            graphic.Frame();
+            graphic.Render();
         }
 
         public void Dispose()

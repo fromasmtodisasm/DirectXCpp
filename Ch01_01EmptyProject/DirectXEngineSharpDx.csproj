@@ -108,19 +108,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="D3D\D3D9.cs" />
-    <Compile Include="D3D\ID3D.cs" />
+    <Compile Include="Graphic\D3D\ID3DApp.cs" />
+    <Compile Include="Graphic\D3D\D3D9.cs" />
     <Compile Include="DisposableBase.cs" />
     <Compile Include="Graphic\Camera.cs" />
-    <Compile Include="D3D\D3DInitializeHelper.cs" />
-    <Compile Include="Graphic\Graphic.cs" />
-    <Compile Include="D3D\ID3DApp.cs" />
-    <Compile Include="D3D\D3D11.cs" />
-    <Compile Include="Graphic\IGraphic.cs" />
+    <Compile Include="Graphic\D3D\D3DInitializeHelper.cs" />
+    <Compile Include="Graphic\D3DGraphic.cs" />
+    <Compile Include="Graphic\D3D\D3D11.cs" />
+    <Compile Include="Graphic\IGraphicComposite.cs" />
     <Compile Include="Graphic\IRenderable.cs" />
-    <Compile Include="Graphic\Model.cs" />
-    <Compile Include="Graphic\Shader.cs" />
-    <Compile Include="Graphic\ShaderBase.cs" />
+    <Compile Include="Graphic\D3DModel.cs" />
+    <Compile Include="Graphic\D3DShader.cs" />
     <Compile Include="Graphic\Shaders\Ambient.cs" />
     <Compile Include="Graphic\Shaders\ColorShader.cs" />
     <Compile Include="Graphic\Shaders\DiffuseLighting.cs" />
@@ -168,7 +166,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <Generator>VertexShaderFunction</Generator>
     </Content>
-    <Content Include="System\week8.fx" />
+    <Content Include="Graphic\Shaders\Effects\week8.fx" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

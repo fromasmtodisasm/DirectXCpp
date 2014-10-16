@@ -17,7 +17,7 @@ using Buffer = SharpDX.Direct3D11.Buffer;
 
 namespace Ch01_01EmptyProject.Graphic.Shaders
 {
-    public class Shader
+    public class D3DShader : IGraphicComposite
     {
         private Buffer vertexBuffer;
         private Vertex[] vertices;
@@ -33,6 +33,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         private CompilationResult pixelShaderByteCode;
         private Buffer constantMatrixBuffer;
         private int indexCount;
+        private DeviceContext deviceContext;
 
         [StructLayout(LayoutKind.Sequential)]
         public struct WorldViewProj
@@ -52,7 +53,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             return wwp;
         }
 
-        public Shader(Device device)
+        public D3DShader(Device device)
         {
             try
             {
@@ -62,7 +63,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
                 try
                 {
-                    vertexShaderByteCode = ShaderBytecode.CompileFromFile(shaderEffect.EffectShaderFileName, shaderEffect.VsFunctionName, "vs_5_0");
+                    vertexShaderByteCode = ShaderBytecode.CompileFromFile(shaderEffect.EffectShaderFileName, shaderEffect.VsFunctionName, shaderEffect.VsVersion.ToString());
                 }
                 catch (Exception ex)
                 {
@@ -71,7 +72,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 }
                 try
                 {
-                    pixelShaderByteCode = ShaderBytecode.CompileFromFile(shaderEffect.EffectShaderFileName, shaderEffect.PsFunctionName, "ps_5_0");
+                    pixelShaderByteCode = ShaderBytecode.CompileFromFile(shaderEffect.EffectShaderFileName, shaderEffect.PsFunctionName, shaderEffect.PsVersion.ToString());
                 }
                 catch (Exception ex)
                 {
@@ -136,25 +137,33 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
             }
         }
-        private void SetShaderParameters(DeviceContext deviceContext, WorldViewProj worldViewProj)
+        public void SetShaderParameters(DeviceContext deviceContext, WorldViewProj worldViewProj, int indexCount)
         {
+            this.indexCount = indexCount;
+            this.deviceContext = deviceContext;
+
+            Matrix worldInverseTransposeMatrix = worldViewProj.worldMatrix;
+            worldInverseTransposeMatrix.Invert();
+            worldInverseTransposeMatrix.Transpose();
+            
             worldViewProj.worldMatrix.Transpose();
             worldViewProj.viewMatrix.Transpose();
             worldViewProj.projectionMatrix.Transpose();
 
             DataStream mappedResource;
+           
             deviceContext.MapSubresource(constantMatrixBuffer, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out mappedResource);
 
             mappedResource.Write(worldViewProj);
-
+            mappedResource.Write(worldInverseTransposeMatrix);
+            // Unlock the constant buffer.
             deviceContext.UnmapSubresource(constantMatrixBuffer, 0);
         }
 
-        public void Render(DeviceContext deviceContext, WorldViewProj worldViewProj, int indexCount)
+        public void Render()
         {
             try
             {
-                SetShaderParameters(deviceContext, worldViewProj);
                 deviceContext.InputAssembler.InputLayout = inputLayout;
 
                 try
@@ -175,15 +184,6 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 {
 
                     throw new Exception("D3D11 failed to set Vertex and Pixel shader: " + ex);
-                }
-
-                try
-                {
-                    deviceContext.UpdateSubresource(ref worldViewProj, constantMatrixBuffer);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("D3D11 failed to pass data to shader" + ex);
                 }
 
                 try

@@ -15,42 +15,43 @@ using Ch01_01EmptyProject.Graphic.Shaders;
 
 namespace Ch01_01EmptyProject.Graphic
 {
-    public class Graphic : IGraphic, IDisposable
+    //this class should be a composite, i just have to handle methods which differ
+    public class D3DGraphic : IGraphicComposite
     {
-        private D3D11 d3d;
-        private Shader shader;
-        private Model model;
-        private Camera camera;
+        private List<IGraphicComposite> graph = new List<IGraphicComposite>();
         private WindowConfiguration windowConfig;
-        
-        public Graphic(WindowConfiguration windowConfig)
+        private D3D11 d3d;
+        private Camera camera;
+        private D3DModel model;
+        private D3DShader shader;
+
+        public D3DGraphic(WindowConfiguration windowConfig)
         {
             //try
             //{
-                this.windowConfig = windowConfig;
+            this.windowConfig = windowConfig;
 
-                d3d = new D3D11(windowConfig);
-                camera = new Camera();
-                model = new Model(d3d.Device);
-                shader = new Shader(d3d.Device);
+             d3d = new D3D11(windowConfig);
+             camera = new Camera();
+             model = new D3DModel(d3d.Device);
+             shader = new D3DShader(d3d.Device);
+
+            graph.Add(d3d);
+            graph.Add(model);
+            graph.Add(shader);
+
             //}
-
             //catch (Exception ex)
             //{
             //    throw new Exception("Could not initialize Direct3D: " + ex.Message);
             //}
         }
 
-        public void Frame()
-        {
-            Render();
-        }
-
         public void Render()
         {
-            d3d.DrawScene();
+            d3d.Render();
 
-            camera.Render(d3d.DeviceContext);
+            camera.Render();
 
             //WORLD VIEW PROJECTION COMPUATION
             //Initialize matrixes
@@ -60,25 +61,25 @@ namespace Ch01_01EmptyProject.Graphic
 
             // Setup and create the projection matrix.
             var projectionMatrix = Matrix.PerspectiveFovLH((float)(Math.PI / 4), (float)(windowConfig.Width) / windowConfig.Height, 0.1f, 1000.0f);
-            var wwp = new Shader.WorldViewProj();
+            var wwp = new D3DShader.WorldViewProj();
             wwp.projectionMatrix = projectionMatrix;
             wwp.viewMatrix = viewMatrix;
             wwp.worldMatrix = worldMatrix;
-            
-            
-            model.Render(d3d.DeviceContext);
+
+            model.SetDeviceContent(d3d.DeviceContext);
+            model.Render();
 
             //var constantMatrixBuffer = shader.SetWorldViewMatrix(worldMatrix, viewMatrix, projectionMatrix);
-            shader.Render(d3d.DeviceContext, wwp, model.IndexCount);
-    
+            shader.SetShaderParameters(d3d.DeviceContext, wwp, model.IndexCount);
+            shader.Render();
+
             d3d.PresentRenderedScene();
         }
 
         public void Dispose()
         {
-            shader.Dispose();
-            model.Dispose();
-            d3d.Dispose();
+            foreach (IGraphicComposite item in graph)
+                item.Dispose();
         }
     }
 }

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 using SharpDX.Direct3D11;
 using SharpDX;
 
-namespace Ch01_01EmptyProject
+namespace Ch01_01EmptyProject.Graphic
 {
-    public class Camera : IRenderable
+    public class Camera : IGraphicComposite
     {
         private Matrix V;
 
@@ -25,7 +25,7 @@ namespace Ch01_01EmptyProject
             set { V = value; }
         }
 
-        public void Render(DeviceContext deviceContext)
+        public void Render()
         {
             try
             {
@@ -58,6 +58,11 @@ namespace Ch01_01EmptyProject
             {
                 throw new Exception("D3D11 failed to render camera: " + ex);
             }
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }

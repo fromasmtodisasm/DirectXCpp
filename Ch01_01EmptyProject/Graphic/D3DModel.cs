@@ -12,14 +12,17 @@ using SharpDX.DXGI;
 using SharpDX.Direct3D;
 
 
-namespace Ch01_01EmptyProject
+namespace Ch01_01EmptyProject.Graphic
 {
-    class Model
+    class D3DModel : IGraphicComposite
     {
         private Buffer vertexBuffer;
+        private Buffer indicesBuffer;
+        
         private Vertex[] vertices;
         private int[] indices;
-        private Buffer indicesBuffer;
+       
+        private DeviceContext deviceContext;
 
         public int IndexCount
         {
@@ -27,7 +30,7 @@ namespace Ch01_01EmptyProject
             private set;
         }
 
-        public Model(Device device)
+        public D3DModel(Device device)
         {
             try
             {
@@ -45,7 +48,12 @@ namespace Ch01_01EmptyProject
             }
         }
 
-        public void Render(DeviceContext deviceContext)
+        public void SetDeviceContent(DeviceContext deviceContext)
+        {
+            this.deviceContext = deviceContext;
+        }
+
+        public void Render()
         {
             try
             {
