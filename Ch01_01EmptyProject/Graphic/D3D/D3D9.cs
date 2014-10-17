@@ -31,7 +31,7 @@ namespace Ch01_01EmptyProject
         }
     };
 
-    public class D3D9 : ID3D
+    public class D3D9 
     {
         //Direct3D and Device should be probably only two things which should be in constructor
         private Direct3D d3d;// the pointer to our Direct3D device interface

@@ -20,7 +20,6 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
     public class D3DShader : IGraphicComposite
     {
         private Buffer vertexBuffer;
-        private Vertex[] vertices;
         private Buffer indicesBuffer;
         private int[] indices;
 
@@ -58,8 +57,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             try
             {
                 this.device = device;
+                ShaderName shader = ShaderName.Color;
 
-                IShaderEffect shaderEffect = ShaderFactory.Create(ShaderName.Color);
+                IShaderEffect shaderEffect = ShaderFactory.Create(shader);
 
                 try
                 {
@@ -103,7 +103,17 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 // Now setup the layout of the data that goes into the shader.
                 // It needs to match the VertexType structure in the Model and in the shader.
 
-                InputElement[] inputElementDesc = VertexInputLayouts.Vertex();
+                InputElement[] inputElementDesc;
+
+                if (shader == ShaderName.Texture)
+                {
+                    inputElementDesc = VertexInputLayouts.TextureVertex();
+                }
+
+                else
+                {
+                    inputElementDesc = VertexInputLayouts.ColorVertex();
+                }
 
                 CreateInputLayout(inputElementDesc);
 
@@ -130,6 +140,39 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 {
                     throw new Exception("BufferDescription: " + ex);
                 }
+
+
+                if (shader == ShaderName.Texture)
+                {
+                    ShaderResourceView srw = ShaderResourceView.FromFile(device, @"Graphic\Shaders\Textures\seafloor.dds");
+                    
+                    try
+                    {
+                        SamplerStateDescription samplerDescription = new SamplerStateDescription()
+                                {
+                                    Filter = Filter.MinMagMipLinear,
+
+                                    AddressU = TextureAddressMode.Wrap,
+                                    AddressV = TextureAddressMode.Wrap,
+                                    AddressW = TextureAddressMode.Wrap,
+
+                                    MipLodBias = 0,
+                                    MaximumAnisotropy = 1,
+                                    ComparisonFunction = Comparison.Always,
+                                    BorderColor = new Color4(0, 0, 0, 0),
+                                    MinimumLod = 0,
+                                    MaximumLod = 0
+                                };
+
+                        var sampleState = new SamplerState(device, samplerDescription);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("Could not initialize texture shader: " + ex);
+                    } 
+                }
+
             }
             catch (Exception ex)
             {
@@ -145,17 +188,19 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             Matrix worldInverseTransposeMatrix = worldViewProj.worldMatrix;
             worldInverseTransposeMatrix.Invert();
             worldInverseTransposeMatrix.Transpose();
-            
+
             worldViewProj.worldMatrix.Transpose();
             worldViewProj.viewMatrix.Transpose();
             worldViewProj.projectionMatrix.Transpose();
 
             DataStream mappedResource;
-           
+
             deviceContext.MapSubresource(constantMatrixBuffer, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out mappedResource);
 
             mappedResource.Write(worldViewProj);
-            mappedResource.Write(worldInverseTransposeMatrix);
+            
+            //mappedResource.Write(worldInverseTransposeMatrix);
+            
             // Unlock the constant buffer.
             deviceContext.UnmapSubresource(constantMatrixBuffer, 0);
         }

@@ -93,7 +93,7 @@ namespace Ch01_01EmptyProject.Graphic
             try
             {
                 deviceContext.ClearDepthStencilView(depthStencilView, DepthStencilClearFlags.Depth, 1, 0);
-                deviceContext.ClearRenderTargetView(renderTargetView, Color.Blue);
+                deviceContext.ClearRenderTargetView(renderTargetView, Color.Gray);
             }
             catch (Exception ex)
             {

@@ -108,6 +108,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphic\Box.cs" />
     <Compile Include="Graphic\D3D\ID3DApp.cs" />
     <Compile Include="Graphic\D3D\D3D9.cs" />
     <Compile Include="DisposableBase.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="Graphic\IRenderable.cs" />
     <Compile Include="Graphic\D3DModel.cs" />
     <Compile Include="Graphic\D3DShader.cs" />
+    <Compile Include="Graphic\IShape.cs" />
     <Compile Include="Graphic\Shaders\Ambient.cs" />
     <Compile Include="Graphic\Shaders\ColorShader.cs" />
     <Compile Include="Graphic\Shaders\DiffuseLighting.cs" />
@@ -128,6 +130,8 @@
     <Compile Include="Graphic\Shaders\SpecularLighting.cs" />
     <Compile Include="Graphic\Shaders\TestShader.cs" />
     <Compile Include="Graphic\Shaders\TextureMapping.cs" />
+    <Compile Include="Graphic\Shape.cs" />
+    <Compile Include="Graphic\Structures\IVertex.cs" />
     <Compile Include="System\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -139,11 +143,15 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="System\GreenHornEngine.cs" />
     <Compile Include="System\SystemTime.cs" />
-    <Compile Include="Graphic\Structures\Vertex.cs" />
-    <Compile Include="Graphic\Structures\Vertex2.cs" />
+    <Compile Include="Graphic\Structures\VertexStructures.cs" />
+    <Compile Include="Graphic\Structures\VertexInputLayouts.cs" />
     <Compile Include="System\TestDirectX11Dra.cs" />
     <Compile Include="System\WindowConfiguration.cs" />
     <Content Include="Graphic\Shaders\Effects\ColorShader.fx">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Graphic\Shaders\Effects\DiffuseLightingRastertek.fx">
+      <Generator>VertexShaderFunction</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Graphic\Shaders\Effects\TestShader.fx">
@@ -179,6 +187,7 @@
     <Content Include="Graphic\Shaders\Effects\ColorShader.old.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Graphic\Shaders\Textures\seafloor.dds" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

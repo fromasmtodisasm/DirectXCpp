@@ -1,4 +1,11 @@
 ﻿//rewriten from hlsl 3.0 - http://msdn.microsoft.com/en-us/library/windows/desktop/bb509647%28v=vs.85%29.aspx
+//cbuffer WorldViewProj
+//{
+//float4x4 World;
+//float4x4 View;
+//float4x4 Projection;
+//};
+//float4x4 WorldInverseTranspose;
 
 float4x4 World;
 float4x4 View;
@@ -36,22 +43,25 @@ VertexShaderOutput VertexShaderFunction(VertexShaderInput input)
 
 	//doing the same thinng as before just inside the shader itself
 	float4 worldPosition = mul(input.Position, World);
-		float4 viewPosition = mul(worldPosition, View);
-		output.Position = mul(viewPosition, Projection);
+	float4 viewPosition = mul(worldPosition, View);
+	output.Position = mul(viewPosition, Projection);
 
 	float4 normal = mul(input.Normal, WorldInverseTranspose);
 
-		//angle between surface normal vector and the light, which we use to compute intensity of light
-		// if direct , use 100% of intensity, if at the side, object is not enlighted at all
-		float4 lightIntensity = dot(normal, DiffuseLightDirection);
-		output.Color = saturate(DiffuseColor * DiffuseIntensity * lightIntensity);
+	//angle between surface normal vector and the light, which we use to compute intensity of light
+	// if direct , use 100% of intensity, if at the side, object is not enlighted at all
+	float4 lightIntensity = dot(normal, DiffuseLightDirection);
+	output.Color = saturate(DiffuseColor * DiffuseIntensity * lightIntensity);
+
+	
+	//output.normal = normalize(output.normal);
 
 	return output;
 }
 
 float4 PixelShaderFunction(VertexShaderOutput input) : SV_TARGET
 {
-	return saturate(input.Color + AmbientColor * AmbientIntensity);
+	return saturate(input.Color + AmbientColor * AmbientIntensity * 500);
 }
 
 technique11 Diffuse
@@ -62,3 +72,5 @@ technique11 Diffuse
 		SetPixelShader(CompileShader(ps_5_0, PixelShaderFunction()));
 	}
 }
+
+

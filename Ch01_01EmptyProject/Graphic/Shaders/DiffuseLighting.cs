@@ -8,9 +8,13 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 {
    public class DiffuseLighting : ShaderEffectBase
     {
-        string effectShaderFileName = @"Graphic\Shaders\Effects\ColorShader.fx";
-        string vsFunctionName = "ColorVertexShader";
-        string psFunctionName = "ColorPixelShader";
+       string effectShaderFileName = @"Graphic\Shaders\Effects\DiffuseLightingRastertek.fx";
+       //string effectShaderFileName = @"Graphic\Shaders\Effects\DiffuseLighting.fx";
+       string vsFunctionName = "LightVertexShader";
+       string psFunctionName = "LightPixelShader"; 
+
+       //string vsFunctionName = "VertexShaderFunction";
+       // string psFunctionName = "PixelShaderFunction";
         
         public override string EffectShaderFileName
         {
