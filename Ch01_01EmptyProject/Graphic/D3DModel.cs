@@ -11,6 +11,8 @@ using SharpDX.Direct3D11;
 using SharpDX.DXGI;
 using SharpDX.Direct3D;
 using Ch01_01EmptyProject.Graphic.Structures;
+using System.Reflection;
+using Ch01_01EmptyProject.Graphic.Shaders;
 
 namespace Ch01_01EmptyProject.Graphic
 {
@@ -22,6 +24,9 @@ namespace Ch01_01EmptyProject.Graphic
         private int[] indices;
 
         private DeviceContext deviceContext;
+        private Device device;
+        private object p1;
+        private int[] p2;
 
         public int IndexCount
         {
@@ -29,82 +34,19 @@ namespace Ch01_01EmptyProject.Graphic
             private set;
         }
 
-        public D3DModel(Device device)
+        public  D3DModel(Device device, object p1, int[] p2)
         {
             try
             {
-                Vector4[] colors = new Vector4[]
-                        {
-                        (Vector4)Color.White,
-                        (Vector4)Color.Black,
-                        (Vector4)Color.Red,
-                        (Vector4)Color.Green,
-                        (Vector4)Color.Blue,
-                        (Vector4)Color.Yellow,
-                        (Vector4)Color.Cyan,
-                        (Vector4)Color.Magenta,
-                        };
-
-                Vector2[] textureCoord = new Vector2[]
-                {
-                	new Vector2(0, 1),
-                   new Vector2(.5f, 0),
-                   new Vector2(1, 1),
-                };
-
-
-
-                var vertexType = VertexType.ColorVertex;
-                IShape shape = new Triangle();
-                indices = shape.Indexes;
-
-                IVertex[] vertices;
+                indices = p2;//shape.Indexes;
+                  var vertexype = p1.GetType().GetElementType();
+                //get method wih reflection
+                //it allows me to create a buffer for any type..
+                MethodInfo method = typeof(D3DModel).GetMethod("vertexBufferC");
+                MethodInfo generic = method.MakeGenericMethod(vertexype);
+                generic.Invoke(this, new object[] { device, p1 });
                 
-                //add to the base shapea additional stuff defined by Vector Structure
-                Vector3[] positions = shape.Vertexes;
-                //switch (vertexType)
-                //{
-                //    case VertexType.ColorVertex:
-                //        {
-                //            ColorVertex[] vertices = new ColorVertex[positions.Length];
-                //            //from this array, make coresponding structure
-                //            for (int i = 0; i < positions.Length; i++)
-                //            {
-                //                ColorVertex a = new ColorVertex();
-                //                a.Position = positions[i];
-                //                a.Color = colors[i];
-                //                vertices[i] = a;
-                //            }
-                //        }
-                //        break;
-                //    case VertexType.NormalVertex:
-                //        break;
-                //    case VertexType.TextureVertex:
-                //        {
-                //            TextureVertex[] vertices = new TextureVertex[positions.Length];
-                //            //from this array, make coresponding structure
-                //            for (int i = 0; i < positions.Length; i++)
-                //            {
-                //                var a = new TextureVertex();
-                //                a.Position = positions[i];
-                //                a.Texture = textureCoord[i];
-                //                vertices[i] = a;
-                //            }
-                           
-                //        }
-                //        break;
-                //    case VertexType.ColorNormalVertex:
-                //        break;
-                //    default:
-
-                //        break;
-                //}
-
-
-
-                vertexBufferC<TextureVertex>(device, vertices);
                 IndexCount = indices.Length;
-
 
                 indicesBuffer = Buffer.Create(device, BindFlags.IndexBuffer, indices);
             }
@@ -114,13 +56,10 @@ namespace Ch01_01EmptyProject.Graphic
             }
         }
 
-        private void CreateVertex<T>(Device device, T[] vertices) where T : struct
-        { 
-        
-        }
 
+       
         //by adding where part T cant be nullable
-        private void vertexBufferC<T>(Device device, T[] vertices) where T : struct
+        public void vertexBufferC<T>(Device device, T[] vertices) where T : struct
         {
             try
             {

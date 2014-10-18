@@ -21,8 +21,6 @@ namespace Ch01_01EmptyProject.Graphic.Structures
         TextureVertex,
         ColorNormalVertex,
     }
-
-
     //class VertexTypes and class VertexInputLayouts
     [StructLayout(LayoutKind.Sequential)]
     public struct ColorVertex : IVertex

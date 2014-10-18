@@ -108,7 +108,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphic\Shaders\ShaderModel.cs" />
+    <Compile Include="Graphic\InputLayoutFactory.cs" />
+    <Compile Include="Graphic\ModelShader.cs" />
+    <Compile Include="Graphic\Shaders\ModelShaderFactory.cs" />
     <Compile Include="Graphic\Triangle.cs" />
     <Compile Include="Graphic\Box.cs" />
     <Compile Include="Graphic\D3D\ID3DApp.cs" />

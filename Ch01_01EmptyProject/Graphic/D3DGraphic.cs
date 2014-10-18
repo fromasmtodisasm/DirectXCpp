@@ -25,16 +25,21 @@ namespace Ch01_01EmptyProject.Graphic
         private D3DModel model;
         private D3DShader shader;
 
+
         public D3DGraphic(WindowConfiguration windowConfig)
         {
             //try
             //{
             this.windowConfig = windowConfig;
 
+            ShaderName shaderName = ShaderName.Color;
+            IShape shape = new Triangle();
+            ModelShader.Get(shaderName, shape);
+         
              d3d = new D3D11(windowConfig);
              camera = new Camera();
-             model = new D3DModel(d3d.Device);
-             shader = new D3DShader(d3d.Device);
+             model = new D3DModel(d3d.Device, ModelShader.GetModelForRender, ModelShader.GetIndexes);
+             shader = new D3DShader(d3d.Device, ModelShader.GetShaderEffect);
 
             graph.Add(d3d);
             graph.Add(model);
@@ -70,7 +75,7 @@ namespace Ch01_01EmptyProject.Graphic
             model.Render();
 
             //var constantMatrixBuffer = shader.SetWorldViewMatrix(worldMatrix, viewMatrix, projectionMatrix);
-            shader.SetShaderParameters(d3d.DeviceContext, wwp, model.IndexCount);
+            shader.SetShaderParameters(d3d.DeviceContext, wwp, ModelShader.GetIndexCount);
             shader.Render();
 
             d3d.PresentRenderedScene();

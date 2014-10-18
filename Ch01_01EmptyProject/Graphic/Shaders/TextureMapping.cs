@@ -8,7 +8,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 {
    public class TextureMapping : ShaderEffectBase
     {
-       string effectShaderFileName = @"Graphic\Shaders\Effects\TextureShaderRastertek.fx";
+       string effectShaderFileName = @"Graphic\Shaders\Effects\TextureShader.fx";
 
         public override string EffectShaderFileName
         {

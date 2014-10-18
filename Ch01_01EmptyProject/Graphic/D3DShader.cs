@@ -14,6 +14,7 @@ using SharpDX.Windows;
 
 using Device = SharpDX.Direct3D11.Device;
 using Buffer = SharpDX.Direct3D11.Buffer;
+using Ch01_01EmptyProject.Graphic.Structures;
 
 namespace Ch01_01EmptyProject.Graphic.Shaders
 {
@@ -52,17 +53,12 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             return wwp;
         }
 
-        public D3DShader(Device device)
+        public D3DShader(Device device, IShaderEffect shaderEffect)
         {
             try
             {
                 this.device = device;
-                //new ShaderModel();
                 
-                ShaderName shader = ShaderName.Texture;
-
-                IShaderEffect shaderEffect = ShaderFactory.Create(shader);
-
                 try
                 {
                     vertexShaderByteCode = ShaderBytecode.CompileFromFile(shaderEffect.EffectShaderFileName, shaderEffect.VsFunctionName, shaderEffect.VsVersion.ToString());
@@ -104,19 +100,8 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
                 // Now setup the layout of the data that goes into the shader.
                 // It needs to match the VertexType structure in the Model and in the shader.
-
-                InputElement[] inputElementDesc;
-
-                if (shader == ShaderName.Texture)
-                {
-                    inputElementDesc = VertexInputLayouts.TextureVertex();
-                }
-
-                else
-                {
-                    inputElementDesc = VertexInputLayouts.ColorVertex();
-                }
-
+                 InputElement[] inputElementDesc = InputLayoutFactory.Create(shaderEffect.VertexType);
+                
                 CreateInputLayout(inputElementDesc);
 
                 vertexShaderByteCode.Dispose();
@@ -144,7 +129,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 }
 
 
-                if (shader == ShaderName.Texture)
+                if (shaderEffect.VertexType == VertexType.TextureVertex)
                 {
                     try
                     {
