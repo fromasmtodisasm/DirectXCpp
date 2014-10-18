@@ -44,43 +44,65 @@ namespace Ch01_01EmptyProject.Graphic
                         (Vector4)Color.Cyan,
                         (Vector4)Color.Magenta,
                         };
-                
+
+                Vector2[] textureCoord = new Vector2[]
+                {
+                	new Vector2(0, 1),
+                   new Vector2(.5f, 0),
+                   new Vector2(1, 1),
+                };
+
+
+
                 var vertexType = VertexType.ColorVertex;
-                var shape = new Box();
+                IShape shape = new Triangle();
                 indices = shape.Indexes;
 
+                IVertex[] vertices;
+                
                 //add to the base shapea additional stuff defined by Vector Structure
                 Vector3[] positions = shape.Vertexes;
-                switch (vertexType)
-                {
-                    case VertexType.ColorVertex:
-                        {
-                            ColorVertex[] vertices;
-                            List<ColorVertex> box = new List<ColorVertex>();
-                            //from this array, make coresponding structure
+                //switch (vertexType)
+                //{
+                //    case VertexType.ColorVertex:
+                //        {
+                //            ColorVertex[] vertices = new ColorVertex[positions.Length];
+                //            //from this array, make coresponding structure
+                //            for (int i = 0; i < positions.Length; i++)
+                //            {
+                //                ColorVertex a = new ColorVertex();
+                //                a.Position = positions[i];
+                //                a.Color = colors[i];
+                //                vertices[i] = a;
+                //            }
+                //        }
+                //        break;
+                //    case VertexType.NormalVertex:
+                //        break;
+                //    case VertexType.TextureVertex:
+                //        {
+                //            TextureVertex[] vertices = new TextureVertex[positions.Length];
+                //            //from this array, make coresponding structure
+                //            for (int i = 0; i < positions.Length; i++)
+                //            {
+                //                var a = new TextureVertex();
+                //                a.Position = positions[i];
+                //                a.Texture = textureCoord[i];
+                //                vertices[i] = a;
+                //            }
+                           
+                //        }
+                //        break;
+                //    case VertexType.ColorNormalVertex:
+                //        break;
+                //    default:
 
-                            for (int i = 0; i < positions.Length; i++)
-                            {
-                                ColorVertex a = new ColorVertex();
-                                a.Position = positions[i];
-                                a.Color = colors[i];
-                                box.Add((ColorVertex)a); 
-                            }
-                            vertices = box.ToArray<ColorVertex>();
-                            vertexBufferC(device, vertices);
-                        }
-                        break;
-                    case VertexType.NormalVertex:
-                        break;
-                    case VertexType.TextureVertex:
-                        break;
-                    case VertexType.ColorNormalVertex:
-                        break;
-                    default: 
+                //        break;
+                //}
 
-                        break;
-                }
 
+
+                vertexBufferC<TextureVertex>(device, vertices);
                 IndexCount = indices.Length;
 
 
@@ -92,7 +114,13 @@ namespace Ch01_01EmptyProject.Graphic
             }
         }
 
-        private void vertexBufferC(Device device, ColorVertex[] vertices)
+        private void CreateVertex<T>(Device device, T[] vertices) where T : struct
+        { 
+        
+        }
+
+        //by adding where part T cant be nullable
+        private void vertexBufferC<T>(Device device, T[] vertices) where T : struct
         {
             try
             {
@@ -136,24 +164,6 @@ namespace Ch01_01EmptyProject.Graphic
             vertexBuffer.Dispose();
             indicesBuffer.Dispose();
         }
-
-        private ColorNormalVertex[] CreateVertices2()
-        {
-            return new ColorNormalVertex[]
-            {   
-                 new ColorNormalVertex(){Position = new Vector3(-1, -1, -1),Color = (Vector4)Color.White, Normal = new Vector3(0, 0, -1)},
-                 new ColorNormalVertex(){Position = new Vector3(-1, 1, -1), Color = (Vector4)Color.Black, Normal = new Vector3(0, 0, -1)},
-                 new ColorNormalVertex(){Position = new Vector3(+1, +1, -1), Color = (Vector4)Color.Red, Normal = new Vector3(0, 0, -1)},
-                 new ColorNormalVertex(){Position = new Vector3(+1, -1, -1),Color = (Vector4)Color.Green, Normal = new Vector3(0, 0, -1)},
-                 new ColorNormalVertex(){Position = new Vector3(-1, -1, +1),Color = (Vector4)Color.Blue, Normal = new Vector3(0, 0, -1)},
-                 new ColorNormalVertex(){Position = new Vector3(-1, +1, +1), Color = (Vector4)Color.Yellow, Normal = new Vector3(0, 0, -1)},
-                 new ColorNormalVertex(){Position = new Vector3(+1, +1, +1), Color = (Vector4)Color.Cyan, Normal = new Vector3(0, 0, -1)},
-                 new ColorNormalVertex(){Position = new Vector3(+1, -1, +1),Color = (Vector4)Color.Magenta, Normal = new Vector3(0, 0, -1)},
-              };
-        }
     }
-    //shape
-    // dimensions
-    //define color
 }
 

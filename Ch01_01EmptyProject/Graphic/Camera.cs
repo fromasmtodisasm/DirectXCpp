@@ -26,7 +26,7 @@ namespace Ch01_01EmptyProject.Graphic
                 float radius = 5.0f;
 
                 //Convert spherical to cartesian coords
-                float x = radius * (float)Math.Sin(phi) * (float)Math.Cos(theta);
+                float x = radius * (float)Math.Sin(phi) * (float)Math.Cos(theta); //-2.0f +
                 float y = radius * (float)Math.Cos(phi);
                 float z = radius * (float)Math.Sin(phi) * (float)Math.Sin(theta);
 

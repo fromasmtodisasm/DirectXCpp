@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace Ch01_01EmptyProject.Graphic
 {
-    struct Box
+    struct Box : IShape
     {
         public Vector3[] Vertexes
         {

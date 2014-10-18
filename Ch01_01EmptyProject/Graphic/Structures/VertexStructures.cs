@@ -14,7 +14,7 @@ using System.Runtime.InteropServices;
 
 namespace Ch01_01EmptyProject.Graphic.Structures
 {
-    enum VertexType
+  public enum VertexType
     {
         ColorVertex,
         NormalVertex,
@@ -68,6 +68,31 @@ namespace Ch01_01EmptyProject.Graphic.Structures
     {
         private Vector3 position;
         private Vector2 texture;
+     
+        public Vector3 Position
+        {
+            get { return position; }
+            set { position = value; }
+        }
+        public Vector2 Texture
+        {
+            get { return texture; }
+            set { texture = value; }
+        }
+    }
+
+    [StructLayout(LayoutKind.Sequential)]
+    public struct TextureNormalVertex : IVertex
+    {
+        private Vector3 position;
+        private Vector2 texture;
+        private Vector3 normal;
+
+        public Vector3 Normal
+        {
+            get { return normal; }
+            set { normal = value; }
+        }
 
         public Vector3 Position
         {

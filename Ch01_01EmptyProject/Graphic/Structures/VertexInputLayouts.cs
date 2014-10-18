@@ -13,100 +13,85 @@ using System.Windows.Forms;
 
 namespace Ch01_01EmptyProject
 {
+    public class InputElementBase
+    {
+        string SemanticName = "POSITION";
+        int SemanticIndex = 0;
+        Format Format = Format.R32G32B32A32_Float;
+        int Slot = 0;
+        int AlignedByteOffset = 0;
+    }
+
     public struct VertexInputLayouts
     {
+        public static InputElement Position
+        {
+            get
+            {
+                var position = new InputElement();
+                position.SemanticName = "POSITION";
+                position.Format = Format.R32G32B32A32_Float;
+                return position;
+            }
+          
+
+        }
+
+        public static InputElement Color
+        {
+            get
+            {
+                var color = new InputElement();
+                color.SemanticName = "COLOR";
+                color.Format = Format.R32G32B32A32_Float;
+                color.AlignedByteOffset = 12;
+                return color;
+            }
+          
+        }
+
+        public static InputElement Normal
+        {
+            get
+            {
+                var normal = new InputElement();
+                normal.SemanticName = "NORMAL";
+                normal.Format = Format.R32G32B32A32_Float;
+                normal.AlignedByteOffset = 24;
+                return normal;
+            }
+          
+        }
+
+        public static InputElement TexCoord
+        {
+            get
+            {
+                var texcoord = new InputElement();
+                texcoord.SemanticName = "TEXCOORD";
+                texcoord.SemanticIndex = 0;
+                texcoord.Format = Format.R32G32_Float;
+                texcoord.Slot = 0;
+                texcoord.AlignedByteOffset = 12;
+                return texcoord;
+            }
+          
+        }
+
+
         public static InputElement[] ColorNormalVertex()
         {
-            return new InputElement[]
-        {
-            new InputElement()
-            {
-            SemanticName = "POSITION",
-            SemanticIndex = 0,
-            Format = Format.R32G32B32A32_Float,
-            Slot = 0,
-            AlignedByteOffset = 0,
-            Classification = InputClassification.PerVertexData,
-            InstanceDataStepRate = 0
-            },
-            new InputElement()
-
-            {
-                SemanticName = "COLOR",
-                SemanticIndex = 0,
-                Format = Format.R32G32B32A32_Float,
-                Slot = 0,
-                AlignedByteOffset = 12,
-                Classification = InputClassification.PerVertexData,
-                InstanceDataStepRate = 0
-            },
-            new InputElement()
-
-            {
-                SemanticName = "NORMAL",
-                SemanticIndex = 0,
-                Format = Format.R32G32B32A32_Float,
-                Slot = 0,
-                AlignedByteOffset = 24,
-                Classification = InputClassification.PerVertexData,
-                InstanceDataStepRate = 0
-            }
-        };
+            return new InputElement[] { Position, Color, Normal };
         }
+
         public static InputElement[] ColorVertex()
         {
-            return new InputElement[]
-        {
-            new InputElement()
-            {
-            SemanticName = "POSITION",
-            SemanticIndex = 0,
-            Format = Format.R32G32B32A32_Float,
-            Slot = 0,
-            AlignedByteOffset = 0,
-            Classification = InputClassification.PerVertexData,
-            InstanceDataStepRate = 0
-            },
-           new InputElement()
-
-            {
-                SemanticName = "COLOR",
-                SemanticIndex = 0,
-                Format = Format.R32G32B32A32_Float,
-                Slot = 0,
-                AlignedByteOffset = 12,
-                Classification = InputClassification.PerVertexData,
-                InstanceDataStepRate = 0
-            }
-        };
+            return new InputElement[] { Position, Color };
         }
 
         public static InputElement[] NormalVertex()
         {
-            return new InputElement[]
-        {
-            new InputElement()
-            {
-            SemanticName = "POSITION",
-            SemanticIndex = 0,
-            Format = Format.R32G32B32A32_Float,
-            Slot = 0,
-            AlignedByteOffset = 0,
-            Classification = InputClassification.PerVertexData,
-            InstanceDataStepRate = 0
-            },
-           new InputElement()
-
-            {
-                SemanticName = "NORMAL",
-                SemanticIndex = 0,
-                Format = Format.R32G32B32A32_Float,
-                Slot = 0,
-                AlignedByteOffset = 12,
-                Classification = InputClassification.PerVertexData,
-                InstanceDataStepRate = 0
-            }
-        };
+            return new InputElement[] { Position, Normal };
         }
 
         public static InputElement[] TextureVertex()
@@ -120,18 +105,14 @@ namespace Ch01_01EmptyProject
             Format = Format.R32G32B32A32_Float,
             Slot = 0,
             AlignedByteOffset = 0,
-            Classification = InputClassification.PerVertexData,
-            InstanceDataStepRate = 0
             },
-           new InputElement()
+            new InputElement()
             {
                 SemanticName = "TEXCOORD",
                 SemanticIndex = 0,
                 Format = Format.R32G32_Float,
                 Slot = 0,
                 AlignedByteOffset = 12,
-                Classification = InputClassification.PerVertexData,
-                InstanceDataStepRate = 0
             }
         };
         }

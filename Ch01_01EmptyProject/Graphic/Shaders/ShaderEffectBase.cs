@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ch01_01EmptyProject.Graphic.Structures;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,7 +29,14 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         string psFunctionName = "PixelShaderFunction";
         PsVersion psVersion = PsVersion.ps_5_0;
         VsVersion vsVersion = VsVersion.vs_5_0;
-      
+        VertexType vertexType = VertexType.ColorVertex;
+
+        public virtual VertexType VertexType
+        {
+            get { return vertexType; }
+            //set { vertexType = value; }
+        } 
+
         public virtual string PsFunctionName
         {
             get { return psFunctionName; }

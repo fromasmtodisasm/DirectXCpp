@@ -1,10 +1,12 @@
 ﻿///////////////////////
 ////   GLOBALS
 ///////////////////////
-float4x4 worldMatrix;
-float4x4 viewMatrix;
-float4x4 projectionMatrix;
-
+cbuffer WorldViewProj
+{
+	float4x4 worldMatrix;
+	float4x4 viewMatrix;
+	float4x4 projectionMatrix;
+}
 //////////////////////
 ////   TYPES
 //////////////////////
@@ -37,8 +39,8 @@ PixelInputType ColorVertexShader(VertexInputType input)
 	output.position = mul(output.position, projectionMatrix);
 
 	// Store the input color for the pixel shader to use.
-	output.color = input.color;
-
+	output.color = input.color; //mul(input.color, float4(0.2, 0.2, 0.1, 0.3));
+	
 	return output;
 }
 

@@ -57,7 +57,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             try
             {
                 this.device = device;
-                ShaderName shader = ShaderName.Color;
+                //new ShaderModel();
+                
+                ShaderName shader = ShaderName.Texture;
 
                 IShaderEffect shaderEffect = ShaderFactory.Create(shader);
 
@@ -144,10 +146,11 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
                 if (shader == ShaderName.Texture)
                 {
-                    ShaderResourceView srw = ShaderResourceView.FromFile(device, @"Graphic\Shaders\Textures\seafloor.dds");
-                    
                     try
                     {
+                        string textureFileName = @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\seafloor.dds";
+
+                        ShaderResourceView srw = ShaderResourceView.FromFile(device, textureFileName);
                         SamplerStateDescription samplerDescription = new SamplerStateDescription()
                                 {
                                     Filter = Filter.MinMagMipLinear,

@@ -108,6 +108,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphic\Shaders\ShaderModel.cs" />
+    <Compile Include="Graphic\Triangle.cs" />
     <Compile Include="Graphic\Box.cs" />
     <Compile Include="Graphic\D3D\ID3DApp.cs" />
     <Compile Include="Graphic\D3D\D3D9.cs" />
@@ -155,6 +157,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Graphic\Shaders\Effects\TestShader.fx">
+      <Generator>VertexShaderFunction</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Graphic\Shaders\Effects\TextureShaderRastertek.fx">
       <Generator>VertexShaderFunction</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

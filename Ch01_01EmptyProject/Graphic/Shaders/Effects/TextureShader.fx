@@ -1,5 +1,12 @@
 ﻿//rewriten from hlsl 3.0 - http://msdn.microsoft.com/en-us/library/windows/desktop/bb509647%28v=vs.85%29.aspx
 
+cbuffer WorldViewProj
+{
+	float4x4 World;
+	float4x4 View;
+	float4x4 Projection;
+};
+
 texture ModelTexture;
 sampler2D textureSampler = sampler_state
 {
@@ -10,10 +17,6 @@ sampler2D textureSampler = sampler_state
 	AddressU = Clamp;
 	AddressV = Clamp;
 };
-
-float4x4 World;
-float4x4 View;
-float4x4 Projection;
 
 float4x4 WorldInverseTranspose;
 
@@ -36,6 +39,7 @@ struct VertexShaderInput
 {
 	float4 Position : POSITION;
 	float4 Normal : NORMAL;
+	float2 TextureCoordinate : TEXCOORD;
 };
 
 //VertexToPixel
