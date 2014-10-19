@@ -11,9 +11,16 @@ namespace Ch01_01EmptyProject
 {
     public class GreenHornEngine : IDisposable
     {
+        
         private static string PROGRAM_TITLE = "D3DRendering - Cube drawing";
+        
         private static int FORM_WIDTH = 1024;
         private static int FORM_HEIGHT = 768;
+
+        private static int FORM_WIDTH_SMALL = 800;
+        private static int FORM_HEIGHT_SMALL = 600;
+        
+        
         private Form1 form;
         private D3DGraphic graphic;
 
@@ -23,8 +30,8 @@ namespace Ch01_01EmptyProject
             form = new Form1();
 
             form.Text = PROGRAM_TITLE;
-            form.Width = FORM_WIDTH;
-            form.Height = FORM_HEIGHT;
+            form.Width = FORM_WIDTH_SMALL;
+            form.Height = FORM_HEIGHT_SMALL;
             form.FormBorderStyle = FormBorderStyle.FixedToolWindow;
 
             WindowConfiguration wc = new WindowConfiguration();

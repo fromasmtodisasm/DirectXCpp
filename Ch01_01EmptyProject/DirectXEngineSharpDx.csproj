@@ -109,10 +109,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Graphic\Shaders\ShaderModel.cs" />
+    <Compile Include="Graphic\Square.cs" />
     <Compile Include="Graphic\Triangle.cs" />
     <Compile Include="Graphic\Box.cs" />
     <Compile Include="Graphic\D3D\ID3DApp.cs" />
-    <Compile Include="Graphic\D3D\D3D9.cs" />
     <Compile Include="DisposableBase.cs" />
     <Compile Include="Graphic\Camera.cs" />
     <Compile Include="Graphic\D3D\D3DInitializeHelper.cs" />
@@ -149,10 +149,14 @@
     <Compile Include="Graphic\Structures\VertexInputLayouts.cs" />
     <Compile Include="System\TestDirectX11Dra.cs" />
     <Compile Include="System\WindowConfiguration.cs" />
+    <Content Include="Graphic\Shaders\Effects\AmbientLightingRastertek.fx">
+      <Generator>VertexShaderFunction</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Graphic\Shaders\Effects\ColorShader.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Graphic\Shaders\Effects\DiffuseLightingRastertek.fx">
+    <Content Include="Graphic\Shaders\Effects\DiffuseLightingRastertek .fx">
       <Generator>VertexShaderFunction</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -194,7 +198,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Graphic\Shaders\Textures\seafloor.dds" />
-    <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

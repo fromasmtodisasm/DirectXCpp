@@ -49,7 +49,7 @@ namespace Ch01_01EmptyProject.Graphic
 
                 var initializeHelper = new D3DInitializeHelper(windowConfig);
 
-                DriverType driverType = DriverType.Hardware; //initializeHelper.GetDriverTypeForRenderingWhichSupportsDx11(false);
+                DriverType driverType = DriverType.Warp; //initializeHelper.GetDriverTypeForRenderingWhichSupportsDx11(false);
 #if DEBUG
                 //deviceFlags = DeviceCreationFlags.Debug;
 #endif

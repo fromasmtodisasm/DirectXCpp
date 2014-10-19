@@ -21,6 +21,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
     {
         private Buffer vertexBuffer;
         private Buffer indicesBuffer;
+        private Buffer lightBuffer;
         private int[] indices;
 
         private InputLayout inputLayout;
@@ -33,6 +34,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         private Buffer constantMatrixBuffer;
         private int indexCount;
         private DeviceContext deviceContext;
+        private SamplerState sampleState;
+        private ShaderResourceView srw;
+        private Buffer constantLightBuffer;
 
         [StructLayout(LayoutKind.Sequential)]
         public struct WorldViewProj
@@ -42,145 +46,172 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             public Matrix projectionMatrix;
         }
 
-        public WorldViewProj SetWorldViewMatrix(Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix)
+        public struct LightBufferType
         {
-            var wwp = new WorldViewProj();
-            wwp.projectionMatrix = projectionMatrix;
-            wwp.viewMatrix = viewMatrix;
-            wwp.worldMatrix = worldMatrix;
-
-            return wwp;
+            public Vector4 diffuseColor;
+            public Vector3 lightDirection;
+            // Added extra padding so structure is a multiple of 16 for CreateBuffer function requirements.
+            public float padding;
         }
 
         public D3DShader(Device device)
         {
+            this.device = device;
+
+            ShaderName shader = ShaderName.Texture;
+
+            IShaderEffect shaderEffect = ShaderFactory.Create(shader);
+
             try
             {
-                this.device = device;
-                //new ShaderModel();
-                
-                ShaderName shader = ShaderName.Texture;
+                vertexShaderByteCode = ShaderBytecode.CompileFromFile(shaderEffect.EffectShaderFileName, shaderEffect.VsFunctionName, shaderEffect.VsVersion.ToString());
+            }
+            catch (Exception ex)
+            {
 
-                IShaderEffect shaderEffect = ShaderFactory.Create(shader);
+                throw new Exception("vertexShaderByteCode: " + ex);
+            }
+            try
+            {
+                pixelShaderByteCode = ShaderBytecode.CompileFromFile(shaderEffect.EffectShaderFileName, shaderEffect.PsFunctionName, shaderEffect.PsVersion.ToString());
+            }
+            catch (Exception ex)
+            {
 
-                try
-                {
-                    vertexShaderByteCode = ShaderBytecode.CompileFromFile(shaderEffect.EffectShaderFileName, shaderEffect.VsFunctionName, shaderEffect.VsVersion.ToString());
-                }
-                catch (Exception ex)
-                {
+                throw new Exception("vertexShaderByteCode: " + ex);
+            }
 
-                    throw new Exception("vertexShaderByteCode: " + ex);
-                }
-                try
-                {
-                    pixelShaderByteCode = ShaderBytecode.CompileFromFile(shaderEffect.EffectShaderFileName, shaderEffect.PsFunctionName, shaderEffect.PsVersion.ToString());
-                }
-                catch (Exception ex)
-                {
+            try
+            {
+                vertexShader = new VertexShader(device, vertexShaderByteCode);
+            }
+            catch (Exception ex)
+            {
 
-                    throw new Exception("vertexShaderByteCode: " + ex);
-                }
+                throw new Exception("vertexShader: " + ex);
+            }
 
-                try
-                {
-                    vertexShader = new VertexShader(device, vertexShaderByteCode);
-                }
-                catch (Exception ex)
-                {
+            try
+            {
+                pixelShader = new PixelShader(device, pixelShaderByteCode);
+            }
+            catch (Exception ex)
+            {
 
-                    throw new Exception("vertexShader: " + ex);
-                }
+                throw new Exception("pixelShader: " + ex);
+            }
 
-                try
-                {
-                    pixelShader = new PixelShader(device, pixelShaderByteCode);
-                }
-                catch (Exception ex)
-                {
+            // Now setup the layout of the data that goes into the shader.
+            // It needs to match the VertexType structure in the Model and in the shader.
 
-                    throw new Exception("pixelShader: " + ex);
-                }
+            InputElement[] inputElementDesc;
+    
+            if (shader == ShaderName.Texture)
+            {
+                inputElementDesc = VertexInputLayouts.TextureVertex();
+            }
 
-                // Now setup the layout of the data that goes into the shader.
-                // It needs to match the VertexType structure in the Model and in the shader.
+            else
+            {
+                inputElementDesc = VertexInputLayouts.ColorVertex();
+            }
 
-                InputElement[] inputElementDesc;
+            CreateInputLayout(inputElementDesc);
 
-                if (shader == ShaderName.Texture)
-                {
-                    inputElementDesc = VertexInputLayouts.TextureVertex();
-                }
+            vertexShaderByteCode.Dispose();
+            pixelShaderByteCode.Dispose();
 
-                else
-                {
-                    inputElementDesc = VertexInputLayouts.ColorVertex();
-                }
-
-                CreateInputLayout(inputElementDesc);
-
-                vertexShaderByteCode.Dispose();
-                pixelShaderByteCode.Dispose();
-
-                // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
-                try
-                {
-                    var matrixBufferDesc = new BufferDescription()
-                           {
-                               Usage = ResourceUsage.Dynamic,
-                               //or size of constant buffer
-                               SizeInBytes = Utilities.SizeOf<Matrix>(),
-                               BindFlags = BindFlags.ConstantBuffer,
-                               CpuAccessFlags = CpuAccessFlags.Write,
-                               OptionFlags = ResourceOptionFlags.None,
-                               StructureByteStride = 0
-                           };
-                    constantMatrixBuffer = new Buffer(device, matrixBufferDesc);
-
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("BufferDescription: " + ex);
-                }
-
-
-                if (shader == ShaderName.Texture)
-                {
-                    try
-                    {
-                        string textureFileName = @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\seafloor.dds";
-
-                        ShaderResourceView srw = ShaderResourceView.FromFile(device, textureFileName);
-                        SamplerStateDescription samplerDescription = new SamplerStateDescription()
-                                {
-                                    Filter = Filter.MinMagMipLinear,
-
-                                    AddressU = TextureAddressMode.Wrap,
-                                    AddressV = TextureAddressMode.Wrap,
-                                    AddressW = TextureAddressMode.Wrap,
-
-                                    MipLodBias = 0,
-                                    MaximumAnisotropy = 1,
-                                    ComparisonFunction = Comparison.Always,
-                                    BorderColor = new Color4(0, 0, 0, 0),
-                                    MinimumLod = 0,
-                                    MaximumLod = 0
-                                };
-
-                        var sampleState = new SamplerState(device, samplerDescription);
-
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new Exception("Could not initialize texture shader: " + ex);
-                    } 
-                }
+            // Setup the description of the dynamic matrix constant buffer that is in the vertex shader.
+            try
+            {
+                var matrixBufferDesc = new BufferDescription()
+                       {
+                           Usage = ResourceUsage.Dynamic,
+                           //or size of constant buffer
+                           SizeInBytes = Utilities.SizeOf<WorldViewProj>(),
+                           BindFlags = BindFlags.ConstantBuffer,
+                           CpuAccessFlags = CpuAccessFlags.Write,
+                           OptionFlags = ResourceOptionFlags.None,
+                           StructureByteStride = 0
+                       };
+                constantMatrixBuffer = new Buffer(device, matrixBufferDesc);
 
             }
             catch (Exception ex)
             {
-                throw new Exception("Could not initialize the shader: " + ex);
+                throw new Exception("BufferDescription: " + ex);
+            }
 
+
+            if (shader == ShaderName.Texture || shader == ShaderName.Diffuse)
+            {
+                try
+                {
+                    string textureFileName = @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\seafloor.dds";
+
+                    srw = ShaderResourceView.FromFile(device, textureFileName);
+                    SamplerStateDescription samplerDescription = new SamplerStateDescription()
+                            {
+                                Filter = Filter.MinMagMipLinear,
+
+                                AddressU = TextureAddressMode.Wrap,
+                                AddressV = TextureAddressMode.Wrap,
+                                AddressW = TextureAddressMode.Wrap,
+
+                                MipLodBias = 0,
+                                MaximumAnisotropy = 1,
+                                ComparisonFunction = Comparison.Always,
+                                BorderColor = new Color4(255, 0, 0, 1),
+                                MinimumLod = 0,
+                                MaximumLod = 0
+                            };
+
+                    sampleState = new SamplerState(device, samplerDescription);
+
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Could not initialize texture shader: " + ex);
+                }
+            }
+
+            if (shader == ShaderName.Diffuse)
+            {
+               Vector4 diffuseColor = (Vector4)Color.DarkRed;
+               Vector3 lightDirection = new Vector3(1, 1, 1);
+
+                var lightBufferDesc = new BufferDescription()
+                {
+                    Usage = ResourceUsage.Dynamic,
+                    SizeInBytes = Utilities.SizeOf<LightBufferType>(),
+                    BindFlags = BindFlags.ConstantBuffer,
+                    CpuAccessFlags = CpuAccessFlags.Write,
+                    OptionFlags = ResourceOptionFlags.None,
+                    StructureByteStride = 0
+                };
+
+                constantLightBuffer = new Buffer(device, lightBufferDesc);
+
+                DataStream mappedResource;
+                deviceContext.MapSubresource(constantLightBuffer, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out mappedResource);
+
+                var lightBuffer = new LightBufferType()
+                {
+                    diffuseColor = diffuseColor,
+                    lightDirection = lightDirection,
+                    padding = 0,
+                };
+
+                mappedResource.Write(lightBuffer);
+
+				// Unlock the constant buffer.
+				deviceContext.UnmapSubresource(constantLightBuffer, 0);
+
+				// Set the position of the light constant buffer in the pixel shader.
+				int bufferNumber = 0;
+
+				// Finally set the light constant buffer in the pixel shader with the updated values.
+                deviceContext.PixelShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
             }
         }
         public void SetShaderParameters(DeviceContext deviceContext, WorldViewProj worldViewProj, int indexCount)
@@ -201,56 +232,57 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             deviceContext.MapSubresource(constantMatrixBuffer, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out mappedResource);
 
             mappedResource.Write(worldViewProj);
-            
+
             //mappedResource.Write(worldInverseTransposeMatrix);
-            
+
             // Unlock the constant buffer.
             deviceContext.UnmapSubresource(constantMatrixBuffer, 0);
-        }
 
-        public void Render()
-        {
             try
             {
-                deviceContext.InputAssembler.InputLayout = inputLayout;
-
-                try
-                {
-                    deviceContext.VertexShader.SetConstantBuffer(0, constantMatrixBuffer);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("D3D11 failed to set constant buffer" + ex);
-                }
-
-                try
-                {
-                    deviceContext.VertexShader.Set(vertexShader);
-                    deviceContext.PixelShader.Set(pixelShader);
-                }
-                catch (Exception ex)
-                {
-
-                    throw new Exception("D3D11 failed to set Vertex and Pixel shader: " + ex);
-                }
-
-                try
-                {
-                    deviceContext.DrawIndexed(indexCount, 0, 0);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("D3D11 failed to draw scene: " + ex);
-                }
+                deviceContext.VertexShader.SetConstantBuffer(0, constantMatrixBuffer);
             }
             catch (Exception ex)
             {
-                throw new Exception("D3D11 failed to render shaders: " + ex);
+                throw new Exception("D3D11 failed to set constant buffer" + ex);
+            }
+
+            // Set shader resource in the pixel shader.
+            deviceContext.PixelShader.SetShaderResource(0, srw);
+        }
+
+
+
+        public void Render()
+        {
+            deviceContext.InputAssembler.InputLayout = inputLayout;
+            try
+            {
+                deviceContext.VertexShader.Set(vertexShader);
+                deviceContext.PixelShader.Set(pixelShader);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("D3D11 failed to set Vertex and Pixel shader: " + ex);
+            }
+
+            try
+            {
+                // Set the sampler state in the pixel shader.
+                deviceContext.PixelShader.SetSampler(0, sampleState);
+                deviceContext.DrawIndexed(indexCount, 0, 0);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("D3D11 failed to draw scene: " + ex);
             }
         }
 
         public void Dispose()
         {
+            constantLightBuffer.Dispose();
+            srw.Dispose();
+            sampleState.Dispose();
             constantMatrixBuffer.Dispose();
             inputLayout.Dispose();
             pixelShader.Dispose();
