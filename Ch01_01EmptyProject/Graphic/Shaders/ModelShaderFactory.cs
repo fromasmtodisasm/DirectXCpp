@@ -26,17 +26,68 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                     }
                     break;
             }
-           
+
             return specificVertexes;
         }
 
         private static Vector2[] GetTextureCoord()
         {
             Vector2[] textureCoord = new Vector2[]
+           {	
+          new Vector2( 0.0f, 0.0f ),
+         new Vector2( 1.0f, 0.0f ),
+         new Vector2( 1.0f, 1.0f ),
+         new Vector2( 0.0f, 1.0f ),
+
+		// Bottom Face
+         new Vector2( 0.0f, 0.0f ),
+         new Vector2( 1.0f, 0.0f ),
+         new Vector2( 1.0f, 1.0f ),
+         new Vector2( 0.0f, 1.0f ),
+
+		// Left Face
+         new Vector2( 0.0f, 0.0f ),
+         new Vector2( 1.0f, 0.0f ),
+         new Vector2( 1.0f, 1.0f ),
+         new Vector2( 0.0f, 1.0f ),
+
+		// Right Face
+        new Vector2( 0.0f, 0.0f ),
+        new Vector2( 1.0f, 0.0f ),
+        new Vector2( 1.0f, 1.0f ),
+        new Vector2( 0.0f, 1.0f ),
+
+		// Back Face
+         new Vector2( 0.0f, 0.0f ),
+         new Vector2( 1.0f, 0.0f ),
+         new Vector2( 1.0f, 1.0f ),
+         new Vector2( 0.0f, 1.0f ),
+
+		// Front Face
+        new Vector2( 0.0f, 0.0f ),
+        new Vector2( 1.0f, 0.0f ),
+        new Vector2( 1.0f, 1.0f ),
+        new Vector2( 0.0f, 1.0f ),
+   };
+
+
+            //Vector2[] textureCoord = new Vector2[]
+            //    {
+            //       new Vector2(0, 1),
+            //       new Vector2(0.5f, 0),
+            //       new Vector2(1, 1),
+            //    };
+            return textureCoord;
+        }
+
+
+        private static Vector3[] GetTextureCoord3D()
+        {
+            Vector3[] textureCoord = new Vector3[]
                 {
-                	new Vector2(0, 1),
-                   new Vector2(.5f, 0),
-                   new Vector2(1, 1),
+                   //new Vector3(0, 1),
+                   //new Vector3(0.5f, 0),
+                   //new Vector3(1, 1),
                 };
             return textureCoord;
         }
@@ -99,30 +150,3 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
     }
 }
-
-//private T CreateVertex<T>(Device device, Vector3[] positions, Vector4[] colors, IVertex[] vertices) where T : struct, IVertex
-//{
-//    vertices = new T[positions.Length];
-//    //from this array, make coresponding structure
-//    for (int i = 0; i < positions.Length; i++)
-//    {
-//        T a = new T();
-//        a.Position = positions[i];
-
-
-
-//        if (typeof(ColorVertex).IsAssignableFrom(typeof(T)))
-//        {
-//            //this is code for specific factories 
-//            ColorVertex b = (ColorVertex)Convert.ChangeType(a, typeof(ColorVertex));
-//            b.Color = colors[i];
-
-//        }
-
-
-//        IVertex[] v = (IVertex[])Convert.ChangeType(vertices, typeof(IVertex[]));
-//        v[i] = b;
-//    }
-//}
-
-//by adding where part T cant be nullable

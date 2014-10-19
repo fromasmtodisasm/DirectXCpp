@@ -32,8 +32,8 @@ namespace Ch01_01EmptyProject.Graphic
             //{
             this.windowConfig = windowConfig;
 
-            ShaderName shaderName = ShaderName.Color;
-            IShape shape = new Triangle();
+            ShaderName shaderName = ShaderName.Texture;
+            IShape shape = new Box2();
             ModelShader.Get(shaderName, shape);
          
              d3d = new D3D11(windowConfig);
@@ -73,8 +73,7 @@ namespace Ch01_01EmptyProject.Graphic
 
             model.SetDeviceContent(d3d.DeviceContext);
             model.Render();
-
-            //var constantMatrixBuffer = shader.SetWorldViewMatrix(worldMatrix, viewMatrix, projectionMatrix);
+            
             shader.SetShaderParameters(d3d.DeviceContext, wwp, ModelShader.GetIndexCount);
             shader.Render();
 

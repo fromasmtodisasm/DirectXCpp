@@ -108,6 +108,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphic\Box2.cs" />
     <Compile Include="Graphic\InputLayoutFactory.cs" />
     <Compile Include="Graphic\ModelShader.cs" />
     <Compile Include="Graphic\Shaders\ModelShaderFactory.cs" />
@@ -196,6 +197,7 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="Graphic\Shaders\Textures\seafloor.dds" />
+    <None Include="Graphic\Shaders\Textures\wall.dds" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

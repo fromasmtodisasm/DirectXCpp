@@ -34,6 +34,8 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         private Buffer constantMatrixBuffer;
         private int indexCount;
         private DeviceContext deviceContext;
+        private SamplerState sampleState;
+        private ShaderResourceView srw;
 
         [StructLayout(LayoutKind.Sequential)]
         public struct WorldViewProj
@@ -42,23 +44,12 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             public Matrix viewMatrix;
             public Matrix projectionMatrix;
         }
-
-        public WorldViewProj SetWorldViewMatrix(Matrix worldMatrix, Matrix viewMatrix, Matrix projectionMatrix)
-        {
-            var wwp = new WorldViewProj();
-            wwp.projectionMatrix = projectionMatrix;
-            wwp.viewMatrix = viewMatrix;
-            wwp.worldMatrix = worldMatrix;
-
-            return wwp;
-        }
-
         public D3DShader(Device device, IShaderEffect shaderEffect)
         {
             try
             {
                 this.device = device;
-                
+
                 try
                 {
                     vertexShaderByteCode = ShaderBytecode.CompileFromFile(shaderEffect.EffectShaderFileName, shaderEffect.VsFunctionName, shaderEffect.VsVersion.ToString());
@@ -100,8 +91,8 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
                 // Now setup the layout of the data that goes into the shader.
                 // It needs to match the VertexType structure in the Model and in the shader.
-                 InputElement[] inputElementDesc = InputLayoutFactory.Create(shaderEffect.VertexType);
-                
+                InputElement[] inputElementDesc = InputLayoutFactory.Create(shaderEffect.VertexType);
+
                 CreateInputLayout(inputElementDesc);
 
                 vertexShaderByteCode.Dispose();
@@ -114,7 +105,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                            {
                                Usage = ResourceUsage.Dynamic,
                                //or size of constant buffer
-                               SizeInBytes = Utilities.SizeOf<Matrix>(),
+                               SizeInBytes = Utilities.SizeOf<WorldViewProj>(),
                                BindFlags = BindFlags.ConstantBuffer,
                                CpuAccessFlags = CpuAccessFlags.Write,
                                OptionFlags = ResourceOptionFlags.None,
@@ -133,9 +124,18 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 {
                     try
                     {
-                        string textureFileName = @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\seafloor.dds";
+                        string textureFileName = @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\wall.dds";
 
-                        ShaderResourceView srw = ShaderResourceView.FromFile(device, textureFileName);
+                        try
+                        {
+                            srw = ShaderResourceView.FromFile(device, textureFileName);
+                        }
+                        catch (Exception ex)
+                        {
+                            throw new Exception("textureLoad: " + ex);
+                        }
+
+
                         SamplerStateDescription samplerDescription = new SamplerStateDescription()
                                 {
                                     Filter = Filter.MinMagMipLinear,
@@ -147,18 +147,18 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                                     MipLodBias = 0,
                                     MaximumAnisotropy = 1,
                                     ComparisonFunction = Comparison.Always,
-                                    BorderColor = new Color4(0, 0, 0, 0),
+                                    BorderColor = Color.Green,
                                     MinimumLod = 0,
                                     MaximumLod = 0
                                 };
 
-                        var sampleState = new SamplerState(device, samplerDescription);
+                        sampleState = new SamplerState(device, samplerDescription);
 
                     }
                     catch (Exception ex)
                     {
                         throw new Exception("Could not initialize texture shader: " + ex);
-                    } 
+                    }
                 }
 
             }
@@ -186,11 +186,21 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             deviceContext.MapSubresource(constantMatrixBuffer, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out mappedResource);
 
             mappedResource.Write(worldViewProj);
-            
-            //mappedResource.Write(worldInverseTransposeMatrix);
-            
+
             // Unlock the constant buffer.
             deviceContext.UnmapSubresource(constantMatrixBuffer, 0);
+    
+            try
+            {
+                deviceContext.VertexShader.SetConstantBuffer(0, constantMatrixBuffer);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("D3D11 failed to set constant buffer" + ex);
+            }
+
+            // Set shader resource in the pixel shader.
+            deviceContext.PixelShader.SetShaderResource(0, srw);
         }
 
         public void Render()
@@ -201,17 +211,11 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
                 try
                 {
-                    deviceContext.VertexShader.SetConstantBuffer(0, constantMatrixBuffer);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("D3D11 failed to set constant buffer" + ex);
-                }
-
-                try
-                {
                     deviceContext.VertexShader.Set(vertexShader);
                     deviceContext.PixelShader.Set(pixelShader);
+
+                    int slotSampler = 0;
+                    deviceContext.PixelShader.SetSampler(slotSampler, sampleState);
                 }
                 catch (Exception ex)
                 {
@@ -236,6 +240,8 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
         public void Dispose()
         {
+            srw.Dispose();
+            sampleState.Dispose();
             constantMatrixBuffer.Dispose();
             inputLayout.Dispose();
             pixelShader.Dispose();
