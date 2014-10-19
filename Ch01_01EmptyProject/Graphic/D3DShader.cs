@@ -14,6 +14,7 @@ using SharpDX.Windows;
 
 using Device = SharpDX.Direct3D11.Device;
 using Buffer = SharpDX.Direct3D11.Buffer;
+using Ch01_01EmptyProject.Graphic.Structures;
 
 namespace Ch01_01EmptyProject.Graphic.Shaders
 {
@@ -54,13 +55,10 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             public float padding;
         }
 
-        public D3DShader(Device device)
+        public D3DShader(Device device, IShaderEffect shaderEffect)
         {
             this.device = device;
-
             ShaderName shader = ShaderName.Texture;
-
-            IShaderEffect shaderEffect = ShaderFactory.Create(shader);
 
             try
             {
@@ -103,18 +101,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
             // Now setup the layout of the data that goes into the shader.
             // It needs to match the VertexType structure in the Model and in the shader.
-
-            InputElement[] inputElementDesc;
-    
-            if (shader == ShaderName.Texture)
-            {
-                inputElementDesc = VertexInputLayouts.TextureVertex();
-            }
-
-            else
-            {
-                inputElementDesc = VertexInputLayouts.ColorVertex();
-            }
+            InputElement[] inputElementDesc = InputLayoutFactory.Create(shaderEffect.VertexType);
 
             CreateInputLayout(inputElementDesc);
 
@@ -147,7 +134,16 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             {
                 try
                 {
-                    string textureFileName = @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\seafloor.dds";
+                    string textureFileName = @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\wall.dds";
+
+                    try
+                    {
+                        srw = ShaderResourceView.FromFile(device, textureFileName);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("textureLoad: " + ex);
+                    }
 
                     srw = ShaderResourceView.FromFile(device, textureFileName);
                     SamplerStateDescription samplerDescription = new SamplerStateDescription()
@@ -161,7 +157,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                                 MipLodBias = 0,
                                 MaximumAnisotropy = 1,
                                 ComparisonFunction = Comparison.Always,
-                                BorderColor = new Color4(255, 0, 0, 1),
+                                BorderColor = Color.Green,
                                 MinimumLod = 0,
                                 MaximumLod = 0
                             };
@@ -177,8 +173,8 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
             if (shader == ShaderName.Diffuse)
             {
-               Vector4 diffuseColor = (Vector4)Color.DarkRed;
-               Vector3 lightDirection = new Vector3(1, 1, 1);
+                Vector4 diffuseColor = (Vector4)Color.DarkRed;
+                Vector3 lightDirection = new Vector3(1, 1, 1);
 
                 var lightBufferDesc = new BufferDescription()
                 {
@@ -196,21 +192,21 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 deviceContext.MapSubresource(constantLightBuffer, MapMode.WriteDiscard, SharpDX.Direct3D11.MapFlags.None, out mappedResource);
 
                 var lightBuffer = new LightBufferType()
-                {
-                    diffuseColor = diffuseColor,
-                    lightDirection = lightDirection,
-                    padding = 0,
-                };
+            {
+                diffuseColor = diffuseColor,
+                lightDirection = lightDirection,
+                padding = 0,
+            };
 
                 mappedResource.Write(lightBuffer);
 
-				// Unlock the constant buffer.
-				deviceContext.UnmapSubresource(constantLightBuffer, 0);
+                // Unlock the constant buffer.
+                deviceContext.UnmapSubresource(constantLightBuffer, 0);
 
-				// Set the position of the light constant buffer in the pixel shader.
-				int bufferNumber = 0;
+                // Set the position of the light constant buffer in the pixel shader.
+                int bufferNumber = 0;
 
-				// Finally set the light constant buffer in the pixel shader with the updated values.
+                // Finally set the light constant buffer in the pixel shader with the updated values.
                 deviceContext.PixelShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
             }
         }
@@ -233,8 +229,6 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
             mappedResource.Write(worldViewProj);
 
-            //mappedResource.Write(worldInverseTransposeMatrix);
-
             // Unlock the constant buffer.
             deviceContext.UnmapSubresource(constantMatrixBuffer, 0);
 
@@ -256,10 +250,14 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         public void Render()
         {
             deviceContext.InputAssembler.InputLayout = inputLayout;
+
             try
             {
                 deviceContext.VertexShader.Set(vertexShader);
                 deviceContext.PixelShader.Set(pixelShader);
+
+                int slotSampler = 0;
+                deviceContext.PixelShader.SetSampler(slotSampler, sampleState);
             }
             catch (Exception ex)
             {

@@ -25,7 +25,7 @@ struct VertexShaderOutput //PixelInputType
 {
 	float4 Position : SV_POSITION;
 	float2 tex : TEXCOORD;
-	float3 normal : NORMAL;;
+	float3 normal : NORMAL;
 };
 
 //Transforming verticves and doing color calculatios

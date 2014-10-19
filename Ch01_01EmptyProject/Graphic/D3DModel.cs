@@ -12,6 +12,7 @@ using SharpDX.DXGI;
 using SharpDX.Direct3D;
 using Ch01_01EmptyProject.Graphic.Structures;
 using System.Reflection;
+using Ch01_01EmptyProject.Graphic.Shaders;
 
 namespace Ch01_01EmptyProject.Graphic
 {
@@ -64,122 +65,23 @@ namespace Ch01_01EmptyProject.Graphic
         private int[] indices;
 
         private DeviceContext deviceContext;
+        private Device device;
+        private object p1;
+        private int[] p2;
+        private Type vertexype;
 
-        public int IndexCount
-        {
-            get;
-            private set;
-        }
-
-        public D3DModel(Device device)
+        public D3DModel(Device device, object p1, int[] p2)
         {
             try
             {
+                indices = p2;//shape.Indexes;
+                vertexype = p1.GetType().GetElementType();
+                //get method wih reflection
+                //it allows me to create a buffer for any type..
+                MethodInfo method = typeof(D3DModel).GetMethod("vertexBufferC");
+                MethodInfo generic = method.MakeGenericMethod(vertexype);
 
-              Vector2[] textureCoord = new Vector2[]
-                {
-                    new Vector2(0, 1),
-                   new Vector2(.5f, 0),
-                   new Vector2(1, 1),
-                 
-                   new Vector2(1, 0),
-                     new Vector2(1, 0),
-                       new Vector2(1, 0),
-                          new Vector2(1, 0),
-                            new Vector2(1, 0),
-                              new Vector2(1, 0),
-                    
-                };
-
-                //var vertexType = VertexType.ColorVertex;
-
-                IShape shape = new Square();
-                indices = shape.Indexes;
-
-                //add to the base shapea additional stuff defined by Vector Structure
-                Vector3[] positions = shape.Vertexes;
-
-
-                // to decorate basic shape with aditional vertices , info about decorator type
-                // should provide factory
-
-                //switch (vertexType)
-                //{
-                //    case VertexType.ColorVertex:
-                //        {
-                //            ColorVertex[] vertices = new ColorVertex[positions.Length];
-                //            //from this array, make coresponding structure
-                //            for (int i = 0; i < positions.Length; i++)
-                //            {
-                //                ColorVertex a = new ColorVertex();
-                //                a.Position = positions[i];
-                //                a.Color = colors[i];
-                //                vertices[i] = a;
-                //            }
-                //        }
-                //        break;
-                //    case VertexType.NormalVertex:
-                //        break;
-                //    case VertexType.TextureVertex:
-                //        {
-                //            TextureVertex[] vertices = new TextureVertex[positions.Length];
-                //            //from this array, make coresponding structure
-                //            for (int i = 0; i < positions.Length; i++)
-                //            {
-                //                var a = new TextureVertex();
-                //                a.Position = positions[i];
-                //                a.Texture = textureCoord[i];
-                //                vertices[i] = a;
-                //            }
-
-                //        }
-                //        break;
-                //    case VertexType.ColorNormalVertex:
-                //        break;
-                //    default:
-
-                //        break;
-                //}
-
-                //ColorVertex[] vertices = new ColorVertex[positions.Length];
-                ////from this array, make coresponding structure
-                //for (int i = 0; i < positions.Length; i++)
-                //{
-                //    ColorVertex a = new ColorVertex();
-                //    a.Position = positions[i];
-                //    a.Color = colors[i];
-                //    vertices[i] = a;
-                //}
-
-
-
-                TextureVertex[] vertices = new TextureVertex[positions.Length];
-                //from this array, make coresponding structure
-                for (int i = 0; i < positions.Length; i++)
-                {
-                    TextureVertex a = new TextureVertex();
-                    a.Position = positions[i];
-                    a.Texture = textureCoord[i];
-                    vertices[i] = a;
-                }
-
-
-                try
-                {
-                    vertexBuffer = Buffer.Create(device, BindFlags.VertexBuffer, vertices);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Verrtx Bufdfder: " + ex.Message);
-                }
-
-                //generiic version
-                //MethodInfo createBufferMethod = typeof(Buffer).GetMethod("Create");
-                //MethodInfo createBufferGenericMethod = createBufferMethod.MakeGenericMethod(vertexType);
-
-
-                IndexCount = indices.Length;
-
+                generic.Invoke(this, new object[] { device, p1 });
 
                 indicesBuffer = Buffer.Create(device, BindFlags.IndexBuffer, indices);
             }
@@ -189,12 +91,18 @@ namespace Ch01_01EmptyProject.Graphic
             }
         }
 
-        private void CreateVertex<T>(Device device, T[] vertices) where T : struct
+        //by adding where part T cant be nullable
+        public void vertexBufferC<T>(Device device, T[] vertices) where T : struct
         {
-
+            try
+            {
+                vertexBuffer = Buffer.Create(device, BindFlags.VertexBuffer, vertices);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Verrtx Bufdfder: " + ex.Message);
+            }
         }
-
-
 
         public void SetDeviceContent(DeviceContext deviceContext)
         {
@@ -206,7 +114,11 @@ namespace Ch01_01EmptyProject.Graphic
             try
             {
                 int firstSlot = 0;
-                int stride = Utilities.SizeOf<TextureVertex>();
+
+                MethodInfo sizeO = typeof(D3DModel).GetMethod("UtilitiesSizeOf");
+                MethodInfo generic = sizeO.MakeGenericMethod(vertexype);
+                int stride = (int)generic.Invoke(this, null);
+
                 int offset = 0;
 
                 //bound vertex buffer to an input slot of the device, in order to feed the vertices to the pipeline output
@@ -221,6 +133,12 @@ namespace Ch01_01EmptyProject.Graphic
             {
                 throw new Exception("D3D11 failed to render model: " + ex);
             }
+        }
+
+        public int UtilitiesSizeOf<T>() where T : struct
+        { 
+            //this wrapper is here because of reflection invoke
+            return Utilities.SizeOf<T>();
         }
 
         public void Dispose()

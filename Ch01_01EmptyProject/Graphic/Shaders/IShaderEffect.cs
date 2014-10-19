@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Ch01_01EmptyProject.Graphic.Structures;
+using System;
 namespace Ch01_01EmptyProject.Graphic.Shaders
 {
     public interface IShaderEffect
@@ -8,5 +9,6 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         PsVersion PsVersion { get; }
         string VsFunctionName { get; }
         VsVersion VsVersion { get; }
+        VertexType VertexType  { get; }
     }
 }

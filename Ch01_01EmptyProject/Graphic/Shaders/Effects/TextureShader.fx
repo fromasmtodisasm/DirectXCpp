@@ -102,7 +102,7 @@ technique11 Textured
 {
 	pass Pass1
 	{
-		SetVertexShader(CompileShader(vs_5_0, VertexShaderFunction()));
-		SetPixelShader(CompileShader(ps_5_0, PixelShaderFunction()));
+		SetVertexShader(CompileShader(vs_5_0, TextureVertexShader()));
+		SetPixelShader(CompileShader(ps_5_0, TexturePixelShader()));
 	}
 }
