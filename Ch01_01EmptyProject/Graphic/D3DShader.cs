@@ -20,14 +20,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 {
     public class D3DShader : IGraphicComposite
     {
-        private Buffer vertexBuffer;
-        private Buffer indicesBuffer;
-        private Buffer lightBuffer;
+        #region Instance fields
         private Buffer constantMatrixBuffer;
         private Buffer constantLightBuffer;
-
-
-        private int[] indices;
 
         private InputLayout inputLayout;
         private VertexShader vertexShader;
@@ -46,7 +41,11 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
         private DataStream mappedResource;
         private ShaderName shader;
+        private Vector3 cameraPosition;
+        private Buffer constantCameraBuffer; 
+        #endregion
 
+        #region ShaderStructures region
         [StructLayout(LayoutKind.Sequential)]
         public struct WorldViewProj
         {
@@ -63,6 +62,16 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             public float padding;
         }
         [StructLayout(LayoutKind.Sequential)]
+        public struct SpecularLightBufferType
+        {
+            public Vector4 ambientColor;
+            public Vector4 diffuseColor;
+            public Vector3 lightDirection;
+            public float specularPower;
+            public Vector4 specularColor;
+            // Added extra padding so structure is a multiple of 16 for CreateBuffer function requirements.
+        }
+        [StructLayout(LayoutKind.Sequential)]
         public struct AmbientLightBufferType
         {
             public Vector4 ambientColor;
@@ -72,8 +81,15 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             public float padding;
         }
 
+        [StructLayout(LayoutKind.Sequential)]
+        struct CameraBufferType
+        {
+            public Vector3 cameraPosition;
+            public float padding;
+        } 
+        #endregion
 
-        public D3DShader(Device device, IShaderEffect shaderEffect, ShaderName shader)
+        public D3DShader(Device device, IShaderEffect shaderEffect, ShaderName shader, Vector3 cameraPosition)
         {
             this.device = device;
             this.shader = shader;
@@ -126,14 +142,14 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             vertexShaderByteCode.Dispose();
             pixelShaderByteCode.Dispose();
 
+            constantMatrixBuffer = GetConstantMatrixBuffer<WorldViewProj>(device);
+
             //is there any differnece between loading one shader wih multiple effects
             //and more shaders with only one effect?
             if (shader == ShaderName.Texture || shader == ShaderName.Diffuse || shader == ShaderName.Ambient)
             {
                 LoadTextureShader(device);
             }
-
-            constantMatrixBuffer = GetConstantMatrixBuffer<WorldViewProj>(device);
 
             if (shader == ShaderName.Diffuse)
             {
@@ -142,6 +158,11 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             if (shader == ShaderName.Ambient)
             {
                 constantLightBuffer = GetConstantMatrixBuffer<AmbientLightBufferType>(device);
+            }
+            if (shader == ShaderName.Specular)
+            {
+                constantCameraBuffer = GetConstantMatrixBuffer<CameraBufferType>(device);
+                constantLightBuffer = GetConstantMatrixBuffer<SpecularLightBufferType>(device);
             }
         }
 
@@ -188,7 +209,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             if (shader == ShaderName.Diffuse)
             {
                 Vector4 diffuseColor = new Vector4(1, 0, 1, 1);
-                Vector3 lightDirection = new Vector3(0, 0, 1);
+                Vector3 lightDirection = new Vector3(1.0f, 0.0f, 1.0f);
 
                 var lightBuffer = new LightBufferType()
                 {
@@ -197,10 +218,8 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                     padding = 0,
                 };
 
-                WriteToSubresource(constantLightBuffer, lightBuffer);
+                WriteToSubresource<LightBufferType>(constantLightBuffer, lightBuffer);
 
-                // Set the position of the light constant buffer in the pixel shader.
-                bufferNumber = 0;
                 // Finally set the light constant buffer in the pixel shader with the updated values.
                 deviceContext.PixelShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
             }
@@ -208,10 +227,10 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             if (shader == ShaderName.Ambient)
             {
                 Vector4 diffuseColor = new Vector4(1, 1, 1f, 1f);
-                Vector3 lightDirection = new Vector3(1, 0, 0);
+                Vector3 lightDirection = new Vector3(1, .5f, 0);
                 Vector4 ambientColor = new Vector4(0.15f, 0.15f, 0.15f, 1.0f);
 
-                AmbientLightBufferType ambientLightBuffer = new AmbientLightBufferType()
+                var ambientLightBuffer = new AmbientLightBufferType()
                 {
                     ambientColor = ambientColor,
                     diffuseColor = diffuseColor,
@@ -219,12 +238,46 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                     padding = 0,
                 };
 
-                WriteToSubresource(constantLightBuffer, ambientLightBuffer);
+                WriteToSubresource<AmbientLightBufferType>(constantLightBuffer, ambientLightBuffer);
 
-                // Set the position of the light constant buffer in the pixel shader.
+                // Finally set the light constant buffer in the pixel shader with the updated values.
+                deviceContext.PixelShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
+            }
+
+            if(shader == ShaderName.Specular)
+            {
+                var cameraBuffer = new CameraBufferType()
+                {
+                  cameraPosition = cameraPosition,
+                  padding = 0.0f,
+                };
+
+                WriteToSubresource<CameraBufferType>(constantCameraBuffer, cameraBuffer);
+                bufferNumber = 1;
+
+                deviceContext.VertexShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
+
+                Vector4 diffuseColor = new Vector4(1, 1, 1f, 1f);
+                Vector3 lightDirection = new Vector3(1, 1, 1);
+                Vector4 ambientColor = new Vector4(0.15f, 0.15f, 0.15f, 1.0f);
+
+                Vector4 specularColor = new Vector4(1, 1, 1, 1);
+                float specularPower = 32;
+
+                var specularLightBuffer = new SpecularLightBufferType()
+                {
+                    ambientColor = ambientColor,
+                    diffuseColor = diffuseColor,
+                    lightDirection = lightDirection,
+                    specularColor = specularColor,
+                    specularPower = specularPower,
+                };
+
+                WriteToSubresource<SpecularLightBufferType>(constantLightBuffer, specularLightBuffer);
                 bufferNumber = 0;
                 // Finally set the light constant buffer in the pixel shader with the updated values.
                 deviceContext.PixelShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
+                
             }
         }
 
@@ -260,8 +313,8 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         {
             constantLightBuffer.Dispose();
             constantMatrixBuffer.Dispose();
-           
-            
+            constantCameraBuffer.Dispose();
+
             textureResource.Dispose();
             sampleState.Dispose();
             constantMatrixBuffer.Dispose();

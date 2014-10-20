@@ -97,6 +97,49 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             return textureCoord;
         }
 
+        private static Vector3[] GetNormalCoord()
+        {
+            Vector3[] textureCoord = new Vector3[]
+                {
+                  // Top Face
+        new Vector3( 0.0f,  1.0f, 0.0f ),
+        new Vector3( 0.0f,  1.0f, 0.0f ), 
+        new Vector3( 0.0f,  1.0f, 0.0f ),
+        new Vector3( 0.0f,  1.0f, 0.0f ), 
+
+		// Bottom Face
+        new Vector3( 0.0f,  -1.0f, 0.0f ), 
+        new Vector3( 0.0f,  -1.0f, 0.0f ), 
+        new Vector3( 0.0f,  -1.0f, 0.0f ), 
+        new Vector3( 0.0f,  -1.0f, 0.0f ), 
+
+		// Left Face
+        new Vector3( -1.0f,  0.0f, 0.0f ), 
+        new Vector3( -1.0f,  0.0f, 0.0f ), 
+        new Vector3( -1.0f,  0.0f, 0.0f ), 
+        new Vector3( -1.0f,  0.0f, 0.0f ), 
+
+		// Right Face
+       new Vector3( 1.0f,  0.0f, 0.0f ), 
+       new Vector3( 1.0f,  0.0f, 0.0f ),
+       new Vector3( 1.0f,  0.0f, 0.0f ),
+       new Vector3( 1.0f,  0.0f, 0.0f ),
+
+		// Back Face
+        new Vector3( 0.0f,  0.0f, -1.0f ), 
+        new Vector3( 0.0f,  0.0f, -1.0f ),
+        new Vector3( 0.0f,  0.0f, -1.0f ),
+        new Vector3( 0.0f,  0.0f, -1.0f ),
+
+		// Front Face
+       new Vector3( 0.0f,  0.0f, 1.0f ),
+       new Vector3( 0.0f,  0.0f, 1.0f ),
+       new Vector3( 0.0f,  0.0f, 1.0f ),
+       new Vector3( 0.0f,  0.0f, 1.0f ),
+                };
+            return textureCoord;
+        }
+
         private static Vector4[] GetColors()
         {
             Vector4[] colors = new Vector4[]
@@ -156,15 +199,16 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         public static T[] TextureNormalVertex<T>(Vector3[] positions) where T : struct
         {
             Vector2[] textureCoord = GetTextureCoord();
-
-            TextureNormalVertex[] vertices = new TextureNormalVertex[positions.Length];
+            Vector3[] normalCoord = GetNormalCoord();
+           
+                TextureNormalVertex[] vertices = new TextureNormalVertex[positions.Length];
             //from this array, make coresponding structure
             for (int i = 0; i < positions.Length; i++)
             {
                 TextureNormalVertex a = new TextureNormalVertex();
                 a.Position = positions[i];
                 a.Texture = textureCoord[i];
-                a.Normal = new Vector3(0, 0, -1);
+                a.Normal = normalCoord[i];
                 vertices[i] = a;
             }
 

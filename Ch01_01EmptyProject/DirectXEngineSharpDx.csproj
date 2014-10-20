@@ -161,6 +161,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Graphic\Shaders\Effects\DiffuseLightingRastertek.fx" />
+    <Content Include="Graphic\Shaders\Effects\SpecularLightingRastertek.fx">
+      <Generator>VertexShaderFunction</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Graphic\Shaders\Effects\TestShader.fx">
       <Generator>VertexShaderFunction</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

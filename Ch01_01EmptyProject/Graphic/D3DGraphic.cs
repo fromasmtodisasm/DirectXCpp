@@ -36,7 +36,7 @@ namespace Ch01_01EmptyProject.Graphic
             d3d = new D3D11(windowConfig);
             camera = new Camera();
             model = new D3DModel(d3d.Device, ModelShader.GetModelForRender, ModelShader.GetIndexes);
-            shader = new D3DShader(d3d.Device, ModelShader.GetShaderEffect, shaderName);
+            shader = new D3DShader(d3d.Device, ModelShader.GetShaderEffect, shaderName, camera.Position);
 
             graph.Add(d3d);
             graph.Add(model);
