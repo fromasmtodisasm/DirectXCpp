@@ -7,7 +7,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 {
    public class AmbientShader : ShaderEffectBase
     {
-        string effectShaderFileName = @"Graphic\Shaders\Effects\AmbientLighting.fx";
+        string effectShaderFileName = @"Graphic\Shaders\Effects\AmbientLightingRastertek.fx";
+        private string vsFunctionName = "LightVertexShaderFunction";
+        private string psFunctionName = "LightPixelShaderFunction";
 
         public override string EffectShaderFileName
         {
@@ -16,5 +18,26 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 return effectShaderFileName;
             }
         }
-    }
+        public override Structures.VertexType VertexType
+        {
+            get
+            {
+                return Structures.VertexType.TextureNormalVertex;
+            }
+        }
+        public override string VsFunctionName
+        {
+            get
+            {
+                return vsFunctionName;
+            }
+        }
+        public override string PsFunctionName
+        {
+            get
+            {
+              return psFunctionName;
+            }
+        }
+   }
 }

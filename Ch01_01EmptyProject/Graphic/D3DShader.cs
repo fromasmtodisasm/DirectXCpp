@@ -62,6 +62,16 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             // Added extra padding so structure is a multiple of 16 for CreateBuffer function requirements.
             public float padding;
         }
+        [StructLayout(LayoutKind.Sequential)]
+        public struct AmbientLightBufferType
+        {
+            public Vector4 ambientColor;
+            public Vector4 diffuseColor;
+            public Vector3 lightDirection;
+            // Added extra padding so structure is a multiple of 16 for CreateBuffer function requirements.
+            public float padding;
+        }
+
 
         public D3DShader(Device device, IShaderEffect shaderEffect, ShaderName shader)
         {
@@ -118,7 +128,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
             //is there any differnece between loading one shader wih multiple effects
             //and more shaders with only one effect?
-            if (shader == ShaderName.Texture || shader == ShaderName.Diffuse)
+            if (shader == ShaderName.Texture || shader == ShaderName.Diffuse || shader == ShaderName.Ambient)
             {
                 LoadTextureShader(device);
             }
@@ -128,6 +138,10 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             if (shader == ShaderName.Diffuse)
             {
                 constantLightBuffer = GetConstantMatrixBuffer<LightBufferType>(device);
+            }
+            if (shader == ShaderName.Ambient)
+            {
+                constantLightBuffer = GetConstantMatrixBuffer<AmbientLightBufferType>(device);
             }
         }
 
@@ -174,7 +188,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             if (shader == ShaderName.Diffuse)
             {
                 Vector4 diffuseColor = new Vector4(1, 0, 1, 1);
-                Vector3 lightDirection = new Vector3(.4f, 0, 1);
+                Vector3 lightDirection = new Vector3(0, 0, 1);
 
                 var lightBuffer = new LightBufferType()
                 {
@@ -184,6 +198,28 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 };
 
                 WriteToSubresource(constantLightBuffer, lightBuffer);
+
+                // Set the position of the light constant buffer in the pixel shader.
+                bufferNumber = 0;
+                // Finally set the light constant buffer in the pixel shader with the updated values.
+                deviceContext.PixelShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
+            }
+
+            if (shader == ShaderName.Ambient)
+            {
+                Vector4 diffuseColor = new Vector4(1, 1, 1f, 1f);
+                Vector3 lightDirection = new Vector3(1, 0, 0);
+                Vector4 ambientColor = new Vector4(0.15f, 0.15f, 0.15f, 1.0f);
+
+                AmbientLightBufferType ambientLightBuffer = new AmbientLightBufferType()
+                {
+                    ambientColor = ambientColor,
+                    diffuseColor = diffuseColor,
+                    lightDirection = lightDirection,
+                    padding = 0,
+                };
+
+                WriteToSubresource(constantLightBuffer, ambientLightBuffer);
 
                 // Set the position of the light constant buffer in the pixel shader.
                 bufferNumber = 0;
@@ -223,6 +259,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         public void Dispose()
         {
             constantLightBuffer.Dispose();
+            constantMatrixBuffer.Dispose();
+           
+            
             textureResource.Dispose();
             sampleState.Dispose();
             constantMatrixBuffer.Dispose();

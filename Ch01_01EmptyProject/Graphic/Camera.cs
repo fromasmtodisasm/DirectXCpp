@@ -24,7 +24,7 @@ namespace Ch01_01EmptyProject.Graphic
         public void RastertekCameraRender()
         {
             // Setup the position of the camera in the world.
-            var position = new Vector3(0, 0, -10);
+            var position = new Vector3(0, 2, -11);
 
             // Setup where the camera is looking by default.
             var lookAt = new Vector3(0, 0, 1);
@@ -45,10 +45,10 @@ namespace Ch01_01EmptyProject.Graphic
             lookAt = position + lookAt;
 
             // Finally create the view matrix from the three updated vectors.
-            ViewMatrix = Matrix.LookAtLH(position, lookAt, up);
-        
+            V = Matrix.LookAtLH(position, lookAt, up);
+
         }
-        
+
         public void Render()
         {
             try
@@ -58,7 +58,7 @@ namespace Ch01_01EmptyProject.Graphic
                 float radius = 5.0f;
 
                 //Convert spherical to cartesian coords
-                float x = -2 + radius * (float)Math.Sin(phi) * (float)Math.Cos(theta);
+                float x = -5 + radius * (float)Math.Sin(phi) * (float)Math.Cos(theta);
                 float y = radius * (float)Math.Cos(phi);
                 float z = radius * (float)Math.Sin(phi) * (float)Math.Sin(theta);
 
@@ -78,7 +78,7 @@ namespace Ch01_01EmptyProject.Graphic
 
         public void Dispose()
         {
-            
+
         }
     }
 }

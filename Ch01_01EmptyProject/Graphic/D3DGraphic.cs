@@ -25,12 +25,11 @@ namespace Ch01_01EmptyProject.Graphic
         private D3DModel model;
         private D3DShader shader;
 
-
         public D3DGraphic(WindowConfiguration windowConfig)
         {
             this.windowConfig = windowConfig;
 
-            ShaderName shaderName = ShaderName.Diffuse;
+            ShaderName shaderName = ShaderName.Ambient;
             IShape shape = new Box2();
             ModelShader.Get(shaderName, shape);
 
