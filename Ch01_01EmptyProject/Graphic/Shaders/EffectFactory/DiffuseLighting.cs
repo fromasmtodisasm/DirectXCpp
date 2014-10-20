@@ -8,8 +8,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 {
    public class DiffuseLighting : ShaderEffectBase
     {
-       string effectShaderFileName = @"Graphic\Shaders\Effects\DiffuseLightingRastertek.fx";
-       //string effectShaderFileName = @"Graphic\Shaders\Effects\DiffuseLighting.fx";
+       //only at this effect is need to specify full path ?? BUG
+       string effectShaderFileName = @"D:\GitHub\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Effects\DiffuseLightingRastertek.fx";
+        
        string vsFunctionName = "LightVertexShader";
        string psFunctionName = "LightPixelShader"; 
 

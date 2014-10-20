@@ -26,6 +26,12 @@ namespace Ch01_01EmptyProject.Graphic
                         inputElementDesc = VertexInputLayouts.TextureVertex();
                     }
                     break;
+                case VertexType.TextureNormalVertex:
+                    {
+                        inputElementDesc = VertexInputLayouts.TextureNormalVertex();
+                    }
+                    break;
+
                 //case VertexType.ColorNormalVertex:
                 // break;
                 //default:

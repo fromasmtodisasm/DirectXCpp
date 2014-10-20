@@ -111,8 +111,13 @@
     <Compile Include="Graphic\Box2.cs" />
     <Compile Include="Graphic\InputLayoutFactory.cs" />
     <Compile Include="Graphic\ModelShader.cs" />
+    <Compile Include="Graphic\Shaders\EffectFactory\Ambient.cs" />
+    <Compile Include="Graphic\Shaders\EffectFactory\ColorShader.cs" />
+    <Compile Include="Graphic\Shaders\EffectFactory\DiffuseLighting.cs" />
+    <Compile Include="Graphic\Shaders\EffectFactory\SpecularLighting.cs" />
+    <Compile Include="Graphic\Shaders\EffectFactory\TestShader.cs" />
+    <Compile Include="Graphic\Shaders\EffectFactory\TextureMapping.cs" />
     <Compile Include="Graphic\Shaders\ModelShaderFactory.cs" />
-    <Compile Include="Graphic\Shaders\ShaderModel.cs" />
     <Compile Include="Graphic\Square.cs" />
     <Compile Include="Graphic\Triangle.cs" />
     <Compile Include="Graphic\Box.cs" />
@@ -127,17 +132,12 @@
     <Compile Include="Graphic\D3DModel.cs" />
     <Compile Include="Graphic\D3DShader.cs" />
     <Compile Include="Graphic\IShape.cs" />
-    <Compile Include="Graphic\Shaders\Ambient.cs" />
-    <Compile Include="Graphic\Shaders\ColorShader.cs" />
-    <Compile Include="Graphic\Shaders\DiffuseLighting.cs" />
     <Compile Include="Graphic\Shaders\IShaderEffect.cs" />
     <Compile Include="Graphic\Shaders\ShaderFactory.cs" />
     <Compile Include="Graphic\Shaders\ShaderEffectBase.cs" />
-    <Compile Include="Graphic\Shaders\SpecularLighting.cs" />
-    <Compile Include="Graphic\Shaders\TestShader.cs" />
-    <Compile Include="Graphic\Shaders\TextureMapping.cs" />
     <Compile Include="Graphic\Shape.cs" />
     <Compile Include="Graphic\Structures\IVertex.cs" />
+    <Compile Include="Graphic\Shaders\Texture.cs" />
     <Compile Include="System\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -160,10 +160,7 @@
     <Content Include="Graphic\Shaders\Effects\ColorShader.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Graphic\Shaders\Effects\DiffuseLightingRastertek .fx">
-      <Generator>VertexShaderFunction</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
+    <Content Include="Graphic\Shaders\Effects\DiffuseLightingRastertek.fx" />
     <Content Include="Graphic\Shaders\Effects\TestShader.fx">
       <Generator>VertexShaderFunction</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

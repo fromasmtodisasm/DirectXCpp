@@ -14,11 +14,12 @@ using System.Runtime.InteropServices;
 
 namespace Ch01_01EmptyProject.Graphic.Structures
 {
-  public enum VertexType
+    public enum VertexType
     {
         ColorVertex,
         NormalVertex,
         TextureVertex,
+        TextureNormalVertex,
         ColorNormalVertex,
     }
     //class VertexTypes and class VertexInputLayouts
@@ -66,7 +67,7 @@ namespace Ch01_01EmptyProject.Graphic.Structures
     {
         private Vector3 position;
         private Vector2 texture;
-     
+
         public Vector3 Position
         {
             get { return position; }

@@ -28,28 +28,20 @@ namespace Ch01_01EmptyProject.Graphic
 
         public D3DGraphic(WindowConfiguration windowConfig)
         {
-            //try
-            //{
             this.windowConfig = windowConfig;
 
-            ShaderName shaderName = ShaderName.Texture;
+            ShaderName shaderName = ShaderName.Diffuse;
             IShape shape = new Box2();
             ModelShader.Get(shaderName, shape);
-         
-             d3d = new D3D11(windowConfig);
-             camera = new Camera();
-             model = new D3DModel(d3d.Device, ModelShader.GetModelForRender, ModelShader.GetIndexes);
-             shader = new D3DShader(d3d.Device, ModelShader.GetShaderEffect);
+
+            d3d = new D3D11(windowConfig);
+            camera = new Camera();
+            model = new D3DModel(d3d.Device, ModelShader.GetModelForRender, ModelShader.GetIndexes);
+            shader = new D3DShader(d3d.Device, ModelShader.GetShaderEffect, shaderName);
 
             graph.Add(d3d);
             graph.Add(model);
             graph.Add(shader);
-
-            //}
-            //catch (Exception ex)
-            //{
-            //    throw new Exception("Could not initialize Direct3D: " + ex.Message);
-            //}
         }
 
         public void Render()
@@ -73,7 +65,7 @@ namespace Ch01_01EmptyProject.Graphic
 
             model.SetDeviceContent(d3d.DeviceContext);
             model.Render();
-            
+
             shader.SetShaderParameters(d3d.DeviceContext, wwp, ModelShader.GetIndexCount);
             shader.Render();
 

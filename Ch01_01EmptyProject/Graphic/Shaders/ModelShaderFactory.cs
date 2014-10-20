@@ -25,6 +25,11 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                         specificVertexes = TextureVertex<TextureVertex>(positions);
                     }
                     break;
+                case VertexType.TextureNormalVertex:
+                    {
+                        specificVertexes = TextureNormalVertex<TextureNormalVertex>(positions);
+                    }
+                    break;
             }
 
             return specificVertexes;
@@ -148,5 +153,23 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             return y;
         }
 
+        public static T[] TextureNormalVertex<T>(Vector3[] positions) where T : struct
+        {
+            Vector2[] textureCoord = GetTextureCoord();
+
+            TextureNormalVertex[] vertices = new TextureNormalVertex[positions.Length];
+            //from this array, make coresponding structure
+            for (int i = 0; i < positions.Length; i++)
+            {
+                TextureNormalVertex a = new TextureNormalVertex();
+                a.Position = positions[i];
+                a.Texture = textureCoord[i];
+                a.Normal = new Vector3(0, 0, -1);
+                vertices[i] = a;
+            }
+
+            var y = (T[])Convert.ChangeType(vertices, typeof(T[]));
+            return y;
+        }
     }
 }

@@ -109,6 +109,45 @@ namespace Ch01_01EmptyProject
         };
         }
 
+        public static InputElement[] TextureNormalVertex()
+        {
+            return new InputElement[]
+        {
+            new InputElement()
+            {
+            SemanticName = "POSITION",
+            SemanticIndex = 0,
+            Format = Format.R32G32B32A32_Float,
+            Slot = 0,
+            AlignedByteOffset = 0,
+            Classification = InputClassification.PerVertexData,
+            InstanceDataStepRate = 0
+            },
+             new InputElement()
+            {
+                SemanticName = "TEXCOORD",
+                SemanticIndex = 0,
+                Format = Format.R32G32_Float,
+                Slot = 0,
+                AlignedByteOffset = 12,
+                Classification = InputClassification.PerVertexData,
+                InstanceDataStepRate = 0
+            },
+           new InputElement()
+
+            {
+                SemanticName = "NORMAL",
+                SemanticIndex = 0,
+                Format = Format.R32G32B32_Float,
+                Slot = 0,
+                AlignedByteOffset = 20,
+                Classification = InputClassification.PerVertexData,
+                InstanceDataStepRate = 0
+            }
+        };
+        }
+
+
         public static InputElement[] TextureVertex()
         {
             return new InputElement[]
