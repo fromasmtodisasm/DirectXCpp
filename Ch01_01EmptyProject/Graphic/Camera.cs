@@ -12,6 +12,9 @@ namespace Ch01_01EmptyProject.Graphic
     {
         private Matrix V;
         private Vector3 cameraPos;
+        private float rotationZ;
+        private float rotationY;
+        private float rotationX;
 
         public Vector3 Position
         {
@@ -24,9 +27,12 @@ namespace Ch01_01EmptyProject.Graphic
             set { V = value; }
         }
 
-        private float RotationX { get; set; }
-        private float RotationY { get; set; }
-        private float RotationZ { get; set; }
+        public void SetRotation(float x, float y, float z)
+        {
+            rotationX = x;
+            rotationY = y;
+            rotationZ = z;
+        }
 
         public void RastertekCameraRender()
         {
@@ -37,9 +43,9 @@ namespace Ch01_01EmptyProject.Graphic
             var lookAt = new Vector3(0, 0, 1);
 
             // Set the yaw (Y axis), pitch (X axis), and roll (Z axis) rotations in radians.
-            var pitch = RotationX * 0.0174532925f;
-            var yaw = RotationY * 0.0174532925f;
-            var roll = RotationZ * 0.0174532925f;
+            var pitch = rotationX * 0.0174532925f;
+            var yaw = rotationY * 0.0174532925f;
+            var roll = rotationZ * 0.0174532925f;
 
             // Create the rotation matrix from the yaw, pitch, and roll values.
             var rotationMatrix = Matrix.RotationYawPitchRoll(yaw, pitch, roll);
@@ -66,14 +72,14 @@ namespace Ch01_01EmptyProject.Graphic
 
                 //Convert spherical to cartesian coords
                 float x = -2 + radius * (float)Math.Sin(phi) * (float)Math.Cos(theta);
-                float y = radius * (float)Math.Cos(phi);
-                float z = radius * (float)Math.Sin(phi) * (float)Math.Sin(theta);
+                float y =  radius * (float)Math.Cos(phi);
+                float z =  radius * (float)Math.Sin(phi) * (float)Math.Sin(theta);
 
                 //Build the view matrix
                 cameraPos = new Vector3(x, y, z);
                 Vector3 cameraTarget = new Vector3();
                 Vector3 cameraUp = new Vector3(0.0f, 1.0f, 0.0f);
-
+           
                 //view matrix
                 V = Matrix.LookAtLH(cameraPos, cameraTarget, cameraUp);
             }

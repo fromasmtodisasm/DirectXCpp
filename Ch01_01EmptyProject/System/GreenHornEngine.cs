@@ -6,23 +6,25 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Ch01_01EmptyProject.Graphic;
+using Ch01_01EmptyProject.Inputs;
 
 namespace Ch01_01EmptyProject
 {
     public class GreenHornEngine : IDisposable
     {
-        
         private static string PROGRAM_TITLE = "D3DRendering - Cube drawing";
-        
+
         private static int FORM_WIDTH = 1024;
         private static int FORM_HEIGHT = 768;
 
         private static int FORM_WIDTH_SMALL = 800;
         private static int FORM_HEIGHT_SMALL = 600;
-        
-        
+
+
         private Form1 form;
         private D3DGraphic graphic;
+        private Input input;
+        private WindowConfiguration wc;
 
         public GreenHornEngine()
         {
@@ -34,11 +36,16 @@ namespace Ch01_01EmptyProject
             form.Height = FORM_HEIGHT_SMALL;
             form.FormBorderStyle = FormBorderStyle.FixedToolWindow;
 
-            WindowConfiguration wc = new WindowConfiguration();
+            wc = new WindowConfiguration();
             wc.Width = FORM_WIDTH;
             wc.Height = FORM_HEIGHT;
             wc.FormWindowHandle = form.Handle;
+        }
 
+        public void Initialize()
+        {
+            input = new Input(wc);
+            input.Initialize();
             graphic = new D3DGraphic(wc);
         }
 
@@ -52,11 +59,16 @@ namespace Ch01_01EmptyProject
 
         private void Frame()
         {
+            input.Frame();
+            int mouseX, mouseY;
+            input.GetMouseLocation(out mouseX, out mouseY);
+            graphic.Frame(mouseX, mouseY);
             graphic.Render();
         }
 
         public void Dispose()
         {
+            input.Dispose();
             graphic.Dispose();
         }
     }

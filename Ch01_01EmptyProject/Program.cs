@@ -158,6 +158,7 @@ namespace Ch01_01EmptyProject
                 try
                 {
                     system = new GreenHornEngine();
+                    system.Initialize();
                     system.Run();
                 }
 
@@ -175,6 +176,7 @@ namespace Ch01_01EmptyProject
                 try
                 {
                     system = new GreenHornEngine();
+                    system.Initialize();
                     system.Run();
                 }
                 finally
@@ -188,8 +190,6 @@ namespace Ch01_01EmptyProject
         {
             //D3DX11Test test = new D3DX11Test();
             //test.Draw();
-
-
         }
     }
 }

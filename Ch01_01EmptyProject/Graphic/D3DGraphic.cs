@@ -43,20 +43,27 @@ namespace Ch01_01EmptyProject.Graphic
             graph.Add(shader);
         }
 
+        float rotation = 0.0f;
         public void Render()
         {
             d3d.Render();
-
             camera.Render();
+
+            //rotation += (float)Math.PI; //0.05f;*
+            ////if (rotation > 360.0)
+            ////{
+            ////    rotation -= 360.0f;
+            ////}
+
+            //camera.SetRotation(rotation, 0, 0);
 
             //WORLD VIEW PROJECTION COMPUATION
             //Initialize matrixes
             var worldMatrix = Matrix.Identity;
-
             var viewMatrix = camera.ViewMatrix;
-
             // Setup and create the projection matrix.
             var projectionMatrix = Matrix.PerspectiveFovLH((float)(Math.PI / 4), (float)(windowConfig.Width) / windowConfig.Height, 0.1f, 1000.0f);
+            
             var wwp = new D3DShader.WorldViewProj();
             wwp.projectionMatrix = projectionMatrix;
             wwp.viewMatrix = viewMatrix;
@@ -75,6 +82,13 @@ namespace Ch01_01EmptyProject.Graphic
         {
             foreach (IGraphicComposite item in graph)
                 item.Dispose();
+        }
+
+        internal void Frame(int mouseX, int mouseY)
+        {
+#if DEBUG
+            System.Diagnostics.Debug.WriteLine("Graphic.Frame() :: mouse coord x = " + mouseX + "and y = " + mouseY); 
+#endif
         }
     }
 }
