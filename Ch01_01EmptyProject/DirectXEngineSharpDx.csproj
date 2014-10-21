@@ -114,7 +114,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Graphic\Box2.cs" />
+    <Compile Include="Graphic\Cameras\RastertekCamera.cs" />
+    <Compile Include="Graphic\Model\Box2.cs" />
     <Compile Include="Graphic\InputLayoutFactory.cs" />
     <Compile Include="Graphic\ModelShader.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\Ambient.cs" />
@@ -124,11 +125,11 @@
     <Compile Include="Graphic\Shaders\EffectFactory\TestShader.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\TextureMapping.cs" />
     <Compile Include="Graphic\Shaders\ModelShaderFactory.cs" />
-    <Compile Include="Graphic\Square.cs" />
-    <Compile Include="Graphic\Triangle.cs" />
-    <Compile Include="Graphic\Box.cs" />
+    <Compile Include="Graphic\Model\Square.cs" />
+    <Compile Include="Graphic\Model\Triangle.cs" />
+    <Compile Include="Graphic\Model\Box.cs" />
     <Compile Include="DisposableBase.cs" />
-    <Compile Include="Graphic\Camera.cs" />
+    <Compile Include="Graphic\Cameras\Camera.cs" />
     <Compile Include="Graphic\D3D\D3DInitializeHelper.cs" />
     <Compile Include="Graphic\D3DGraphic.cs" />
     <Compile Include="Graphic\D3D\D3D11.cs" />
@@ -136,15 +137,16 @@
     <Compile Include="Graphic\IRenderable.cs" />
     <Compile Include="Graphic\D3DModel.cs" />
     <Compile Include="Graphic\D3DShader.cs" />
-    <Compile Include="Graphic\IShape.cs" />
+    <Compile Include="Graphic\Model\IShape.cs" />
     <Compile Include="Graphic\Shaders\IShaderEffect.cs" />
     <Compile Include="Graphic\Shaders\ShaderFactory.cs" />
     <Compile Include="Graphic\Shaders\ShaderEffectBase.cs" />
-    <Compile Include="Graphic\Shape.cs" />
+    <Compile Include="Graphic\Model\Shape.cs" />
     <Compile Include="Graphic\Structures\IVertex.cs" />
     <Compile Include="Graphic\Shaders\Texture.cs" />
     <Compile Include="Inputs\Input.cs" />
     <Compile Include="Inputs\InputExample.cs" />
+    <Compile Include="Inputs\Positiob.cs" />
     <Compile Include="System\Form1.cs">
       <SubType>Form</SubType>
     </Compile>

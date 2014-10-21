@@ -22,7 +22,7 @@ namespace Ch01_01EmptyProject.Graphic
         private List<IGraphicComposite> graph = new List<IGraphicComposite>();
         private WindowConfiguration windowConfig;
         private D3D11 d3d;
-        private Camera camera;
+        private RastertekCamera camera;
         private D3DModel model;
         private D3DShader shader;
 
@@ -38,7 +38,7 @@ namespace Ch01_01EmptyProject.Graphic
             ModelShader.Get(shaderName, shape);
 
             d3d = new D3D11(windowConfig);
-            camera = new Camera();
+            camera = new RastertekCamera();
             model = new D3DModel(d3d.Device, ModelShader.GetModelForRender, ModelShader.GetIndexes);
             shader = new D3DShader(d3d.Device, ModelShader.GetShaderEffect, shaderName, camera.Position);
 
@@ -47,19 +47,14 @@ namespace Ch01_01EmptyProject.Graphic
             graph.Add(shader);
         }
 
-        float rotation = 0.0f;
-
         public void Frame()
         {
+            //camera.Position = new Vector3(0, 0, -10f);
+            camera.SetRotation(0, Position.RotationY, 0);
+            
             // process a graphic with fps or what?
 #if DEBUG
-            Debug.WriteLine("Graphic.Frame :: FPS = " + FPS + "and FrameTime = " + FrameTime);
-#endif
-        }
-        internal void Frame(int mouseX, int mouseY)
-        {
-#if DEBUG
-            Debug.WriteLine("Graphic.Frame :: mouse coord x = " + mouseX + "and y = " + mouseY);
+            //Debug.WriteLine("Graphic.Frame :: FPS = " + FPS + "and FrameTime = " + FrameTime);
 #endif
         }
 
@@ -68,8 +63,6 @@ namespace Ch01_01EmptyProject.Graphic
             d3d.Render();
             camera.Render();
 
-            //camera.SetRotation(rotation, 0, 0);
-        
             var wwp = ComputeWorldViewProjectionMatrix();
 
             model.SetDeviceContent(d3d.DeviceContext);
@@ -101,5 +94,7 @@ namespace Ch01_01EmptyProject.Graphic
             wwp.worldMatrix = worldMatrix;
             return wwp;
         }
+
+        public Inputs.Position Position { get; set; }
     }
 }

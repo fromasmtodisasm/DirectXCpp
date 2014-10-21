@@ -28,6 +28,7 @@ namespace Ch01_01EmptyProject
         private WindowConfiguration wc;
         private FPS fps;
         private SystemTime timer;
+        private Position position;
 
         public GreenHornEngine()
         {
@@ -44,7 +45,7 @@ namespace Ch01_01EmptyProject
             wc.Height = FORM_HEIGHT;
             wc.FormWindowHandle = form.Handle;
         }
-       
+
         public void Initialize()
         {
             input = new Input(wc);
@@ -52,6 +53,7 @@ namespace Ch01_01EmptyProject
             graphic = new D3DGraphic(wc);
             fps = new FPS();
             timer = new SystemTime();
+            position = new Position();
         }
 
         public void Run()
@@ -66,18 +68,25 @@ namespace Ch01_01EmptyProject
         {
             //tricky part is, some classes have render and other frame
             // pick one and make Composite out of it
-             fps.Frame();
-             timer.Frame();
+            fps.Frame();
+            timer.Frame();
 
             input.Frame();
             int mouseX, mouseY;
+            
             input.GetMouseLocation(out mouseX, out mouseY);
-            graphic.Frame(mouseX, mouseY);
 
+            //for simplicty, if mouse is moving, rotate
+            //if (input.IsMouseMoving()) { }
+            //    position.TurnLeft();
+            
+            position.FrameTime = timer.FrameTime;
+            
             graphic.FPS = fps.Value;
             graphic.FrameTime = timer.FrameTime;
+            graphic.Position = position;
             graphic.Frame();
-           
+
             graphic.Render();
         }
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SharpDX.Windows;
 using SharpDX.RawInput;
 using SharpDX.DirectInput;
+using System.Diagnostics;
 
 namespace Ch01_01EmptyProject.Inputs
 {
@@ -20,6 +21,8 @@ namespace Ch01_01EmptyProject.Inputs
         private DirectInput directInput;
         private MouseState mouseState;
         private SharpDX.ResultDescriptor getCurrentStateErrorResult;
+        private int mouseXlastFrame;
+        private int mouseYlastFrame;
 
         public Input(WindowConfiguration wc)
         {
@@ -109,10 +112,27 @@ namespace Ch01_01EmptyProject.Inputs
             if (mouseY > screenHeight) mouseY = screenHeight;
         }
 
+        //instead of out, return Vector2?
         public void GetMouseLocation(out int outMouseX, out int outMmouseY)
         {
             outMouseX = mouseX;
             outMmouseY = mouseY;
+        }
+
+        //its extremly ugly, but theres build in way how to do this, check for tutorial
+        public bool IsMouseMoving()
+        {
+            if (mouseXlastFrame != mouseX || mouseYlastFrame != mouseY)
+            {
+#if DEBUG
+                  //Debug.WriteLine("Graphic.Frame :: mouse coord x = " + mouseX + "and y = " + mouseY);
+#endif
+                return true;
+            }
+            else
+            {
+                return false; 
+            }
         }
 
         public void Frame()
