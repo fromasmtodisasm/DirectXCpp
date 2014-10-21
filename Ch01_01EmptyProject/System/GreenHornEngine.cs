@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Ch01_01EmptyProject.Graphic;
 using Ch01_01EmptyProject.Inputs;
+using Ch01_01EmptyProject.System;
 
 namespace Ch01_01EmptyProject
 {
@@ -25,6 +26,8 @@ namespace Ch01_01EmptyProject
         private D3DGraphic graphic;
         private Input input;
         private WindowConfiguration wc;
+        private FPS fps;
+        private SystemTime timer;
 
         public GreenHornEngine()
         {
@@ -41,12 +44,14 @@ namespace Ch01_01EmptyProject
             wc.Height = FORM_HEIGHT;
             wc.FormWindowHandle = form.Handle;
         }
-
+       
         public void Initialize()
         {
             input = new Input(wc);
             input.Initialize();
             graphic = new D3DGraphic(wc);
+            fps = new FPS();
+            timer = new SystemTime();
         }
 
         public void Run()
@@ -59,10 +64,20 @@ namespace Ch01_01EmptyProject
 
         private void Frame()
         {
+            //tricky part is, some classes have render and other frame
+            // pick one and make Composite out of it
+             fps.Frame();
+             timer.Frame();
+
             input.Frame();
             int mouseX, mouseY;
             input.GetMouseLocation(out mouseX, out mouseY);
             graphic.Frame(mouseX, mouseY);
+
+            graphic.FPS = fps.Value;
+            graphic.FrameTime = timer.FrameTime;
+            graphic.Frame();
+           
             graphic.Render();
         }
 

@@ -12,6 +12,7 @@ using Ch01_01EmptyProject;
 using System.Windows.Forms;
 using System.Threading;
 using Ch01_01EmptyProject.Graphic.Shaders;
+using System.Diagnostics;
 
 namespace Ch01_01EmptyProject.Graphic
 {
@@ -24,6 +25,9 @@ namespace Ch01_01EmptyProject.Graphic
         private Camera camera;
         private D3DModel model;
         private D3DShader shader;
+
+        public int FPS { get; set; }
+        public float FrameTime { get; set; }
 
         public D3DGraphic(WindowConfiguration windowConfig)
         {
@@ -44,30 +48,29 @@ namespace Ch01_01EmptyProject.Graphic
         }
 
         float rotation = 0.0f;
+
+        public void Frame()
+        {
+            // process a graphic with fps or what?
+#if DEBUG
+            Debug.WriteLine("Graphic.Frame :: FPS = " + FPS + "and FrameTime = " + FrameTime);
+#endif
+        }
+        internal void Frame(int mouseX, int mouseY)
+        {
+#if DEBUG
+            Debug.WriteLine("Graphic.Frame :: mouse coord x = " + mouseX + "and y = " + mouseY);
+#endif
+        }
+
         public void Render()
         {
             d3d.Render();
             camera.Render();
 
-            //rotation += (float)Math.PI; //0.05f;*
-            ////if (rotation > 360.0)
-            ////{
-            ////    rotation -= 360.0f;
-            ////}
-
             //camera.SetRotation(rotation, 0, 0);
-
-            //WORLD VIEW PROJECTION COMPUATION
-            //Initialize matrixes
-            var worldMatrix = Matrix.Identity;
-            var viewMatrix = camera.ViewMatrix;
-            // Setup and create the projection matrix.
-            var projectionMatrix = Matrix.PerspectiveFovLH((float)(Math.PI / 4), (float)(windowConfig.Width) / windowConfig.Height, 0.1f, 1000.0f);
-            
-            var wwp = new D3DShader.WorldViewProj();
-            wwp.projectionMatrix = projectionMatrix;
-            wwp.viewMatrix = viewMatrix;
-            wwp.worldMatrix = worldMatrix;
+        
+            var wwp = ComputeWorldViewProjectionMatrix();
 
             model.SetDeviceContent(d3d.DeviceContext);
             model.Render();
@@ -84,11 +87,19 @@ namespace Ch01_01EmptyProject.Graphic
                 item.Dispose();
         }
 
-        internal void Frame(int mouseX, int mouseY)
+       
+        private D3DShader.WorldViewProj ComputeWorldViewProjectionMatrix()
         {
-#if DEBUG
-            System.Diagnostics.Debug.WriteLine("Graphic.Frame() :: mouse coord x = " + mouseX + "and y = " + mouseY); 
-#endif
+            var worldMatrix = Matrix.Identity;
+            var viewMatrix = camera.ViewMatrix;
+            // Setup and create the projection matrix.
+            var projectionMatrix = Matrix.PerspectiveFovLH((float)(Math.PI / 4), (float)(windowConfig.Width) / windowConfig.Height, 0.1f, 1000.0f);
+
+            var wwp = new D3DShader.WorldViewProj();
+            wwp.projectionMatrix = projectionMatrix;
+            wwp.viewMatrix = viewMatrix;
+            wwp.worldMatrix = worldMatrix;
+            return wwp;
         }
     }
 }

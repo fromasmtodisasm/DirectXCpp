@@ -4,58 +4,40 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Timers;
+using System.Diagnostics;
 
 namespace Ch01_01EmptyProject
 {
-    class SystemTime
+    public class SystemTime
     {
-        Timer renderLoop;
+        Stopwatch stopWatch;
+        private long frameTime;
 
-        public delegate bool RenderDelegate();
-        private RenderDelegate Render;
-        public delegate void ExitDelegate();
-        private ExitDelegate Exit;
-        private object lockObject = new Object();
-        private bool IsStopped = false;
-
-        public void Initialize(RenderDelegate render, ExitDelegate exit)
+        public long FrameTime
         {
-            renderLoop = new Timer(1);
-            Render = render;
-            Exit = exit;
-
-            renderLoop.Elapsed += renderLooop_Elapsed;
+            get { return frameTime; }
+            set { frameTime = value; }
         }
 
-        private void renderLooop_Elapsed(object sender, ElapsedEventArgs e)
+        public SystemTime()
         {
-            if (IsStopped)
-                return;
-
-            var result = true;
-            lock (this)
+            if (IsHighPerformanceTimerSupported())
             {
-                result = Render();
-            }
-            if (!result)
-                Stop();
-        }
-
-        private void Stop()
-        {
-
-            if (!IsStopped)
-            {
-                IsStopped = true;
-                renderLoop.Stop();
-                Exit();
+                stopWatch = Stopwatch.StartNew();
             }
         }
 
-        public void Run()
+        private bool IsHighPerformanceTimerSupported()
         {
-            IsStopped = false;
-            renderLoop.Start();
+            return !(Stopwatch.Frequency == 0);
         }
- }
+
+        //find difference between the loops, + execution time
+        public void Frame()
+        {
+            stopWatch.Stop();
+            frameTime = stopWatch.ElapsedMilliseconds;
+            stopWatch.Restart();
+        }
+    }
 }
