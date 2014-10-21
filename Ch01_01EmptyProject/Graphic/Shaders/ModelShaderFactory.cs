@@ -200,8 +200,8 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         {
             Vector2[] textureCoord = GetTextureCoord();
             Vector3[] normalCoord = GetNormalCoord();
-           
-                TextureNormalVertex[] vertices = new TextureNormalVertex[positions.Length];
+
+            TextureNormalVertex[] vertices = new TextureNormalVertex[positions.Length];
             //from this array, make coresponding structure
             for (int i = 0; i < positions.Length; i++)
             {

@@ -22,7 +22,7 @@ namespace Ch01_01EmptyProject.Graphic
         private List<IGraphicComposite> graph = new List<IGraphicComposite>();
         private WindowConfiguration windowConfig;
         private D3D11 d3d;
-        private RastertekCamera camera;
+        private Camera camera;
         private D3DModel model;
         private D3DShader shader;
 
@@ -33,12 +33,12 @@ namespace Ch01_01EmptyProject.Graphic
         {
             this.windowConfig = windowConfig;
 
-            ShaderName shaderName = ShaderName.Ambient;
+            ShaderName shaderName = ShaderName.Multitexture;
             IShape shape = new Box2();
             ModelShader.Get(shaderName, shape);
 
             d3d = new D3D11(windowConfig);
-            camera = new RastertekCamera();
+            camera = new Camera();
             model = new D3DModel(d3d.Device, ModelShader.GetModelForRender, ModelShader.GetIndexes);
             shader = new D3DShader(d3d.Device, ModelShader.GetShaderEffect, shaderName, camera.Position);
 
@@ -49,8 +49,8 @@ namespace Ch01_01EmptyProject.Graphic
 
         public void Frame()
         {
-            //camera.Position = new Vector3(0, 0, -10f);
-            camera.SetRotation(0, Position.RotationY, 0);
+            //camera.Position = new Vector3(0, 0, -10.0f);
+            //camera.SetRotation(0, 0, 0); //(float)Math.PI * 20
             
             // process a graphic with fps or what?
 #if DEBUG

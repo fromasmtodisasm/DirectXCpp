@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Ch01_01EmptyProject.Graphic.Shaders
 {
-   public enum ShaderName
+    public enum ShaderName
     {
         Color,
         Ambient,
@@ -14,6 +14,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         Specular,
         Texture,
         Test,
+        Multitexture,
     }
 
     public static class ShaderFactory
@@ -35,6 +36,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                     break;
                 case ShaderName.Specular:
                     shaderEffect = new SpecularLighting();
+                    break;
+                case ShaderName.Multitexture:
+                    shaderEffect = new Multitexturing();
                     break;
                 case ShaderName.Texture:
                     shaderEffect = new TextureMapping();

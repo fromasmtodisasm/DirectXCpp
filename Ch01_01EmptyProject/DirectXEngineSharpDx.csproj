@@ -121,6 +121,7 @@
     <Compile Include="Graphic\Shaders\EffectFactory\Ambient.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\ColorShader.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\DiffuseLighting.cs" />
+    <Compile Include="Graphic\Shaders\EffectFactory\Multitexturing.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\SpecularLighting.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\TestShader.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\TextureMapping.cs" />
@@ -142,6 +143,8 @@
     <Compile Include="Graphic\Shaders\ShaderFactory.cs" />
     <Compile Include="Graphic\Shaders\ShaderEffectBase.cs" />
     <Compile Include="Graphic\Model\Shape.cs" />
+    <Compile Include="Graphic\Shaders\TextureTypes.cs" />
+    <Compile Include="Graphic\Shaders\Textures.cs" />
     <Compile Include="Graphic\Structures\IVertex.cs" />
     <Compile Include="Graphic\Shaders\Texture.cs" />
     <Compile Include="Inputs\Input.cs" />
@@ -170,6 +173,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Graphic\Shaders\Effects\DiffuseLightingRastertek.fx" />
+    <Content Include="Graphic\Shaders\Effects\MultitexturingRasterek.fx">
+      <Generator>VertexShaderFunction</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Graphic\Shaders\Effects\SpecularLightingRastertek.fx">
       <Generator>VertexShaderFunction</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -211,6 +218,7 @@
     <Content Include="Graphic\Shaders\Effects\ColorShader.old.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Graphic\Shaders\Textures\dirt01.dds" />
     <None Include="Graphic\Shaders\Textures\seafloor.dds" />
     <None Include="Graphic\Shaders\Textures\wall.dds" />
     <None Include="Properties\Settings.settings">

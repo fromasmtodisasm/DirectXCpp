@@ -42,7 +42,8 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         private DataStream mappedResource;
         private ShaderName shader;
         private Vector3 cameraPosition;
-        private Buffer constantCameraBuffer; 
+        private Buffer constantCameraBuffer;
+        private Textures textures;
         #endregion
 
         #region ShaderStructures region
@@ -86,11 +87,15 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         {
             public Vector3 cameraPosition;
             public float padding;
-        } 
+        }
         #endregion
+
+        public ShaderResourceView[] TextureCollection { get; private set; }
+
 
         public D3DShader(Device device, IShaderEffect shaderEffect, ShaderName shader, Vector3 cameraPosition)
         {
+
             this.device = device;
             this.shader = shader;
 
@@ -146,7 +151,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
             //is there any differnece between loading one shader wih multiple effects
             //and more shaders with only one effect?
-            if (shader == ShaderName.Texture || shader == ShaderName.Diffuse || shader == ShaderName.Ambient)
+            if (shader == ShaderName.Texture || shader == ShaderName.Diffuse || shader == ShaderName.Ambient || shader == ShaderName.Multitexture)
             {
                 LoadTextureShader(device);
             }
@@ -204,7 +209,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             }
 
             // Set shader resource in the pixel shader.
-            deviceContext.PixelShader.SetShaderResource(0, textureResource);
+            deviceContext.PixelShader.SetShaderResources(0, TextureCollection);
 
             if (shader == ShaderName.Diffuse)
             {
@@ -244,12 +249,12 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 deviceContext.PixelShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
             }
 
-            if(shader == ShaderName.Specular)
+            if (shader == ShaderName.Specular)
             {
                 var cameraBuffer = new CameraBufferType()
                 {
-                  cameraPosition = cameraPosition,
-                  padding = 0.0f,
+                    cameraPosition = cameraPosition,
+                    padding = 0.0f,
                 };
 
                 WriteToSubresource<CameraBufferType>(constantCameraBuffer, cameraBuffer);
@@ -277,7 +282,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 bufferNumber = 0;
                 // Finally set the light constant buffer in the pixel shader with the updated values.
                 deviceContext.PixelShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
-                
+
             }
         }
 
@@ -311,11 +316,21 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
         public void Dispose()
         {
-            constantLightBuffer.Dispose();
-            constantMatrixBuffer.Dispose();
-            constantCameraBuffer.Dispose();
+            if (constantLightBuffer != null)
+            {
+                constantLightBuffer.Dispose();
+            }
+            if (constantLightBuffer != null)
+            {
+                constantCameraBuffer.Dispose();
+            }
+            if (textureResource != null)
+            {
+                textureResource.Dispose();
+            }
 
-            textureResource.Dispose();
+            constantMatrixBuffer.Dispose();
+         
             sampleState.Dispose();
             constantMatrixBuffer.Dispose();
             inputLayout.Dispose();
@@ -323,14 +338,13 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             vertexShader.Dispose();
         }
 
-
-
-
         private void LoadTextureShader(Device device)
         {
             try
             {
-                textureResource = Texture.Load(device);
+                //this is ugly
+                textures = new Textures(device, new TextureType[] { TextureType.Wall, TextureType.Dirt });
+                TextureCollection = textures.Select(item => item).ToArray();
 
                 SamplerStateDescription textureSamplerDescription = new SamplerStateDescription()
                 {
@@ -349,7 +363,6 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 };
 
                 sampleState = new SamplerState(device, textureSamplerDescription);
-
             }
             catch (Exception ex)
             {

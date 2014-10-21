@@ -43,10 +43,11 @@ namespace Ch01_01EmptyProject.Graphic
                 float radius = 5.0f;
 
                 //Convert spherical to cartesian coords
-                float x = -2 + radius * (float)Math.Sin(phi) * (float)Math.Cos(theta);
+                float x = -3.0f + radius * (float)Math.Sin(phi) * (float)Math.Cos(theta);
                 float y = radius * (float)Math.Cos(phi);
                 float z = radius * (float)Math.Sin(phi) * (float)Math.Sin(theta);
 
+                cameraPos = new Vector3(x, y, z);
                 //Build the view matrix
                 Vector3 cameraTarget = new Vector3();
                 Vector3 cameraUp = new Vector3(0.0f, 1.0f, 0.0f);

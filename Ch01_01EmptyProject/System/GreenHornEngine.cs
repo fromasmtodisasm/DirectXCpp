@@ -11,7 +11,7 @@ using Ch01_01EmptyProject.System;
 
 namespace Ch01_01EmptyProject
 {
-    public class GreenHornEngine : IDisposable
+    public class XCube : IDisposable
     {
         private static string PROGRAM_TITLE = "D3DRendering - Cube drawing";
 
@@ -21,7 +21,6 @@ namespace Ch01_01EmptyProject
         private static int FORM_WIDTH_SMALL = 800;
         private static int FORM_HEIGHT_SMALL = 600;
 
-
         private Form1 form;
         private D3DGraphic graphic;
         private Input input;
@@ -30,7 +29,7 @@ namespace Ch01_01EmptyProject
         private SystemTime timer;
         private Position position;
 
-        public GreenHornEngine()
+        public XCube()
         {
             // Create the window to render to
             form = new Form1();

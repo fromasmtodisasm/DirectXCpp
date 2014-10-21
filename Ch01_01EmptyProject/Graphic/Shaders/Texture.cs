@@ -7,23 +7,19 @@ using System.Threading.Tasks;
 
 namespace Ch01_01EmptyProject.Graphic.Shaders
 {
-    class Texture
+   public static class Texture
     {
-        private ShaderResourceView textureResource;
-
-        public static ShaderResourceView Load(Device device)
+        public static ShaderResourceView Load(Device device, string textureFileName)
         {
-            string textureFileName = @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\wall.dds";
-
             try
             {
-             return ShaderResourceView.FromFile(device, textureFileName);
+                return ShaderResourceView.FromFile(device, textureFileName);
             }
             catch (Exception ex)
             {
                 throw new Exception("textureLoad: " + ex);
             }
         }
-        
+
     }
 }
