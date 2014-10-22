@@ -25,6 +25,7 @@ namespace Ch01_01EmptyProject.Graphic
         private Camera camera;
         private D3DModel model;
         private D3DShader shader;
+        private Matrix worldMatrix;
 
         public int FPS { get; set; }
         public float FrameTime { get; set; }
@@ -33,7 +34,7 @@ namespace Ch01_01EmptyProject.Graphic
         {
             this.windowConfig = windowConfig;
 
-            ShaderName shaderName = ShaderName.Multitexture;
+            ShaderName shaderName = ShaderName.Bumpmaping;
             IShape shape = new Box2();
             ModelShader.Get(shaderName, shape);
 
@@ -49,9 +50,9 @@ namespace Ch01_01EmptyProject.Graphic
 
         public void Frame()
         {
-            //camera.Position = new Vector3(0, 0, -10.0f);
+            //camera.Position = new Vector3(0, 0, 6.0f);
             //camera.SetRotation(0, 0, 0); //(float)Math.PI * 20
-            
+
             // process a graphic with fps or what?
 #if DEBUG
             //Debug.WriteLine("Graphic.Frame :: FPS = " + FPS + "and FrameTime = " + FrameTime);
@@ -80,10 +81,9 @@ namespace Ch01_01EmptyProject.Graphic
                 item.Dispose();
         }
 
-       
         private D3DShader.WorldViewProj ComputeWorldViewProjectionMatrix()
         {
-            var worldMatrix = Matrix.Identity;
+            worldMatrix = Matrix.Identity;
             var viewMatrix = camera.ViewMatrix;
             // Setup and create the projection matrix.
             var projectionMatrix = Matrix.PerspectiveFovLH((float)(Math.PI / 4), (float)(windowConfig.Width) / windowConfig.Height, 0.1f, 1000.0f);

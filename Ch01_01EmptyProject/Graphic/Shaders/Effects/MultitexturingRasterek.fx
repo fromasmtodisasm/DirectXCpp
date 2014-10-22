@@ -49,7 +49,7 @@ float4  MultiTexturePixelShader(VertexShaderOutput input) : SV_TARGET
 	textureColor2 = shaderTextures[1].Sample(SampleType, input.tex);
 
 	//blend together and multiply by gamma
-	blendColor = textureColor * textureColor2 * 1.0;
+	blendColor = textureColor * textureColor2 * 1.5;
 	blendColor = saturate(blendColor);
 
 	return blendColor;

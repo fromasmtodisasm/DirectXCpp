@@ -30,10 +30,17 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                         specificVertexes = TextureNormalVertex<TextureNormalVertex>(positions);
                     }
                     break;
+                case VertexType.TextureNormalTangentBinormalVertex:
+                    {
+                        specificVertexes = TextureNormalTangentBinormalVertex<TextureNormalTangentBinormalVertex>(positions);
+                    }
+                    break;
             }
 
             return specificVertexes;
         }
+
+    
 
         private static Vector2[] GetTextureCoord()
         {
@@ -177,7 +184,95 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             return y;
         }
 
+        private static Vector3[] GetBinormalCoord()
+        {
+            Vector3[] textureCoord = new Vector3[]
+                {
+           	// Top Face
+         new Vector3( 0.0f,  0.0f, 1.0f ) ,
+         new Vector3( 0.0f,  0.0f, 1.0f ) ,
+         new Vector3( 0.0f,  0.0f, 1.0f ) ,
+         new Vector3( 0.0f,  0.0f, 1.0f ) ,
 
+		// Bottom Face
+       new Vector3( 0.0f,  0.0f, -1.0f ) ,
+       new Vector3( 0.0f,  0.0f, -1.0f ) ,
+     new Vector3( 0.0f,  0.0f, -1.0f ) ,
+      new Vector3( 0.0f,  0.0f, -1.0f ) ,
+
+		// Left Face
+    new Vector3( 0.0f,  1.0f, 0.0f ) ,
+     new Vector3( 0.0f,  1.0f, 0.0f ) ,
+      new Vector3( 0.0f,  1.0f, 0.0f ) ,
+       new Vector3( 0.0f,  1.0f, 0.0f ) ,
+
+		// Right Face
+        new Vector3( 0.0f,  1.0f, 0.0f ) ,
+        new Vector3( 0.0f,  1.0f, 0.0f ) ,
+        new Vector3( 0.0f,  1.0f, 0.0f ) ,
+        new Vector3( 0.0f,  1.0f, 0.0f ) ,
+
+		// Back Face
+        new Vector3( 0.0f,  1.0f, 0.0f ) ,
+       new Vector3( 0.0f,  1.0f, 0.0f ) ,
+        new Vector3( 0.0f,  1.0f, 0.0f ) ,
+         new Vector3( 0.0f,  1.0f, 0.0f ) ,
+
+		// Front Face
+      new Vector3( 0.0f,  1.0f, 0.0f ) ,
+    new Vector3( 0.0f,  1.0f, 0.0f ) ,
+       new Vector3( 0.0f,  1.0f, 0.0f ) ,
+     new Vector3( 0.0f,  1.0f, 0.0f ) ,
+         };
+            return textureCoord;
+        }
+
+
+        private static Vector3[] GetTangentCoord()
+        {
+            Vector3[] textureCoord = new Vector3[]
+                {
+        	// Top Face
+        new Vector3( 1.0f,  0.0f, 0.0f ), 
+        new Vector3( 1.0f,  0.0f, 0.0f ), 
+        new Vector3( 1.0f,  0.0f, 0.0f ), 
+        new Vector3( 1.0f,  0.0f, 0.0f ), 
+
+		// Bottom Face
+      new Vector3( 1.0f,  0.0f, 0.0f ),
+      new Vector3( 1.0f,  0.0f, 0.0f ), 
+    new Vector3( 1.0f,  0.0f, 0.0f ), 
+     new Vector3( 1.0f,  0.0f, 0.0f ),
+
+		// Left Face
+      new Vector3( 0.0f,  0.0f, -1.0f ),
+     new Vector3( 0.0f,  0.0f, -1.0f ),
+        new Vector3( 0.0f,  0.0f, -1.0f ),
+       new Vector3( 0.0f,  0.0f, -1.0f ), 
+
+		// Right Face
+       new Vector3( 0.0f,  0.0f, 1.0f ), 
+       new Vector3( 0.0f,  0.0f, 1.0f ), 
+       new Vector3( 0.0f,  0.0f, 1.0f ), 
+       new Vector3( 0.0f,  0.0f, 1.0f ), 
+
+		// Back Face
+       new Vector3( 1.0f,  0.0f, 0.0f ), 
+      new Vector3( 1.0f,  0.0f, 0.0f ), 
+       new Vector3( 1.0f,  0.0f, 0.0f ), 
+        new Vector3( 1.0f,  0.0f, 0.0f ), 
+
+		// Front Face
+       new Vector3( -1.0f,  0.0f, 0.0f ), 
+       new Vector3( -1.0f,  0.0f, 0.0f ), 
+       new Vector3( -1.0f,  0.0f, 0.0f ),
+       new Vector3( -1.0f,  0.0f, 0.0f ),
+              };
+
+            return textureCoord;
+        }
+
+        
         public static T[] TextureVertex<T>(Vector3[] positions) where T : struct
         {
             Vector2[] textureCoord = GetTextureCoord();
@@ -189,6 +284,31 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 TextureVertex a = new TextureVertex();
                 a.Position = positions[i];
                 a.Texture = textureCoord[i];
+                vertices[i] = a;
+            }
+
+            var y = (T[])Convert.ChangeType(vertices, typeof(T[]));
+            return y;
+        }
+
+        private static object TextureNormalTangentBinormalVertex<T>(Vector3[] positions) where T : struct
+        {
+            Vector2[] textureCoord = GetTextureCoord();
+            Vector3[] normalCoord = GetNormalCoord();
+            Vector3[] binormalCoord = GetBinormalCoord();
+            Vector3[] tangentCoord = GetTangentCoord();
+
+            TextureNormalTangentBinormalVertex[] vertices = new TextureNormalTangentBinormalVertex[positions.Length];
+            //from this array, make coresponding structure
+            for (int i = 0; i < positions.Length; i++)
+            {
+                TextureNormalTangentBinormalVertex a = new TextureNormalTangentBinormalVertex();
+                a.Position = positions[i];
+                a.Texture = textureCoord[i];
+                a.Normal = normalCoord[i];
+                a.Tangent = tangentCoord[i];
+                a.Binormal = binormalCoord[i];
+               
                 vertices[i] = a;
             }
 

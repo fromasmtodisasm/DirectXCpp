@@ -151,12 +151,12 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
             //is there any differnece between loading one shader wih multiple effects
             //and more shaders with only one effect?
-            if (shader == ShaderName.Texture || shader == ShaderName.Diffuse || shader == ShaderName.Ambient || shader == ShaderName.Multitexture)
+            if (shader != ShaderName.Color)
             {
                 LoadTextureShader(device);
             }
 
-            if (shader == ShaderName.Diffuse)
+            if (shader == ShaderName.Diffuse || shader == ShaderName.Bumpmaping)
             {
                 constantLightBuffer = GetConstantMatrixBuffer<LightBufferType>(device);
             }
@@ -187,10 +187,6 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             this.indexCount = indexCount;
             this.deviceContext = deviceContext;
 
-            //Matrix worldInverseTransposeMatrix = worldViewProj.worldMatrix;
-            //worldInverseTransposeMatrix.Invert();
-            //worldInverseTransposeMatrix.Transpose();
-
             worldViewProj.worldMatrix.Transpose();
             worldViewProj.viewMatrix.Transpose();
             worldViewProj.projectionMatrix.Transpose();
@@ -211,10 +207,12 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             // Set shader resource in the pixel shader.
             deviceContext.PixelShader.SetShaderResources(0, TextureCollection);
 
-            if (shader == ShaderName.Diffuse)
+            if (shader == ShaderName.Diffuse || shader == ShaderName.Bumpmaping)
             {
-                Vector4 diffuseColor = new Vector4(1, 0, 1, 1);
-                Vector3 lightDirection = new Vector3(1.0f, 0.0f, 1.0f);
+                Vector4 diffuseColor = new Vector4(1, 1, 1, 1f);
+                //Vector4 diffuseColor = new Vector4(1, 0, 1, 1);
+                //Vector3 lightDirection = new Vector3(1.0f, 0.0f, 1.0f);
+                Vector3 lightDirection = new Vector3(1, 0, 1);
 
                 var lightBuffer = new LightBufferType()
                 {
@@ -320,7 +318,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             {
                 constantLightBuffer.Dispose();
             }
-            if (constantLightBuffer != null)
+            if (constantCameraBuffer != null)
             {
                 constantCameraBuffer.Dispose();
             }
@@ -343,7 +341,10 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             try
             {
                 //this is ugly
-                textures = new Textures(device, new TextureType[] { TextureType.Wall, TextureType.Dirt });
+                textures = new Textures(device, new TextureType[] { TextureType.Stones ,TextureType.Stones_NormalMap });
+                //textures = new Textures(device, new TextureType[] { TextureType.Wall, TextureType.Wall_NS });
+                //textures = new Textures(device, new TextureType[] { TextureType.Wall, TextureType.Dirt });
+                
                 TextureCollection = textures.Select(item => item).ToArray();
 
                 SamplerStateDescription textureSamplerDescription = new SamplerStateDescription()

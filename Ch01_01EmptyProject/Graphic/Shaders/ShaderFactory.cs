@@ -15,6 +15,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         Texture,
         Test,
         Multitexture,
+        Bumpmaping,
     }
 
     public static class ShaderFactory
@@ -45,6 +46,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                     break;
                 case ShaderName.Test:
                     shaderEffect = new TestShader();
+                    break;
+                case ShaderName.Bumpmaping:
+                    shaderEffect = new BumpMapping();
                     break;
                 default:
                     shaderEffect = null;

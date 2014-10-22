@@ -21,6 +21,7 @@ namespace Ch01_01EmptyProject.Graphic.Structures
         TextureVertex,
         TextureNormalVertex,
         ColorNormalVertex,
+        TextureNormalTangentBinormalVertex,
     }
     //class VertexTypes and class VertexInputLayouts
     [StructLayout(LayoutKind.Sequential)]
@@ -86,6 +87,44 @@ namespace Ch01_01EmptyProject.Graphic.Structures
         private Vector3 position;
         private Vector2 texture;
         private Vector3 normal;
+
+        public Vector3 Normal
+        {
+            get { return normal; }
+            set { normal = value; }
+        }
+
+        public Vector3 Position
+        {
+            get { return position; }
+            set { position = value; }
+        }
+        public Vector2 Texture
+        {
+            get { return texture; }
+            set { texture = value; }
+        }
+    }
+
+    public struct TextureNormalTangentBinormalVertex : IVertex
+    {
+        private Vector3 position;
+        private Vector2 texture;
+        private Vector3 normal;
+        private Vector3 binormal;
+        private Vector3 tangent;
+
+        public Vector3 Binormal
+        {
+            get { return binormal; }
+            set { binormal = value; }
+        }
+
+        public Vector3 Tangent
+        {
+            get { return tangent; }
+            set { tangent = value; }
+        }
 
         public Vector3 Normal
         {
