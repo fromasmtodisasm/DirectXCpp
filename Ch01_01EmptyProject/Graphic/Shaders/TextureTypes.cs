@@ -14,6 +14,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         Wall_NS,
         Stones,
         Stones_NormalMap,
+        Wall_HS,
     }
 
     public class TextureDefinitions : Dictionary<TextureType, string>
@@ -25,6 +26,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             this.Add(TextureType.Dirt, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\dirt01.dds");
 
             this.Add(TextureType.Wall_NS, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\wall_ns.dds");
+            this.Add(TextureType.Wall_HS, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\wall_hm.dds");
 
             this.Add(TextureType.Stones, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\stone01.dds");
             this.Add(TextureType.Stones_NormalMap, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\bump01.dds");

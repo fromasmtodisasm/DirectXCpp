@@ -29,12 +29,13 @@ namespace Ch01_01EmptyProject.Graphic
 
         public int FPS { get; set; }
         public float FrameTime { get; set; }
+        public Inputs.Position Position { get; set; }
 
         public D3DGraphic(WindowConfiguration windowConfig)
         {
             this.windowConfig = windowConfig;
 
-            ShaderName shaderName = ShaderName.Bumpmaping;
+            ShaderName shaderName = ShaderName.ParallaxMapping;
             IShape shape = new Box2();
             ModelShader.Get(shaderName, shape);
 
@@ -94,7 +95,5 @@ namespace Ch01_01EmptyProject.Graphic
             wwp.worldMatrix = worldMatrix;
             return wwp;
         }
-
-        public Inputs.Position Position { get; set; }
     }
 }

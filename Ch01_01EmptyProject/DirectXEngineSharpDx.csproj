@@ -119,6 +119,7 @@
     <Compile Include="Graphic\InputLayoutFactory.cs" />
     <Compile Include="Graphic\ModelShader.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\Ambient.cs" />
+    <Compile Include="Graphic\Shaders\EffectFactory\ParallaxMapping.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\ColorShader.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\DiffuseLighting.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\BumpMapping.cs" />
@@ -167,6 +168,15 @@
     <Compile Include="System\TestDirectX11Dra.cs" />
     <Compile Include="System\WindowConfiguration.cs" />
     <Content Include="Graphic\Shaders\Effects\AmbientLightingRastertek.fx">
+      <Generator>VertexShaderFunction</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Graphic\Shaders\Effects\DirectionalLighting.fx" />
+    <Content Include="Graphic\Shaders\Effects\parallaxMappingNvidia.fx">
+      <Generator>VertexShaderFunction</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Graphic\Shaders\Effects\parallaxMappingTest.fx">
       <Generator>VertexShaderFunction</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -223,6 +233,7 @@
     <Content Include="Graphic\Shaders\Effects\ColorShader.old.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Graphic\Shaders\Textures\wall_hm.dds" />
     <None Include="Graphic\Shaders\Textures\bump01.dds" />
     <None Include="Graphic\Shaders\Textures\dirt01.dds" />
     <None Include="Graphic\Shaders\Textures\seafloor.dds" />

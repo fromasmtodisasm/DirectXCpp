@@ -26,7 +26,6 @@ namespace Ch01_01EmptyProject.Inputs
 
         public Input(WindowConfiguration wc)
         {
-
             this.wc = wc;
         }
 
@@ -125,13 +124,13 @@ namespace Ch01_01EmptyProject.Inputs
             if (mouseXlastFrame != mouseX || mouseYlastFrame != mouseY)
             {
 #if DEBUG
-                  //Debug.WriteLine("Graphic.Frame :: mouse coord x = " + mouseX + "and y = " + mouseY);
+                //Debug.WriteLine("Graphic.Frame :: mouse coord x = " + mouseX + "and y = " + mouseY);
 #endif
                 return true;
             }
             else
             {
-                return false; 
+                return false;
             }
         }
 

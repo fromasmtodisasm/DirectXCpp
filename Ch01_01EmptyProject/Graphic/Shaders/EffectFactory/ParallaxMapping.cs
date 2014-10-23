@@ -5,11 +5,11 @@ using System.Text;
 
 namespace Ch01_01EmptyProject.Graphic.Shaders
 {
-    class BumpMapping : ShaderEffectBase
+    class ParallaxMapping : ShaderEffectBase
     {
         string effectShaderFileName = @"Graphic\Shaders\Effects\parallaxMappingTest.fx";
-        private string psFunctionName = "BumpMapPixelShader";
-        private string vsFunctionName = "BumpMapVertexShader"; 
+        private string psFunctionName = "ParallaxMapPixelShader";
+        private string vsFunctionName = "ParallaxMapVertexShader"; 
 
         public override string EffectShaderFileName
         {

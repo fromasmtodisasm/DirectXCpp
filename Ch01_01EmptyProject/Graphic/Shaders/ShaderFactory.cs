@@ -16,6 +16,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         Test,
         Multitexture,
         Bumpmaping,
+        ParallaxMapping,
     }
 
     public static class ShaderFactory
@@ -49,6 +50,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                     break;
                 case ShaderName.Bumpmaping:
                     shaderEffect = new BumpMapping();
+                    break;
+                case ShaderName.ParallaxMapping:
+                    shaderEffect = new ParallaxMapping();
                     break;
                 default:
                     shaderEffect = null;
