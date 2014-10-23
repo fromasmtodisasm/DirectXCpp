@@ -118,6 +118,7 @@
     <Compile Include="Graphic\Model\Box2.cs" />
     <Compile Include="Graphic\InputLayoutFactory.cs" />
     <Compile Include="Graphic\ModelShader.cs" />
+    <Compile Include="Graphic\Shaders\EffectFactory\LightingShader.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\Ambient.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\ParallaxMapping.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\ColorShader.cs" />
@@ -167,6 +168,10 @@
     <Compile Include="Graphic\Structures\VertexInputLayouts.cs" />
     <Compile Include="System\TestDirectX11Dra.cs" />
     <Compile Include="System\WindowConfiguration.cs" />
+    <Content Include="Graphic\Shaders\Effects\DirectionalLightingBook.fx">
+      <Generator>VertexShaderFunction</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Graphic\Shaders\Effects\AmbientLightingRastertek.fx">
       <Generator>VertexShaderFunction</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -189,6 +194,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Graphic\Shaders\Effects\MultitexturingRasterek.fx">
+      <Generator>VertexShaderFunction</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Graphic\Shaders\Effects\SpecularLightingRastertek - Copy.fx">
       <Generator>VertexShaderFunction</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

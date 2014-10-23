@@ -55,7 +55,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             public Matrix projectionMatrix;
         }
         [StructLayout(LayoutKind.Sequential)]
-        public struct LightBufferType
+        public struct DiffuseLightBufferType
         {
             public Vector4 diffuseColor;
             public Vector3 lightDirection;
@@ -156,9 +156,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 LoadTextureShader(device);
             }
 
-            if (shader == ShaderName.Diffuse || shader == ShaderName.Bumpmaping)
+            if (shader == ShaderName.Diffuse || shader == ShaderName.Bumpmaping || shader == ShaderName.LightingEffect)
             {
-                constantLightBuffer = GetConstantMatrixBuffer<LightBufferType>(device);
+                constantLightBuffer = GetConstantMatrixBuffer<DiffuseLightBufferType>(device);
             }
             if (shader == ShaderName.Ambient)
             {
@@ -211,21 +211,21 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             // Set shader resource in the pixel shader.
             deviceContext.PixelShader.SetShaderResources(0, TextureCollection);
 
-            if (shader == ShaderName.Diffuse || shader == ShaderName.Bumpmaping)
+            if (shader == ShaderName.Diffuse || shader == ShaderName.Bumpmaping || shader == ShaderName.LightingEffect)
             {
                 Vector4 diffuseColor = new Vector4(1, 1, 1, 1f);
                 //Vector4 diffuseColor = new Vector4(1, 0, 1, 1);
                 //Vector3 lightDirection = new Vector3(1.0f, 0.0f, 1.0f);
                 Vector3 lightDirection = new Vector3(1, 0, 1);
 
-                var lightBuffer = new LightBufferType()
+                var lightBuffer = new DiffuseLightBufferType()
                 {
                     diffuseColor = diffuseColor,
                     lightDirection = lightDirection,
                     padding = 0,
                 };
 
-                WriteToSubresource<LightBufferType>(constantLightBuffer, lightBuffer);
+                WriteToSubresource<DiffuseLightBufferType>(constantLightBuffer, lightBuffer);
 
                 // Finally set the light constant buffer in the pixel shader with the updated values.
                 deviceContext.PixelShader.SetConstantBuffer(bufferNumber, constantLightBuffer);

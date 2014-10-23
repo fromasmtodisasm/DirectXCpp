@@ -35,7 +35,7 @@ namespace Ch01_01EmptyProject.Graphic
         {
             this.windowConfig = windowConfig;
 
-            ShaderName shaderName = ShaderName.ParallaxMapping;
+            ShaderName shaderName = ShaderName.Specular;
             IShape shape = new Box2();
             ModelShader.Get(shaderName, shape);
 
