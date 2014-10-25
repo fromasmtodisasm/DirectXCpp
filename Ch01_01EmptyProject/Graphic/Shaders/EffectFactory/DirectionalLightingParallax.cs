@@ -6,18 +6,15 @@ using System.Threading.Tasks;
 
 namespace Ch01_01EmptyProject.Graphic.Shaders
 {
-    public class DiffuseLighting : ShaderEffectBase
+   public class DirectionalLightingParallax : ShaderEffectBase
     {
-        //only at this effect is need to specify full path ?? BUG
-        string effectShaderFileName = @"D:\GitHub\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Effects\DiffuseLightingRastertekReal.fx";
+       //only at this effect is need to specify full path ?? BUG
+       string effectShaderFileName = @"D:\GitHub\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Effects\DiffuseLightingRastertek.fx";
 
-        string vsFunctionName = "LightVertexShader";
-        string psFunctionName = "LightPixelShader";
+       string vsFunctionName = "DirLightingVertexShaderTwo";
+       string psFunctionName = "DirLightingPixelShaderTwo"; 
 
-        //string vsFunctionName = "VertexShaderFunction";
-        // string psFunctionName = "PixelShaderFunction";
-
-        public override string EffectShaderFileName
+       public override string EffectShaderFileName
         {
             get
             {
@@ -45,7 +42,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         {
             get
             {
-                return Structures.VertexType.TextureNormalVertex;
+                return Structures.VertexType.TextureNormalTangentVertex;
             }
         }
     }

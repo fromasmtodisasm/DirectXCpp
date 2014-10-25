@@ -36,6 +36,11 @@ namespace Ch01_01EmptyProject.Graphic
                         inputElementDesc = VertexInputLayouts.TextureNormalTangentBinormalVertex();
                     }
                     break;
+                case VertexType.TextureNormalTangentVertex:
+                    {
+                        inputElementDesc = VertexInputLayouts.TextureNormalTangentVertex();
+                    }
+                    break;
 
                 //case VertexType.ColorNormalVertex:
                 // break;

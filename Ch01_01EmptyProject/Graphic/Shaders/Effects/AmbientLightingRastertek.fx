@@ -63,7 +63,7 @@ float4 LightPixelShaderFunction(VertexShaderOutput input) : SV_TARGET
 	float4 color;
 	
 	//sample texture
-	textureColor = shaderTexture.Sample(SampleType, input.tex);
+	textureColor = shaderTextures.Sample(SampleType, input.tex);
 
 	color = ambientColor;
 

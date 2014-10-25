@@ -35,7 +35,7 @@ namespace Ch01_01EmptyProject.Graphic
         {
             this.windowConfig = windowConfig;
 
-            ShaderName shaderName = ShaderName.Specular;
+            ShaderName shaderName = ShaderName.DirectionalLightingParallaxMapping;
             IShape shape = new Box2();
             ModelShader.Get(shaderName, shape);
 
@@ -53,7 +53,6 @@ namespace Ch01_01EmptyProject.Graphic
         {
             //camera.Position = new Vector3(0, 0, 6.0f);
             //camera.SetRotation(0, 0, 0); //(float)Math.PI * 20
-
             // process a graphic with fps or what?
 #if DEBUG
             //Debug.WriteLine("Graphic.Frame :: FPS = " + FPS + "and FrameTime = " + FrameTime);

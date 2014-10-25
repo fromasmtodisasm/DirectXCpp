@@ -1,10 +1,9 @@
-﻿//same shader as diffuse, just in different way
-Texture2D shaderTexture[];
+﻿Texture2D shaderTexture;
 SamplerState SampleType;
 
 cbuffer LightBuffer
 {
-	float4 diffuseColor = float4(1, 1, 1, 1);
+	float4 diffuseColor = float4(1, 1, 1, 1);;
 	float3 lightDirection = float3(0, 1, 0);
 	float padding = 1.0f;
 };
@@ -19,9 +18,6 @@ cbuffer MatrixBuffer
 //////////////////////
 ////   TYPES
 //////////////////////
-
-//struct Material
-
 struct VertexInputType
 {
 	float4 position : POSITION;

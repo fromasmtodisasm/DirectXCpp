@@ -164,17 +164,17 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             {
                 constantLightBuffer = GetConstantMatrixBuffer<AmbientLightBufferType>(device);
             }
-            if (shader == ShaderName.Specular || shader == ShaderName.ParallaxMapping)
-            {
-                constantCameraBuffer = GetConstantMatrixBuffer<CameraBufferType>(device);
-            }
-            if (shader == ShaderName.Specular)
+
+            if (shader == ShaderName.Specular || shader == ShaderName.DirectionalLightingParallaxMapping)
             {
                 constantLightBuffer = GetConstantMatrixBuffer<SpecularLightBufferType>(device);
             }
-          
+        
+            if (shader == ShaderName.Specular || shader == ShaderName.ParallaxMapping || shader == ShaderName.DirectionalLightingParallaxMapping)
+            {
+                constantCameraBuffer = GetConstantMatrixBuffer<CameraBufferType>(device);
+            }
         }
-
 
         public void WriteToSubresource<T>(Buffer constantBuffer, T writeTo) where T : struct
         {
@@ -211,13 +211,26 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             // Set shader resource in the pixel shader.
             deviceContext.PixelShader.SetShaderResources(0, TextureCollection);
 
+
+            Vector4 diffuseColor;
+            Vector3 lightDirection;
+            Vector4 ambientColor;
+
             if (shader == ShaderName.Diffuse || shader == ShaderName.Bumpmaping || shader == ShaderName.LightingEffect)
             {
-                Vector4 diffuseColor = new Vector4(1, 1, 1, 1f);
-                //Vector4 diffuseColor = new Vector4(1, 0, 1, 1);
-                //Vector3 lightDirection = new Vector3(1.0f, 0.0f, 1.0f);
-                Vector3 lightDirection = new Vector3(1, 0, 1);
-
+                //another ugly part
+                if (shader == ShaderName.Diffuse)
+                {
+                    diffuseColor = new Vector4(1, 0, 1, 1);
+                    lightDirection = new Vector3(1, 0, 1);
+                }
+                else
+                {
+                    diffuseColor = new Vector4(1, 1, 1, 1f);
+                    //Vector4 diffuseColor = new Vector4(1, 0, 1, 1);
+                    lightDirection = new Vector3(1.0f, 0.0f, 1.0f);
+                    //lightDirection = new Vector3(.4f, 0, 1);
+                }
                 var lightBuffer = new DiffuseLightBufferType()
                 {
                     diffuseColor = diffuseColor,
@@ -233,9 +246,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
             if (shader == ShaderName.Ambient)
             {
-                Vector4 diffuseColor = new Vector4(1, 1, 1f, 1f);
-                Vector3 lightDirection = new Vector3(1, .5f, 0);
-                Vector4 ambientColor = new Vector4(0.15f, 0.15f, 0.15f, 1.0f);
+                diffuseColor = new Vector4(1, 1, 1f, 1f);
+                lightDirection = new Vector3(1, .5f, 0);
+                ambientColor = new Vector4(0.15f, 0.15f, 0.15f, 1.0f);
 
                 var ambientLightBuffer = new AmbientLightBufferType()
                 {
@@ -264,9 +277,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
                 deviceContext.VertexShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
 
-                Vector4 diffuseColor = new Vector4(1, 1, 1f, 1f);
-                Vector3 lightDirection = new Vector3(1, 1, 1);
-                Vector4 ambientColor = new Vector4(0.15f, 0.15f, 0.15f, 1.0f);
+                diffuseColor = new Vector4(1, 1, 1f, 1f);
+                lightDirection = new Vector3(1, 1, 1);
+                ambientColor = new Vector4(0.15f, 0.15f, 0.15f, 1.0f);
 
                 Vector4 specularColor = new Vector4(1, 1, 1, 1);
                 float specularPower = 32;
@@ -285,6 +298,41 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 // Finally set the light constant buffer in the pixel shader with the updated values.
                 deviceContext.PixelShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
 
+            }
+
+            if (shader == ShaderName.DirectionalLightingParallaxMapping)
+            {
+                var cameraBuffer = new CameraBufferType()
+                {
+                    cameraPosition = cameraPosition,
+                    padding = 0.0f,
+                };
+
+                WriteToSubresource<CameraBufferType>(constantCameraBuffer, cameraBuffer);
+                bufferNumber = 1;
+
+                deviceContext.VertexShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
+
+                diffuseColor = new Vector4(1, 1, 1f, 1f);
+                lightDirection = new Vector3(1, 1, 1);
+                ambientColor = new Vector4(0.15f, 0.15f, 0.15f, 1.0f);
+
+                Vector4 specularColor = new Vector4(1, 1, 1, 1);
+                float specularPower = 32;
+
+                var specularLightBuffer = new SpecularLightBufferType()
+                {
+                    ambientColor = ambientColor,
+                    diffuseColor = diffuseColor,
+                    lightDirection = lightDirection,
+                    specularColor = specularColor,
+                    specularPower = specularPower,
+                };
+
+                WriteToSubresource<SpecularLightBufferType>(constantLightBuffer, specularLightBuffer);
+                bufferNumber = 0;
+                // Finally set the light constant buffer in the pixel shader with the updated values.
+                deviceContext.PixelShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
             }
         }
 
@@ -332,7 +380,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             }
 
             constantMatrixBuffer.Dispose();
-         
+
             sampleState.Dispose();
             constantMatrixBuffer.Dispose();
             inputLayout.Dispose();
@@ -346,9 +394,10 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             {
                 //this is ugly
                 //textures = new Textures(device, new TextureType[] { TextureType.Stones ,TextureType.Stones_NormalMap });
-                textures = new Textures(device, new TextureType[] { TextureType.Wall, TextureType.Wall_NS, TextureType.Wall_HS });
+                //textures = new Textures(device, new TextureType[] { TextureType.Wall, TextureType.Wall_NS, TextureType.Wall_HS });
                 //textures = new Textures(device, new TextureType[] { TextureType.Wall, TextureType.Dirt });
-                
+                textures = new Textures(device, new TextureType[] { TextureType.Wall });
+
                 TextureCollection = textures.Select(item => item).ToArray();
 
                 SamplerStateDescription textureSamplerDescription = new SamplerStateDescription()

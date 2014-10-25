@@ -35,12 +35,15 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                         specificVertexes = TextureNormalTangentBinormalVertex<TextureNormalTangentBinormalVertex>(positions);
                     }
                     break;
+                case VertexType.TextureNormalTangentVertex:
+                    {
+                        specificVertexes = TextureNormalTangentVertex<TextureNormalTangentVertex>(positions);
+                    }
+                    break;
             }
 
             return specificVertexes;
         }
-
-    
 
         private static Vector2[] GetTextureCoord()
         {
@@ -81,8 +84,6 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         new Vector2( 1.0f, 1.0f ),
         new Vector2( 0.0f, 1.0f ),
    };
-
-
             //Vector2[] textureCoord = new Vector2[]
             //    {
             //       new Vector2(0, 1),
@@ -227,7 +228,6 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             return textureCoord;
         }
 
-
         private static Vector3[] GetTangentCoord()
         {
             Vector3[] textureCoord = new Vector3[]
@@ -272,7 +272,6 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             return textureCoord;
         }
 
-        
         public static T[] TextureVertex<T>(Vector3[] positions) where T : struct
         {
             Vector2[] textureCoord = GetTextureCoord();
@@ -308,7 +307,30 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 a.Normal = normalCoord[i];
                 a.Tangent = tangentCoord[i];
                 a.Binormal = binormalCoord[i];
-               
+
+                vertices[i] = a;
+            }
+
+            var y = (T[])Convert.ChangeType(vertices, typeof(T[]));
+            return y;
+        }
+
+        private static object TextureNormalTangentVertex<T>(Vector3[] positions)
+        {
+            Vector2[] textureCoord = GetTextureCoord();
+            Vector3[] normalCoord = GetNormalCoord();
+            Vector3[] tangentCoord = GetTangentCoord();
+
+            TextureNormalTangentVertex[] vertices = new TextureNormalTangentVertex[positions.Length];
+            //from this array, make coresponding structure
+            for (int i = 0; i < positions.Length; i++)
+            {
+                TextureNormalTangentVertex a = new TextureNormalTangentVertex();
+                a.Position = positions[i];
+                a.Texture = textureCoord[i];
+                a.Normal = normalCoord[i];
+                a.Tangent = tangentCoord[i];
+
                 vertices[i] = a;
             }
 

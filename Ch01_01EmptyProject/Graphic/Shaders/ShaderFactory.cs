@@ -18,6 +18,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         Bumpmaping,
         ParallaxMapping,
         LightingEffect,
+        DirectionalLightingParallaxMapping,
     }
 
     public static class ShaderFactory
@@ -57,6 +58,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                     break;
                 case ShaderName.LightingEffect:
                     shaderEffect = new LightingShader();
+                    break;
+                case ShaderName.DirectionalLightingParallaxMapping:
+                    shaderEffect = new DirectionalLightingParallax();
                     break;
                 default:
                     shaderEffect = null;

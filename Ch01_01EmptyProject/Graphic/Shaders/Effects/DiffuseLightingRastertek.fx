@@ -1,11 +1,19 @@
-﻿Texture2D shaderTexture;
+﻿Texture2D shaderTextures[2];
 SamplerState SampleType;
 
 cbuffer LightBuffer
 {
-	float4 diffuseColor = float4(1, 1, 1, 1);;
-	float3 lightDirection = float3(0, 1, 0);
-	float padding = 1.0f;
+	float4 ambientColor;
+	float4 diffuseColor;
+	float3 lightDirection;
+	float specularPower;
+	float4 specularColor;
+};
+
+cbuffer CameraBuffer
+{
+	float3 cameraPosition;
+	float padding;
 };
 
 cbuffer MatrixBuffer
@@ -14,82 +22,95 @@ cbuffer MatrixBuffer
 	matrix viewMatrix;
 	matrix projectionMatrix;
 };
-
 //////////////////////
 ////   TYPES
 //////////////////////
 struct VertexInputType
 {
 	float4 position : POSITION;
-	float2 tex : TEXCOORD;
+	float2 tex : TEXCOORD0;
 	float3 normal : NORMAL;
+	float4 tangent : TANGENT;
 };
 
 struct PixelInputType
 {
 	float4 position : SV_POSITION;
-	float2 tex : TEXCOORD;
+	float2 tex : TEXCOORD0;
+	float3 halfVector: TEXCOORD1;
+	float3 lightDir : TEXCOORD2;
 	float3 normal : NORMAL;
+	/*float3 diffuse : NORMAL;
+	float3 specular : TEXCOORD;*/
 };
 
-/////////////////////////////////////
-/////   Vertex Shader
-/////////////////////////////////////
-PixelInputType LightVertexShader(VertexInputType input)
+PixelInputType DirLightingVertexShaderTwo(VertexInputType input)
 {
-	PixelInputType output;
+		PixelInputType output;
+		output.normal = mul(input.normal, (float3x3)worldMatrix);
+		output.normal = normalize(output.normal);
+		// Calculate the position of the vertex against the world, view, and projection matrices.
+		output.position = mul(input.position, worldMatrix);
+		output.position = mul(output.position, viewMatrix);
+		output.position = mul(output.position, projectionMatrix);
+		
+		// Change the position vector to be 4 units for proper matrix calculations.
+		//input.position.w = 1.0f;
+		
+		float3x3 worldInverseTranspose = (float3x3)transpose(worldMatrix);
+		float3 worldPos = mul(input.position, worldMatrix).xyz;
+		float3 lightDir = -lightDirection;
 
-	// Change the position vector to be 4 units for proper matrix calculations.
-	input.position.w = 1.0f;
+		float3 viewDir = cameraPosition - worldPos;
+		float3 halfVector = normalize(normalize(lightDir) + normalize(viewDir));
 
-	// Calculate the position of the vertex against the world, view, and projection matrices.
-	output.position = mul(input.position, worldMatrix);
-	output.position = mul(output.position, viewMatrix);
-	output.position = mul(output.position, projectionMatrix);
-
-	// Store the texture coordinates for the pixel shader.
+		float3 n = mul(input.normal, (float3x3)worldInverseTranspose);
+		float3 t = mul(input.tangent.xyz, (float3x3)worldInverseTranspose);
+		float3 b = cross(n, t) * input.tangent.w;
+		float3x3 tbnMatrix = float3x3(t.x, b.x, n.x,
+								      t.y, b.y, n.y,
+									  t.z, b.z, n.z
+									 );
+    // Store the texture coordinates for the pixel shader.
 	output.tex = input.tex;
-
-	// Calculate the normal vector against the world matrix only.
-	output.normal = mul(input.normal, (float3x3)worldMatrix);
-
-	// Normalize the normal vector.
-	output.normal = normalize(output.normal);
+	
+	output.halfVector = mul(halfVector, tbnMatrix);
+	output.lightDir = mul(lightDir, tbnMatrix);
 
 	return output;
 }
 
-//////////////////////
-////   Pixel Shader
-/////////////////////
-float4 LightPixelShader(PixelInputType input) : SV_TARGET
+float4 DirLightingPixelShaderTwo(PixelInputType input) : SV_TARGET
 {
-	float4 textureColor;
-	float3 lightDir;
-	float lightIntensity;
-	float4 color;
+	float3 h = normalize(input.halfVector);
+	//if parallax mapping ... else
 
-	textureColor = shaderTexture.Sample(SampleType, input.tex);
+	float3 l = normalize(input.lightDir);
+	//in example code is bump map referenced as a normal map
+	float4 bumpMap = shaderTextures[1].Sample(SampleType, input.tex);
+	// Expand the range of the normal value from (0, +1) to (-1, +1).
+	bumpMap = (bumpMap * 2.0f) - 1.0f;
+	float3 n = normalize(bumpMap.xyz);
 
-	// Invert the light direction for calculations.
-	lightDir = -lightDirection;
+	float nDotL = saturate(dot(n, l));
+	float nDotH = saturate(dot(n, h));
+	//material
+	float power = (nDotL == 0.0f) ? 0.0f : pow(nDotH, 90.0f);
 
-	// Calculate the amount of the light on this pixel.
-	lightIntensity = saturate(dot(input.normal, lightDir));
+	//as far im able to get it, nDotL and nDotH are used for lighting effect
+	float4 color = (diffuseColor * nDotL) + (specularColor * power);
 
-	// Determine the final amount of diffuse color based on the diffuse color combined with the light intensity.
-	color = saturate(diffuseColor * lightIntensity);
-
-	color = color * textureColor;
+	//textureColor = s
+	color = color * shaderTextures[0].Sample(SampleType, input.tex);
 	return color;
 }
 
-technique11 Diffuse
+technique11 DiffuseLightingParallax
 {
 	pass Pass1
 	{
-		SetVertexShader(CompileShader(vs_5_0, LightVertexShader()));
-		SetPixelShader(CompileShader(ps_5_0, LightPixelShader()));
+		SetVertexShader(CompileShader(vs_5_0, DirLightingVertexShaderTwo()));
+		SetPixelShader(CompileShader(ps_5_0, DirLightingPixelShaderTwo()));
 	}
 }
 
