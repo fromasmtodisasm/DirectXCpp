@@ -1,5 +1,5 @@
 ﻿//rewriten from hlsl 3.0 - http://msdn.microsoft.com/en-us/library/windows/desktop/bb509647%28v=vs.85%29.aspx
-Texture2D shaderTexture;
+Texture2D shaderTextures[2];
 SamplerState SampleType;
 
 cbuffer ConstantBuffer
@@ -8,6 +8,16 @@ cbuffer ConstantBuffer
 	matrix View;
 	matrix Projection;
 };
+
+cbuffer LightBuffer
+{
+	float4 ambientColor;
+	float4 diffuseColor;
+	float3 lightDirection;
+	float specularPower;
+	float4 specularColor;
+};
+
 
 cbuffer LightBuffer
 {
@@ -89,8 +99,6 @@ float4 PixelShaderFunction(VertexShaderOutput input) : SV_TARGET
 	textureColor = shaderTexture.Sample(SampleType, input.tex);
 	textureColor.rgb *= textureColor.rgb;
 
-
-
 	float3 finalColor = CalcAmbient(material.normal, material.duffuseColor.rgb);
 
 	finalColor += CalcDirectional(In.WorldPos, material);
@@ -105,7 +113,6 @@ float4 PixelShaderFunction(VertexShaderOutput input) : SV_TARGET
 	finalColor += DirLightColor.rgb * pow(NDotH, material.specExp) * material.specIntensity;
 
 	return finalColor * material.diffuseColor.rgb;
-	
 	
 	return float4(finalColor, 1.0);
 }

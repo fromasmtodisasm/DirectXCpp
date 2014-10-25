@@ -7,7 +7,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 {
     class BumpMapping : ShaderEffectBase
     {
-        string effectShaderFileName = @"Graphic\Shaders\Effects\parallaxMappingTest.fx";
+        string effectShaderFileName = @"Graphic\Shaders\Effects\bumpMappingRastertek.fx";
         private string psFunctionName = "BumpMapPixelShader";
         private string vsFunctionName = "BumpMapVertexShader"; 
 

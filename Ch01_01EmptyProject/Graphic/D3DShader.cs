@@ -264,7 +264,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 deviceContext.PixelShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
             }
 
-            if (shader == ShaderName.Specular)
+            if (shader == ShaderName.Specular || shader == ShaderName.DirectionalLightingParallaxMapping)
             {
                 var cameraBuffer = new CameraBufferType()
                 {
@@ -394,9 +394,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             {
                 //this is ugly
                 //textures = new Textures(device, new TextureType[] { TextureType.Stones ,TextureType.Stones_NormalMap });
-                //textures = new Textures(device, new TextureType[] { TextureType.Wall, TextureType.Wall_NS, TextureType.Wall_HS });
+                textures = new Textures(device, new TextureType[] { TextureType.Wall, TextureType.Wall_NS, TextureType.Wall_HS });
                 //textures = new Textures(device, new TextureType[] { TextureType.Wall, TextureType.Dirt });
-                textures = new Textures(device, new TextureType[] { TextureType.Wall });
+                //textures = new Textures(device, new TextureType[] { TextureType.Wall });
 
                 TextureCollection = textures.Select(item => item).ToArray();
 
