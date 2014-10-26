@@ -35,7 +35,7 @@ namespace Ch01_01EmptyProject.Graphic
         {
             this.windowConfig = windowConfig;
 
-            ShaderName shaderName = ShaderName.DirectionalLightingParallaxMapping;
+            ShaderName shaderName = ShaderName.Bumpmaping;
             IShape shape = new Box2();
             ModelShader.Get(shaderName, shape);
 

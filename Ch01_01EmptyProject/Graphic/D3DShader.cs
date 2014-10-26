@@ -169,8 +169,8 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             {
                 constantLightBuffer = GetConstantMatrixBuffer<SpecularLightBufferType>(device);
             }
-        
-            if (shader == ShaderName.Specular || shader == ShaderName.ParallaxMapping || shader == ShaderName.DirectionalLightingParallaxMapping)
+
+            if (shader == ShaderName.Bumpmaping || shader == ShaderName.Specular || shader == ShaderName.ParallaxMapping || shader == ShaderName.DirectionalLightingParallaxMapping)
             {
                 constantCameraBuffer = GetConstantMatrixBuffer<CameraBufferType>(device);
             }
@@ -188,6 +188,11 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
         public void SetShaderParameters(DeviceContext deviceContext, WorldViewProj worldViewProj, int indexCount)
         {
+            //no time for refining this, it should be more flexible 
+            //like: if usingCamera  ==> createCameraBuffer, if usingSpecularLightig....
+            // i should probably use some behavioral/creatioal pattern
+            // this is probably more about behavior.....
+
             this.indexCount = indexCount;
             this.deviceContext = deviceContext;
 
@@ -244,6 +249,11 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 deviceContext.PixelShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
             }
 
+            if (shader == ShaderName.Bumpmaping)
+            {
+                UseCamera();
+            }
+
             if (shader == ShaderName.Ambient)
             {
                 diffuseColor = new Vector4(1, 1, 1f, 1f);
@@ -266,16 +276,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
             if (shader == ShaderName.Specular || shader == ShaderName.DirectionalLightingParallaxMapping)
             {
-                var cameraBuffer = new CameraBufferType()
-                {
-                    cameraPosition = cameraPosition,
-                    padding = 0.0f,
-                };
-
-                WriteToSubresource<CameraBufferType>(constantCameraBuffer, cameraBuffer);
-                bufferNumber = 1;
-
-                deviceContext.VertexShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
+                UseCamera();
 
                 diffuseColor = new Vector4(1, 1, 1f, 1f);
                 lightDirection = new Vector3(1, 1, 1);
@@ -297,7 +298,6 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 bufferNumber = 0;
                 // Finally set the light constant buffer in the pixel shader with the updated values.
                 deviceContext.PixelShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
-
             }
 
             if (shader == ShaderName.DirectionalLightingParallaxMapping)
@@ -334,6 +334,19 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 // Finally set the light constant buffer in the pixel shader with the updated values.
                 deviceContext.PixelShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
             }
+        }
+        private void UseCamera()
+        {
+            var cameraBuffer = new CameraBufferType()
+            {
+                cameraPosition = cameraPosition,
+                padding = 0.0f,
+            };
+
+            WriteToSubresource<CameraBufferType>(constantCameraBuffer, cameraBuffer);
+            int bufferNumber = 1;
+
+            deviceContext.VertexShader.SetConstantBuffer(bufferNumber, constantCameraBuffer);
         }
 
         public void Render()

@@ -10,9 +10,7 @@ cbuffer LightBuffer
 	float4 specularColor;
 };
 
-cbuffer CameraBuffer
-{
-	float3 cameraPosition;
+float3 cameraPosition;
 	float padding;
 };
 
@@ -47,13 +45,7 @@ struct VertexShaderOutput
 	float3 specular : TEXCOORD;*/
 };
 
-
-
-
-
-
 //Transforming verticves and doing color calculatios
-
 VertexShaderOutput DirLightingVertexShaderTwo(VertexInputType input)
 {
 	VertexShaderOutput output;
@@ -63,8 +55,6 @@ VertexShaderOutput DirLightingVertexShaderTwo(VertexInputType input)
 
 	float3 binormal;
 	float3 lightDir;
-
-	float3 fd;
 
 	// Change the position vector to be 4 units for proper matrix calculations.
 	input.position.w = 1.0f;
@@ -106,14 +96,10 @@ VertexShaderOutput DirLightingVertexShaderTwo(VertexInputType input)
 	//output.binormal = normalize(binormal);
 	output.binormal = binormal;
 	return output;
-	 
-	//		
 
 	//		float3 worldPos = mul(input.position, worldMatrix).xyz;
 	//		float3 lightDir = -lightDirection;
 	//
-
-
 }
 
 float4 DirLightingPixelShaderTwo(VertexShaderOutput input) : SV_TARGET
