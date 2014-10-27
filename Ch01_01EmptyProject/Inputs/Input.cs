@@ -10,6 +10,10 @@ using System.Diagnostics;
 
 namespace Ch01_01EmptyProject.Inputs
 {
+    //mouse applies basically a state pattern..
+    //it have not moving state and when user move with mouse
+    //its state its changed to moving state in which is object rotating
+    
     public class Input : IDisposable
     {
         private WindowConfiguration wc;
@@ -43,7 +47,7 @@ namespace Ch01_01EmptyProject.Inputs
 
                 mouse = new Mouse(directInput);
                 mouse.Properties.AxisMode = DeviceAxisMode.Relative;
-
+          
                 // Set the cooperative level of the mouse to share with other programs.
                 //it seems buggy though - RAC
                 //  mouse.SetCooperativeLevel(wc.FormWindowHandle, CooperativeLevel.Foreground | CooperativeLevel.NonExclusive);
@@ -70,7 +74,7 @@ namespace Ch01_01EmptyProject.Inputs
         private void ReadMouse()
         {
             mouseState = new MouseState();
-
+            
             try
             {
                 mouse.GetCurrentState(ref mouseState);

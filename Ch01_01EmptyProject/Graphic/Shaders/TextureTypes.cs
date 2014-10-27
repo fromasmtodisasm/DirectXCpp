@@ -15,6 +15,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         Stones,
         Stones_NormalMap,
         Wall_HS,
+        TestNormalMap,
+        TestHeightMap,
+        TestColorMap,
     }
 
     public class TextureDefinitions : Dictionary<TextureType, string>
@@ -30,6 +33,10 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
             this.Add(TextureType.Stones, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\stone01.dds");
             this.Add(TextureType.Stones_NormalMap, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\bump01.dds");
+
+            this.Add(TextureType.TestColorMap, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\color_map.jpg");
+            this.Add(TextureType.TestHeightMap, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\height_map.jpg");
+            this.Add(TextureType.TestNormalMap, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\normal_map.jpg");
 
         }
 

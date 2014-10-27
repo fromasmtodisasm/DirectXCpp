@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using Ch01_01EmptyProject.Graphic;
 using Ch01_01EmptyProject.Inputs;
 using Ch01_01EmptyProject.System;
+using System.Diagnostics;
 
 namespace Ch01_01EmptyProject
 {
@@ -51,6 +52,7 @@ namespace Ch01_01EmptyProject
             input.Initialize();
             graphic = new D3DGraphic(wc);
             fps = new FPS();
+            fps.Value = 60;
             timer = new SystemTime();
             position = new Position();
         }
@@ -63,30 +65,50 @@ namespace Ch01_01EmptyProject
                 });
         }
 
+        int mouseX, mouseY;
+        int recentMouseX = 0;
+        int recentMouseY = 0;
+
         private void Frame()
         {
             //tricky part is, some classes have render and other frame
             // pick one and make Composite out of it
+
+
             fps.Frame();
             timer.Frame();
 
-            input.Frame();
-            int mouseX, mouseY;
-            
-            input.GetMouseLocation(out mouseX, out mouseY);
+            //input.Frame();
+
+            //recentMouseX = mouseX;
+            //recentMouseY = mouseY;
+
+            //input.GetMouseLocation(out mouseX, out mouseY);
+
+            //if (recentMouseY != mouseY || recentMouseX != mouseX)
+            //{
+            //   float dx = recentMouseX - mouseX;
+            //   float dy = recentMouseY - mouseY;
+
+            //   D3DGraphic.Rotation = dy;
+            //   //Debug.Write("Graphic.Frame :: mouse coord x = " + dx.ToString() + "and y = " + dy.ToString());
+            //}
+
+            graphic.FPS = fps.Value;
+
+            //set the frame time for calculating the updated position
+            graphic.FrameTime = timer.FrameTime;
 
             //for simplicty, if mouse is moving, rotate
             //if (input.IsMouseMoving()) { }
-            //    position.TurnLeft();
-            
+            //position.TurnLeft();
+
             position.FrameTime = timer.FrameTime;
-            
-            graphic.FPS = fps.Value;
-            graphic.FrameTime = timer.FrameTime;
+
             graphic.Position = position;
             graphic.Frame();
 
-            graphic.Render();
+            //graphic.Render();
         }
 
         public void Dispose()

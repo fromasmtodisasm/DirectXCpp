@@ -52,18 +52,13 @@ VertexShaderOutput BumpMapVertexShader(VertexInputType input)
 	// Change the position vector to be 4 units for proper matrix calculations.
 	input.position.w = 1.0f;
 	output.position = mul(input.position, worldMatrix);
-	// Calculate the position of the vertex against the world, view, and projection matrices.
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
-	//i need to use fully initialized positions
-	
-	
+
 	float3 worldPosition = mul(output.position, worldMatrix).xyz;
-	//position could be wrong
 	float3 lightDir = -lightDirection;
 	float3 viewDirection = cameraPosition - worldPosition;
 	float3 halfVector = normalize(normalize(lightDirection) + normalize(viewDirection));
-
 
 	output.normal = mul(input.normal, (float3x3)worldMatrix);
 	output.normal = normalize(output.normal);
@@ -99,10 +94,11 @@ float4 BumpMapPixelShader(VertexShaderOutput input) : SV_TARGET
 	
 	if (useParallaxMapping == true)
 	{
+		float scale = 0.50f;
+		float bias = 0.30f;
+		
 		float height = shaderTextures[2].Sample(SampleType, input.tex).r;
-		// this was at C++ mainfile g_scaleBias[2] = {0.04f, -0.03f};
-		//magic number is equal to scaleBias.x - scaleBias.y
-		height = height * 0.04f; //this can be wrong
+		height = height * scale + bias; //this can be wrong
 		computedTextureCoords = input.tex + (height *  h.xy);
 	}
 	else

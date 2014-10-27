@@ -51,6 +51,10 @@ namespace Ch01_01EmptyProject.Graphic
 
         public void Frame()
         {
+            Rotate();
+
+            Render();
+            
             //camera.Position = new Vector3(0, 0, 6.0f);
             //camera.SetRotation(0, 0, 0); //(float)Math.PI * 20
             // process a graphic with fps or what?
@@ -59,12 +63,21 @@ namespace Ch01_01EmptyProject.Graphic
 #endif
         }
 
+        static void Rotate()
+        {
+            Rotation += (float)Math.PI * 0.015f;
+            if (Rotation > 360)
+                Rotation -= 360;
+        }
+
         public void Render()
         {
             d3d.Render();
             camera.Render();
 
             var wwp = ComputeWorldViewProjectionMatrix();
+
+            Matrix.RotationY(Rotation, out wwp.worldMatrix);
 
             model.SetDeviceContent(d3d.DeviceContext);
             model.Render();
@@ -94,5 +107,7 @@ namespace Ch01_01EmptyProject.Graphic
             wwp.worldMatrix = worldMatrix;
             return wwp;
         }
+
+        public static float Rotation { get; set; }
     }
 }

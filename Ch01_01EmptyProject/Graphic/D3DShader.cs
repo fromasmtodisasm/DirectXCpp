@@ -407,7 +407,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             {
                 //this is ugly
                 //textures = new Textures(device, new TextureType[] { TextureType.Stones ,TextureType.Stones_NormalMap });
-                textures = new Textures(device, new TextureType[] { TextureType.Wall, TextureType.Wall_NS, TextureType.Wall_HS });
+                textures = new Textures(device, new TextureType[] { TextureType.TestColorMap, TextureType.TestNormalMap, TextureType.TestHeightMap });
+
+                //textures = new Textures(device, new TextureType[] { TextureType.Wall, TextureType.Wall_NS, TextureType.Wall_HS });
                 //textures = new Textures(device, new TextureType[] { TextureType.Wall, TextureType.Dirt });
                 //textures = new Textures(device, new TextureType[] { TextureType.Wall });
 
