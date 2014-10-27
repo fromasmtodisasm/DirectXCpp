@@ -246,7 +246,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 WriteToSubresource<DiffuseLightBufferType>(constantLightBuffer, lightBuffer);
 
                 // Finally set the light constant buffer in the pixel shader with the updated values.
-                deviceContext.PixelShader.SetConstantBuffer(bufferNumber, constantLightBuffer);
+                deviceContext.VertexShader.SetConstantBuffer(2, constantLightBuffer);
             }
 
             if (shader == ShaderName.Bumpmaping)

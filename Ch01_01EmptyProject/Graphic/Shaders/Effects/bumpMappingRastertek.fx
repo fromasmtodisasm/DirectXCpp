@@ -33,11 +33,16 @@ struct VertexShaderOutput
 {
 	float4 position : SV_POSITION;
 	float2 tex : TEXCOORD0;
+	
 	float3 normal : NORMAL;
 	float3 tangent : TANGENT;
 	float3 binormal : BINORMAL;
-	//float3 halfVector : TEXCOORD1;
-	float3 worldPosition : POS;
+
+	float3 halfVector : TEXCOORD1;
+	float3 lightDirection : TEXCOORD2;
+	float3 worldPosition : TEXCOORD3;
+
+	float4 diffuseColor : TEXCOORD4;
 };
 
 //Transforming verticves and doing color calculatios
@@ -46,19 +51,19 @@ VertexShaderOutput BumpMapVertexShader(VertexInputType input)
 	VertexShaderOutput output;
 	// Change the position vector to be 4 units for proper matrix calculations.
 	input.position.w = 1.0f;
-
 	output.position = mul(input.position, worldMatrix);
-
 	// Calculate the position of the vertex against the world, view, and projection matrices.
-	//output.position = worldPosition;
 	output.position = mul(output.position, viewMatrix);
 	output.position = mul(output.position, projectionMatrix);
-
 	//i need to use fully initialized positions
+	
+	
 	float3 worldPosition = mul(output.position, worldMatrix).xyz;
-		output.worldPosition = worldPosition;
+	//position could be wrong
+	float3 lightDir = -lightDirection;
+	float3 viewDirection = cameraPosition - worldPosition;
+	float3 halfVector = normalize(normalize(lightDirection) + normalize(viewDirection));
 
-	output.tex = input.tex;
 
 	output.normal = mul(input.normal, (float3x3)worldMatrix);
 	output.normal = normalize(output.normal);
@@ -68,64 +73,59 @@ VertexShaderOutput BumpMapVertexShader(VertexInputType input)
 
 	output.binormal = mul(input.binormal, (float3x3)worldMatrix);
 	output.binormal = normalize(output.binormal);
+		
 
+	//here we make out tbn matrix used for calc. of texel (halfVector)
+	float3x3 tbnMatrix = float3x3(input.tangent.x, input.binormal.x, input.normal.x,
+	input.tangent.y, input.binormal.y, input.normal.y,
+	input.tangent.z, input.binormal.z, input.normal.z
+	);
+
+	
+	output.tex = input.tex;
+	output.halfVector = mul(halfVector, tbnMatrix);
+	output.lightDirection = lightDir; //mul(lightDir, tbnMatrix);
+	
+	output.diffuseColor = diffuseColor;
+	
 	return output;
 }
 
 float4 BumpMapPixelShader(VertexShaderOutput input) : SV_TARGET
 {
-	float4 textureColor;
-	float4 bumpMap;
-	float3 bumpNormal;
-	float3 lightDir;
-	float lightIntensity;
-	float4 color;
+	bool useParallaxMapping = false;
+	float2 computedTextureCoords;
+	float3 h = normalize(input.halfVector);
+	
+	if (useParallaxMapping == true)
+	{
+		float height = shaderTextures[2].Sample(SampleType, input.tex).r;
+		// this was at C++ mainfile g_scaleBias[2] = {0.04f, -0.03f};
+		//magic number is equal to scaleBias.x - scaleBias.y
+		height = height * 0.04f; //this can be wrong
+		computedTextureCoords = input.tex + (height *  h.xy);
+	}
+	else
+	{
+		computedTextureCoords = input.tex;
+	}
 
-	//I could compute tbn matrix at pixel shader(?)
-	//here we make out tbn matrix used for calc. of texel (halfVector)
-	float3x3 tbnMatrix = float3x3(input.tangent.x, input.binormal.x, input.normal.x,
-		input.tangent.y, input.binormal.y, input.normal.y,
-		input.tangent.z, input.binormal.z, input.normal.z
-		);
+	float3 normalizedLight = normalize(input.lightDirection);
 
-	//position could be wrong
-	float3 viewDirection = cameraPosition - input.worldPosition;
-		//	//	float3 halfVector =	float3 viewDir = cameraPosition - worldPos; normalize(lightDirection) + normalize(viewDirection);
-		float3 halfVector = normalize(normalize(lightDirection) + normalize(viewDirection));
-
-		//	halfVector = mul(halfVector, tbnMatrix);
-
-		//sample bump map
-		bumpMap = shaderTextures[1].Sample(SampleType, input.tex);
+	//sample bump map
+	float4 bumpMap = shaderTextures[1].Sample(SampleType, input.tex);
 	// Expand the range of the normal value from (0, +1) to (-1, +1).
 	bumpMap = (bumpMap * 2.0f) - 1.0f;
 	//Calculate the normal from the data in the bump map
-	bumpNormal = (bumpMap.x * input.tangent) + (bumpMap.y * input.binormal) + (bumpMap.z * input.normal);
+	float3 bumpNormal = (bumpMap.x * input.tangent) + (bumpMap.y * input.binormal) + (bumpMap.z * input.normal);
 	//normalize the resulting bump normal
 	bumpNormal = normalize(bumpNormal);
-
-	lightDir = -lightDirection;
 	//calculate amount of the light based on normal value
-	lightIntensity = saturate(dot(bumpNormal, lightDir));
-
-	//HERE IT STARTS - for PARALLAX MAPPING
-	float2 computedTextureCoords;
-	float2 heightCoord;
-	float heightMap = shaderTextures[2].Sample(SampleType, input.tex).r;
-
-	// this was at C++ mainfile g_scaleBias[2] = {0.04f, -0.03f};
-	//magic number is equal to scaleBias.x - scaleBias.y
-	heightMap = heightMap * 0.04f; //this can be wrong
-
-	computedTextureCoords = input.tex + (heightMap *  mul(halfVector, tbnMatrix).xy);
-
-	//computedTextureCoords = input.tex;
-
-	// Determine the final diffuse color based on the diffuse color and the amount of light intensity.
-	color = saturate(diffuseColor * lightIntensity);
+	float lightIntensity = saturate(dot(bumpNormal, normalizedLight));
 	//sample texture pixel
-	textureColor = shaderTextures[0].Sample(SampleType, computedTextureCoords);
-
+	float4 textureColor = shaderTextures[0].Sample(SampleType, computedTextureCoords);
+	// Determine the final diffuse color based on the diffuse color and the amount of light intensity.
+	float4 color = saturate(input.diffuseColor * lightIntensity);
 	color = color * textureColor;
 	return color;
 }
