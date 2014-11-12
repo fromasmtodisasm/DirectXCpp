@@ -24,6 +24,11 @@ namespace Ch01_01EmptyProject.Graphic
 
             shaderEffect = ShaderFactory.Create(shaderName);
             modelShader = ModelShaderFactory.Create(shaderEffect.VertexType, shape.Vertexes);
+            
+            //var model = new Modelf.Model();
+            //model.LoadModel("Cube");
+
+            //modelShader = ModelShaderFactory.Create(shaderEffect.VertexType, model.Data);
          }
 
         public static object GetModelForRender { get { return modelShader; }}

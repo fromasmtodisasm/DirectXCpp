@@ -61,6 +61,7 @@
     <PlatformTarget>x86</PlatformTarget>
     <OutputPath>bin\x86\Debug\</OutputPath>
     <UseVSHostingProcess>false</UseVSHostingProcess>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <PlatformTarget>x86</PlatformTarget>
@@ -115,10 +116,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Graphic\BumpMappingShader.cs" />
+    <Compile Include="Graphic\Cameras\ICamera.cs" />
     <Compile Include="Graphic\Cameras\RastertekCamera.cs" />
-    <Compile Include="Graphic\Model\Box2.cs" />
+    <Compile Include="Graphic\Model\Box.cs" />
     <Compile Include="Graphic\InputLayoutFactory.cs" />
     <Compile Include="Graphic\ModelShader.cs" />
+    <Compile Include="Graphic\Model\IModel.cs" />
+    <Compile Include="Graphic\Model\Model.cs" />
+    <Compile Include="Graphic\Model\ModelEnum.cs" />
+    <Compile Include="Graphic\Shaders\BufferTypes.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\DirectionalLightingParallax.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\LightingShader.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\Ambient.cs" />
@@ -133,7 +140,7 @@
     <Compile Include="Graphic\Shaders\ModelShaderFactory.cs" />
     <Compile Include="Graphic\Model\Square.cs" />
     <Compile Include="Graphic\Model\Triangle.cs" />
-    <Compile Include="Graphic\Model\Box.cs" />
+    <Compile Include="Graphic\Model\Box2.cs" />
     <Compile Include="DisposableBase.cs" />
     <Compile Include="Graphic\Cameras\Camera.cs" />
     <Compile Include="Graphic\D3D\D3DInitializeHelper.cs" />
@@ -145,6 +152,7 @@
     <Compile Include="Graphic\D3DShader.cs" />
     <Compile Include="Graphic\Model\IShape.cs" />
     <Compile Include="Graphic\Shaders\IShaderEffect.cs" />
+    <Compile Include="Graphic\Shaders\ShaderBase.cs" />
     <Compile Include="Graphic\Shaders\ShaderFactory.cs" />
     <Compile Include="Graphic\Shaders\ShaderEffectBase.cs" />
     <Compile Include="Graphic\Model\Shape.cs" />
@@ -168,8 +176,21 @@
     <Compile Include="System\Timer.cs" />
     <Compile Include="Graphic\Structures\VertexStructures.cs" />
     <Compile Include="Graphic\Structures\VertexInputLayouts.cs" />
-    <Compile Include="System\TestDirectX11Dra.cs" />
     <Compile Include="System\WindowConfiguration.cs" />
+    <Compile Include="week8.cs" />
+    <Content Include="Graphic\Model\Cube.txt" />
+    <Content Include="Graphic\Shaders\Effects\parallaxOclussionMapping.fx">
+      <Generator>VertexShaderFunction</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Graphic\Shaders\Effects\bumpMappingRastertek.fx">
+      <Generator>VertexShaderFunction</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Graphic\Shaders\Effects\parallaxMappingTBNMatrix.fx">
+      <Generator>VertexShaderFunction</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Graphic\Shaders\Effects\DiffuseLightingRastertekReal.fx" />
     <Content Include="Graphic\Shaders\Effects\DirectionalLightingBook.fx">
       <Generator>VertexShaderFunction</Generator>
@@ -180,19 +201,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Graphic\Shaders\Effects\DirectionalLighting.fx" />
-    <Content Include="Graphic\Shaders\Effects\parallaxMappingNvidia.fx">
-      <Generator>VertexShaderFunction</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Graphic\Shaders\Effects\parallaxMappingTest.fx">
-      <Generator>VertexShaderFunction</Generator>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Graphic\Shaders\Effects\ColorShader.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Graphic\Shaders\Effects\DiffuseLightingRastertek.fx" />
-    <Content Include="Graphic\Shaders\Effects\bumpMappingRastertek.fx">
+    <Content Include="Graphic\Shaders\Effects\parallaxMapping.fx">
       <Generator>VertexShaderFunction</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -233,9 +246,9 @@
       <Generator>VertexShaderFunction</Generator>
     </Content>
     <Content Include="Graphic\Shaders\Effects\week8.fx" />
-    <Content Include="Graphic\Shaders\Textures\color_map.jpg" />
-    <Content Include="Graphic\Shaders\Textures\height_map.jpg" />
-    <Content Include="Graphic\Shaders\Textures\normal_map.jpg" />
+    <Content Include="Graphic\Textures\color_map.jpg" />
+    <Content Include="Graphic\Textures\height_map.jpg" />
+    <Content Include="Graphic\Textures\normal_map.jpg" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -248,13 +261,15 @@
     <Content Include="Graphic\Shaders\Effects\ColorShader.old.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <None Include="Graphic\Shaders\Textures\bump01.dds" />
-    <None Include="Graphic\Shaders\Textures\dirt01.dds" />
-    <None Include="Graphic\Shaders\Textures\seafloor.dds" />
-    <None Include="Graphic\Shaders\Textures\stone01.dds" />
-    <None Include="Graphic\Shaders\Textures\wall.dds" />
-    <None Include="Graphic\Shaders\Textures\wall_hm.dds" />
-    <None Include="Graphic\Shaders\Textures\wall_ns.dds" />
+    <None Include="Graphic\Textures\bump01.dds" />
+    <None Include="Graphic\Textures\dirt01.dds" />
+    <None Include="Graphic\Textures\rock_colormap.dds" />
+    <None Include="Graphic\Textures\rock_normalmap.dds" />
+    <None Include="Graphic\Textures\seafloor.dds" />
+    <None Include="Graphic\Textures\stone01.dds" />
+    <None Include="Graphic\Textures\wall.dds" />
+    <None Include="Graphic\Textures\wall_hm.dds" />
+    <None Include="Graphic\Textures\wall_ns.dds" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -287,6 +302,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\SharpDX.2.6.2\build\SharpDX.targets" Condition="Exists('..\packages\SharpDX.2.6.2\build\SharpDX.targets')" />
+  <UsingTask TaskName="MSBuild.Fxc.CompileShader" AssemblyFile="MSBuild.Fxc.dll" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

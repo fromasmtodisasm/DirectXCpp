@@ -42,5 +42,14 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 return Structures.VertexType.TextureNormalTangentBinormalVertex;
             }
         }
+
+        //public List<Type> GetPerObjectBufferType()
+        //{
+        //    List<Type> buffers = new List<Type>();
+        //    buffers.Add(typeof(BufferTypes.DiffuseLightBufferType));
+        //    buffers.Add(typeof(BufferTypes.CameraBufferType));
+
+        //    return buffers;
+        //}
     }
 }

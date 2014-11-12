@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using System.Threading;
 using Ch01_01EmptyProject.Graphic.Shaders;
 using System.Diagnostics;
+using Ch01_01EmptyProject.Graphic.Cameras;
 
 namespace Ch01_01EmptyProject.Graphic
 {
@@ -25,7 +26,6 @@ namespace Ch01_01EmptyProject.Graphic
         private Camera camera;
         private D3DModel model;
         private D3DShader shader;
-        private Matrix worldMatrix;
 
         public int FPS { get; set; }
         public float FrameTime { get; set; }
@@ -35,18 +35,20 @@ namespace Ch01_01EmptyProject.Graphic
         {
             this.windowConfig = windowConfig;
 
-            ShaderName shaderName = ShaderName.Bumpmaping;
+            ShaderName shaderName = ShaderName.ParallaxMapping;
             IShape shape = new Box2();
             ModelShader.Get(shaderName, shape);
 
             d3d = new D3D11(windowConfig);
             camera = new Camera();
             model = new D3DModel(d3d.Device, ModelShader.GetModelForRender, ModelShader.GetIndexes);
-            shader = new D3DShader(d3d.Device, ModelShader.GetShaderEffect, shaderName, camera.Position);
+            shader = new D3DShader(d3d.Device, ModelShader.GetShaderEffect, shaderName);
 
             graph.Add(d3d);
             graph.Add(model);
             graph.Add(shader);
+
+            camera.Position = new Vector3(-2, 1, -3);
         }
 
         public void Frame()
@@ -54,8 +56,6 @@ namespace Ch01_01EmptyProject.Graphic
             Rotate();
 
             Render();
-            
-            //camera.Position = new Vector3(0, 0, 6.0f);
             //camera.SetRotation(0, 0, 0); //(float)Math.PI * 20
             // process a graphic with fps or what?
 #if DEBUG
@@ -73,14 +73,15 @@ namespace Ch01_01EmptyProject.Graphic
         public void Render()
         {
             d3d.Render();
+
             camera.Render();
 
             var wwp = ComputeWorldViewProjectionMatrix();
 
-            Matrix.RotationY(Rotation, out wwp.worldMatrix);
-
             model.SetDeviceContent(d3d.DeviceContext);
             model.Render();
+
+            shader.CameraPosition = camera.Position;
 
             shader.SetShaderParameters(d3d.DeviceContext, wwp, ModelShader.GetIndexCount);
             shader.Render();
@@ -94,18 +95,25 @@ namespace Ch01_01EmptyProject.Graphic
                 item.Dispose();
         }
 
-        private D3DShader.WorldViewProj ComputeWorldViewProjectionMatrix()
+        private Ch01_01EmptyProject.Graphic.Shaders.BufferTypes.WorldViewProj ComputeWorldViewProjectionMatrix()
         {
-            worldMatrix = Matrix.Identity;
-            var viewMatrix = camera.ViewMatrix;
-            // Setup and create the projection matrix.
-            var projectionMatrix = Matrix.PerspectiveFovLH((float)(Math.PI / 4), (float)(windowConfig.Width) / windowConfig.Height, 0.1f, 1000.0f);
+            var worldMatrix = Matrix.Identity;
+            var projectionMatrix = Matrix.Identity;
+            var viewMatrix = Matrix.Identity;
 
-            var wwp = new D3DShader.WorldViewProj();
-            wwp.projectionMatrix = projectionMatrix;
-            wwp.viewMatrix = viewMatrix;
-            wwp.worldMatrix = worldMatrix;
-            return wwp;
+            Matrix.RotationY(Rotation, out worldMatrix);
+            viewMatrix = camera.ViewMatrix;
+            // Setup and create the projection matrix.
+            projectionMatrix = Matrix.PerspectiveFovLH((float)(Math.PI / 4), (float)windowConfig.Width / (float)windowConfig.Height, 1.0f, 1000.0f);
+
+            var WWPComputed = new Ch01_01EmptyProject.Graphic.Shaders.BufferTypes.WorldViewProj();
+            WWPComputed.worldMatrix = worldMatrix;
+
+            WWPComputed.worldViewProj = worldMatrix * viewMatrix * projectionMatrix;
+
+            WWPComputed.worldInverseTranspose = Matrix.Transpose(Matrix.Invert(WWPComputed.worldMatrix));
+
+            return WWPComputed;
         }
 
         public static float Rotation { get; set; }

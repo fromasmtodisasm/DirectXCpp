@@ -18,25 +18,34 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         TestNormalMap,
         TestHeightMap,
         TestColorMap,
+        GenericRockNormalHeight,
+        GenericRockColor,
+        Stones_HeightMap,
     }
 
     public class TextureDefinitions : Dictionary<TextureType, string>
     {
+        string path = @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Textures\";
+
         public TextureDefinitions()
         {
-            this.Add(TextureType.Wall, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\wall.dds");
-            this.Add(TextureType.Seafloor, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\seafloor.dds");
-            this.Add(TextureType.Dirt, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\dirt01.dds");
+            this.Add(TextureType.Wall, path + "wall.dds");
+            this.Add(TextureType.Seafloor, path + "seafloor.dds");
+            this.Add(TextureType.Dirt, path + "dirt01.dds");
 
-            this.Add(TextureType.Wall_NS, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\wall_ns.dds");
-            this.Add(TextureType.Wall_HS, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\wall_hm.dds");
+            this.Add(TextureType.Wall_NS, path + "wall_ns.dds");
+            this.Add(TextureType.Wall_HS, path + "wall_hm.dds");
 
-            this.Add(TextureType.Stones, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\stone01.dds");
-            this.Add(TextureType.Stones_NormalMap, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\bump01.dds");
+            this.Add(TextureType.Stones, path + "stone01.dds");
+            this.Add(TextureType.Stones_NormalMap, path + "bump01.dds");
+            this.Add(TextureType.Stones_HeightMap, path + "bump01_hm.dds");
 
-            this.Add(TextureType.TestColorMap, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\color_map.jpg");
-            this.Add(TextureType.TestHeightMap, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\height_map.jpg");
-            this.Add(TextureType.TestNormalMap, @"D:\Github\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Textures\normal_map.jpg");
+            this.Add(TextureType.TestColorMap, path + "color_map.jpg");
+            this.Add(TextureType.TestHeightMap, path + "height_map.jpg");
+            this.Add(TextureType.TestNormalMap, path + "normal_map.jpg");
+
+            this.Add(TextureType.GenericRockNormalHeight, path + "rock_normalmap.dds");
+            this.Add(TextureType.GenericRockColor, path + "rock_colormap.dds");
 
         }
 

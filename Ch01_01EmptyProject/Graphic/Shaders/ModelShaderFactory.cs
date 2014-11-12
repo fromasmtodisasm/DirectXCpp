@@ -48,48 +48,51 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         private static Vector2[] GetTextureCoord()
         {
             Vector2[] textureCoord = new Vector2[]
-           {	
-          new Vector2( 0.0f, 0.0f ),
-         new Vector2( 1.0f, 0.0f ),
-         new Vector2( 1.0f, 1.0f ),
-         new Vector2( 0.0f, 1.0f ),
+               {	
+              new Vector2( 0.0f, 0.0f ),
+             new Vector2( 1.0f, 0.0f ),
+             new Vector2( 1.0f, 1.0f ),
+             new Vector2( 0.0f, 1.0f ),
 
-		// Bottom Face
-         new Vector2( 0.0f, 0.0f ),
-         new Vector2( 1.0f, 0.0f ),
-         new Vector2( 1.0f, 1.0f ),
-         new Vector2( 0.0f, 1.0f ),
+            // Bottom Face
+             new Vector2( 0.0f, 0.0f ),
+             new Vector2( 1.0f, 0.0f ),
+             new Vector2( 1.0f, 1.0f ),
+             new Vector2( 0.0f, 1.0f ),
 
-		// Left Face
-         new Vector2( 0.0f, 0.0f ),
-         new Vector2( 1.0f, 0.0f ),
-         new Vector2( 1.0f, 1.0f ),
-         new Vector2( 0.0f, 1.0f ),
+            // Left Face
+             new Vector2( 0.0f, 0.0f ),
+             new Vector2( 1.0f, 0.0f ),
+             new Vector2( 1.0f, 1.0f ),
+             new Vector2( 0.0f, 1.0f ),
 
-		// Right Face
-        new Vector2( 0.0f, 0.0f ),
-        new Vector2( 1.0f, 0.0f ),
-        new Vector2( 1.0f, 1.0f ),
-        new Vector2( 0.0f, 1.0f ),
+            // Right Face
+            new Vector2( 0.0f, 0.0f ),
+            new Vector2( 1.0f, 0.0f ),
+            new Vector2( 1.0f, 1.0f ),
+            new Vector2( 0.0f, 1.0f ),
 
-		// Back Face
-         new Vector2( 0.0f, 0.0f ),
-         new Vector2( 1.0f, 0.0f ),
-         new Vector2( 1.0f, 1.0f ),
-         new Vector2( 0.0f, 1.0f ),
+            // Back Face
+             new Vector2( 0.0f, 0.0f ),
+             new Vector2( 1.0f, 0.0f ),
+             new Vector2( 1.0f, 1.0f ),
+             new Vector2( 0.0f, 1.0f ),
 
-		// Front Face
-        new Vector2( 0.0f, 0.0f ),
-        new Vector2( 1.0f, 0.0f ),
-        new Vector2( 1.0f, 1.0f ),
-        new Vector2( 0.0f, 1.0f ),
-   };
+            // Front Face
+            new Vector2( 0.0f, 0.0f ),
+            new Vector2( 1.0f, 0.0f ),
+            new Vector2( 1.0f, 1.0f ),
+            new Vector2( 0.0f, 1.0f ),
+           
+
+
             //Vector2[] textureCoord = new Vector2[]
             //    {
             //       new Vector2(0, 1),
             //       new Vector2(0.5f, 0),
             //       new Vector2(1, 1),
             //    };
+               };
             return textureCoord;
         }
 
@@ -160,6 +163,39 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                         (Vector4)Color.Yellow,
                         (Vector4)Color.Cyan,
                         (Vector4)Color.Magenta,
+                            (Vector4)Color.White,
+                        (Vector4)Color.Black,
+                        (Vector4)Color.Red,
+                        (Vector4)Color.Green,
+                        (Vector4)Color.Blue,
+                        (Vector4)Color.Yellow,
+                        (Vector4)Color.Cyan,
+                        (Vector4)Color.Magenta,
+                        (Vector4)Color.White,
+                        (Vector4)Color.Black,
+                        (Vector4)Color.Red,
+                        (Vector4)Color.Green,
+                        (Vector4)Color.Blue,
+                        (Vector4)Color.Yellow,
+                        (Vector4)Color.Cyan,
+                        (Vector4)Color.Magenta,
+                        };
+            return colors;
+        }
+
+        private static Vector4[] GetColorsForBook()
+        {
+            Vector4[] colors = new Vector4[]
+                        {
+                        (Vector4)Color.White,
+                        (Vector4)Color.Black,
+                        (Vector4)Color.Red,
+                        (Vector4)Color.Green,
+                        (Vector4)Color.Blue,
+                        (Vector4)Color.Yellow,
+                        (Vector4)Color.Cyan,
+                        (Vector4)Color.Magenta,
+                     
                         };
             return colors;
         }
@@ -168,7 +204,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
         public static T[] ColorVertex<T>(Vector3[] positions) where T : struct
         {
-            Vector4[] colors = GetColors();
+            Vector4[] colors = GetColorsForBook();
             //Vector2[] textureCoord = GetTextureCoord();
 
             ColorVertex[] vertices = new ColorVertex[positions.Length];
@@ -313,6 +349,29 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
             var y = (T[])Convert.ChangeType(vertices, typeof(T[]));
             return y;
+
+
+            //ector2[] textureCoord = GetTextureCoord();
+            //Vector3[] normalCoord = GetNormalCoord();
+            //Vector3[] binormalCoord = GetBinormalCoord();
+            //Vector3[] tangentCoord = GetTangentCoord();
+
+            //TextureNormalTangentBinormalVertex[] vertices = new TextureNormalTangentBinormalVertex[positions.Length];
+            ////from this array, make coresponding structure
+            //for (int i = 0; i < positions.Length; i++)
+            //{
+            //    TextureNormalTangentBinormalVertex a = new TextureNormalTangentBinormalVertex();
+            //    a.Position = positions[i];
+            //    a.Texture = textureCoord[i];
+            //    a.Normal = normalCoord[i];
+            //    a.Tangent = tangentCoord[i];
+            //    a.Binormal = binormalCoord[i];
+
+            //    vertices[i] = a;
+            //}
+
+            //var y = (T[])Convert.ChangeType(vertices, typeof(T[]));
+            //return y;
         }
 
         private static object TextureNormalTangentVertex<T>(Vector3[] positions)
@@ -357,5 +416,10 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             var y = (T[])Convert.ChangeType(vertices, typeof(T[]));
             return y;
         }
+
+        //internal static object Create(VertexType vertexType, Model.Model.ModelFormat[] modelFormat)
+        //{
+        //    Create(vertexType, modelFormat[]);
+        //}
     }
 }

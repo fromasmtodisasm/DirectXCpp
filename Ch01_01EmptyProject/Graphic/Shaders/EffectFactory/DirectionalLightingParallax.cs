@@ -9,10 +9,10 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
    public class DirectionalLightingParallax : ShaderEffectBase
     {
        //only at this effect is need to specify full path ?? BUG
-       string effectShaderFileName = @"D:\GitHub\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Effects\DiffuseLightingRastertek.fx";
+       string effectShaderFileName = @"D:\GitHub\DirectXCpp\Ch01_01EmptyProject\Graphic\Shaders\Effects\DirectionalLighting.fx";
 
-       string vsFunctionName = "DirLightingVertexShaderTwo";
-       string psFunctionName = "DirLightingPixelShaderTwo"; 
+       string vsFunctionName = "LightVertexShader";
+       string psFunctionName = "LightPixelShader"; 
 
        public override string EffectShaderFileName
         {

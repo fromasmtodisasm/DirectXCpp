@@ -66,5 +66,5 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             get { return psVersion; }
             //set { psVersion = value; }
         }
-    }
+   }
 }

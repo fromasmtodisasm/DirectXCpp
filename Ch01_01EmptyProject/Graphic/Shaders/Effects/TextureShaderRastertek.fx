@@ -1,8 +1,8 @@
 ﻿cbuffer MatrixBuffer
 {
-	matrix worldMatrix;
-	matrix viewMatrix;
-	matrix projectionMatrix;
+	float4x4 worldViewProj;
+	float4x4 worldMatrix;
+	float4x4 worldInverseTranspose;
 };
 
 Texture2D shaderTexture;
@@ -23,15 +23,10 @@ struct PixelInputType
 PixelInputType TextureVertexShader(VertexInputType input)
 {
 	PixelInputType output;
-
-	// Change the position vector to be 4 units for proper matrix calculations.
+	// Change the position vector to be 4 units for proper matrix calculations.!!!IMPORTANT
+	//but maybe i should use vector3 for input
 	input.position.w = 1.0f;
-
-	// Calculate the position of the vertex against the world, view, and projection matrices.
-	output.position = mul(input.position, worldMatrix);
-	output.position = mul(output.position, viewMatrix);
-	output.position = mul(output.position, projectionMatrix);
-
+	output.position = mul(worldViewProj, input.position);//worldViewProj;
 	// Store the texture coordinates for the pixel shader to use.
 	output.tex = input.tex;
 
@@ -41,7 +36,6 @@ PixelInputType TextureVertexShader(VertexInputType input)
 float4 TexturePixelShader(PixelInputType input) : SV_TARGET
 {
 	float4 textureColor;
-
 	// Sample the pixel color from the texture using the sampler at this texture coordinate location.
 	textureColor = shaderTexture.Sample(SampleType, input.tex);
 

@@ -8,49 +8,22 @@ using System.Threading.Tasks;
 
 namespace Ch01_01EmptyProject.Graphic
 {
-    struct Box2 : IShape
+    struct Box : IShape
     {
         public Vector3[] Vertexes
         {
             get
             {
-                Vector3[] positions = new Vector3[]
+                Vector3[] positions = new Vector3[8]
             {
-         // Top Face
-         new Vector3( -1.0f,  1.0f, -1.0f ), 
-         new Vector3(  1.0f,  1.0f, -1.0f ), 
-         new Vector3(  1.0f,  1.0f,  1.0f ),
-         new Vector3( -1.0f,  1.0f,  1.0f ), 
-
-		// Bottom Face
-         new Vector3( -1.0f, -1.0f,  1.0f ), 
-         new Vector3(  1.0f, -1.0f,  1.0f ), 
-         new Vector3(  1.0f, -1.0f, -1.0f ), 
-         new Vector3( -1.0f, -1.0f, -1.0f ), 
-
-		// Left Face
-         new Vector3( -1.0f, -1.0f,  1.0f ), 
-         new Vector3( -1.0f, -1.0f, -1.0f ), 
-         new Vector3( -1.0f,  1.0f, -1.0f ), 
-         new Vector3( -1.0f,  1.0f,  1.0f ), 
-
-		// Right Face
-         new Vector3( 1.0f, -1.0f, -1.0f ), 
-         new Vector3( 1.0f, -1.0f,  1.0f ),
-         new Vector3( 1.0f,  1.0f,  1.0f ),
-         new Vector3( 1.0f,  1.0f, -1.0f ), 
-
-		// Back Face
-         new Vector3( -1.0f, -1.0f, -1.0f ), 
-         new Vector3(  1.0f, -1.0f, -1.0f ), 
-         new Vector3(  1.0f,  1.0f, -1.0f ), 
-         new Vector3( -1.0f,  1.0f, -1.0f ), 
-
-		// Front Face
-         new Vector3(  1.0f, -1.0f, 1.0f ), 
-         new Vector3( -1.0f, -1.0f, 1.0f ),
-         new Vector3( -1.0f,  1.0f, 1.0f ),
-         new Vector3(  1.0f,  1.0f, 1.0f ), 
+            new Vector3(-1, -1, -1),
+            new Vector3(-1, 1, -1),
+            new Vector3(+1, +1, -1),
+            new Vector3(+1, -1, -1),
+            new Vector3(-1, -1, +1),
+            new Vector3(-1, +1, +1),
+            new Vector3(+1, +1, +1),
+            new Vector3(+1, -1, +1),
             };
                 return positions;
             }
@@ -62,29 +35,24 @@ namespace Ch01_01EmptyProject.Graphic
             {
                 return new int[]
             {
-            // top
-        3,1,0,
-        2,1,3,
-
-		// bottom
-        7,5,4,
-        6,5,7,
-
-		// left
-        11,9,8,
-        10,9,11,
-
-		// right
-        15,13,12,
-        14,13,15,
-
-		// back
-        19,17,16,
-        18,17,19,
-
-		// front
-        23,21,20,
-        22,21,23,
+                //frontFace
+                0, 1, 2 ,
+                0, 2, 3, 
+                //backFace
+                4, 6, 5,
+                4, 7, 6,
+                //leftFace
+                4, 5, 1,
+                4, 1, 0,
+                //rightFace
+                3, 2, 6,
+                3, 6, 7,
+                //topFace
+                1, 5, 6,
+                1, 6, 2,
+                //bottomFace
+                4, 0, 3,
+                4, 3, 7,
             };
             }
         }

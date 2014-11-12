@@ -7,7 +7,10 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 {
     class ParallaxMapping : ShaderEffectBase
     {
-        string effectShaderFileName = @"Graphic\Shaders\Effects\parallaxMappingTest.fx";
+        string effectShaderFileName = @"Graphic\Shaders\Effects\parallaxMapping.fx";
+        //string effectShaderFileName = @"Graphic\Shaders\Effects\parallaxMappingTBNMatrix.fx";
+        //string effectShaderFileName = @"Graphic\Shaders\Effects\parallaxOclussionMapping.fx";
+
         private string psFunctionName = "ParallaxMapPixelShader";
         private string vsFunctionName = "ParallaxMapVertexShader"; 
 

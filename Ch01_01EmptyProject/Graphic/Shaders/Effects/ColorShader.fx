@@ -3,9 +3,7 @@
 ///////////////////////
 cbuffer WorldViewProj
 {
-	float4x4 worldMatrix;
-	float4x4 viewMatrix;
-	float4x4 projectionMatrix;
+	float4x4 worldViewProj;
 }
 //////////////////////
 ////   TYPES
@@ -35,9 +33,11 @@ PixelInputType ColorVertexShader(VertexInputType input)
 	//input.position.w = 1.0f;
 
 	// Calculate the position of the vertex against the world, view, and projection matrices.
-	output.position = mul(input.position, worldMatrix);
-	output.position = mul(output.position, viewMatrix);
-	output.position = mul(output.position, projectionMatrix);
+	//output.position = mul(input.position, worldMatrix);
+	//output.position = mul(output.position, viewMatrix);
+	//output.position = mul(output.position, projectionMatrix);
+
+	output.position = mul(float4(input.position, 1.0f), worldViewProj);
 
 	// Store the input color for the pixel shader to use.
 	output.color = input.color; //mul(input.color, float4(0.2, 0.2, 0.1, 0.3));
