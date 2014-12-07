@@ -24,9 +24,9 @@ namespace Ch01_01EmptyProject.Graphic
         private WindowConfiguration windowConfig;
         private D3D11 d3d;
         private Camera camera;
-        private D3DModel model;
+        private Bitmap model;
         private D3DShader shader;
-
+      
         public int FPS { get; set; }
         public float FrameTime { get; set; }
         public Inputs.Position Position { get; set; }
@@ -35,25 +35,33 @@ namespace Ch01_01EmptyProject.Graphic
         {
             this.windowConfig = windowConfig;
 
-            ShaderName shaderName = ShaderName.ParallaxMapping;
+            ShaderName shaderName = ShaderName.Texture;
             IShape shape = new Box2();
             ModelShader.Get(shaderName, shape);
 
             d3d = new D3D11(windowConfig);
             camera = new Camera();
-            model = new D3DModel(d3d.Device, ModelShader.GetModelForRender, ModelShader.GetIndexes);
+            
+            model = new Bitmap(d3d.Device, ModelShader.GetShaderEffect, shaderName, this.windowConfig, new Vector2(256, 256));             
+            
+            //model = new D3DModel(d3d.Device, ModelShader.GetModelForRender, ModelShader.GetIndexes);
+
+
+            //var bitmap = new Bitmap(device, );
+
             shader = new D3DShader(d3d.Device, ModelShader.GetShaderEffect, shaderName);
 
             graph.Add(d3d);
             graph.Add(model);
             graph.Add(shader);
-
-            camera.Position = new Vector3(-2, 1, -3);
+           
+            //camera.Position = new Vector3(-2, 1, -3);
+             camera.Position = new Vector3(0.0f, 0.0f, -10.0f);
         }
 
         public void Frame()
         {
-            Rotate();
+            //Rotate();
 
             Render();
             //camera.SetRotation(0, 0, 0); //(float)Math.PI * 20

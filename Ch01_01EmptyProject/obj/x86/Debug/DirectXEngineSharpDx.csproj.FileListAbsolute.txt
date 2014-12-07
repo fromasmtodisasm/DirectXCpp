@@ -39,3 +39,4 @@ D:\GitHub\DirectXCpp\Ch01_01EmptyProject\obj\x86\Debug\Ch01_01EmptyProject.pdb
 D:\GitHub\DirectXCpp\Ch01_01EmptyProject\bin\x86\Debug\Graphic\Shaders\Effects\parallaxOclussionMapping.fx
 D:\GitHub\DirectXCpp\Ch01_01EmptyProject\bin\x86\Debug\Graphic\Shaders\Effects\parallaxMappingTBNMatrix.fx
 D:\GitHub\DirectXCpp\Ch01_01EmptyProject\bin\x86\Debug\Graphic\Shaders\Effects\parallaxMapping.fx
+D:\GitHub\DirectXCpp\Ch01_01EmptyProject\bin\x86\Debug\Graphic\Shaders\Effects\DepthShader.fx

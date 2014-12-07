@@ -119,6 +119,7 @@
     <Compile Include="Graphic\BumpMappingShader.cs" />
     <Compile Include="Graphic\Cameras\ICamera.cs" />
     <Compile Include="Graphic\Cameras\RastertekCamera.cs" />
+    <Compile Include="Graphic\Bitmap.cs" />
     <Compile Include="Graphic\Model\Box.cs" />
     <Compile Include="Graphic\InputLayoutFactory.cs" />
     <Compile Include="Graphic\ModelShader.cs" />
@@ -126,6 +127,7 @@
     <Compile Include="Graphic\Model\Model.cs" />
     <Compile Include="Graphic\Model\ModelEnum.cs" />
     <Compile Include="Graphic\Shaders\BufferTypes.cs" />
+    <Compile Include="Graphic\Shaders\EffectFactory\DepthShader.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\DirectionalLightingParallax.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\LightingShader.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\Ambient.cs" />
@@ -179,6 +181,10 @@
     <Compile Include="System\WindowConfiguration.cs" />
     <Compile Include="week8.cs" />
     <Content Include="Graphic\Model\Cube.txt" />
+    <Content Include="Graphic\Shaders\Effects\DepthShader.fx">
+      <Generator>VertexShaderFunction</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Graphic\Shaders\Effects\parallaxOclussionMapping.fx">
       <Generator>VertexShaderFunction</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

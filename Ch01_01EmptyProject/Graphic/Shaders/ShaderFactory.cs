@@ -19,6 +19,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         ParallaxMapping,
         LightingEffect,
         DirectionalLightingParallaxMapping,
+        DepthShader,
     }
 
     public static class ShaderFactory
@@ -61,6 +62,9 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                     break;
                 case ShaderName.DirectionalLightingParallaxMapping:
                     shaderEffect = new DirectionalLightingParallax();
+                    break;
+                case ShaderName.DepthShader:
+                    shaderEffect = new DepthShader();
                     break;
                 default:
                     shaderEffect = null;
