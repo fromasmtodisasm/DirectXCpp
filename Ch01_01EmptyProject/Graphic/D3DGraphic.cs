@@ -21,7 +21,7 @@ namespace Ch01_01EmptyProject.Graphic
     public class D3DGraphic : IGraphicComposite
     {
         private List<IGraphicComposite> graph = new List<IGraphicComposite>();
-        private WindowConfiguration windowConfig;
+        private SystemConfiguration windowConfig;
         private D3D11 d3d;
         private Camera camera;
         private Bitmap model;
@@ -31,7 +31,7 @@ namespace Ch01_01EmptyProject.Graphic
         public float FrameTime { get; set; }
         public Inputs.Position Position { get; set; }
 
-        public D3DGraphic(WindowConfiguration windowConfig)
+        public D3DGraphic(SystemConfiguration windowConfig)
         {
             this.windowConfig = windowConfig;
 
@@ -41,14 +41,10 @@ namespace Ch01_01EmptyProject.Graphic
 
             d3d = new D3D11(windowConfig);
             camera = new Camera();
-            
+
             model = new Bitmap(d3d.Device, ModelShader.GetShaderEffect, shaderName, this.windowConfig, new Vector2(256, 256));             
             
             //model = new D3DModel(d3d.Device, ModelShader.GetModelForRender, ModelShader.GetIndexes);
-
-
-            //var bitmap = new Bitmap(device, );
-
             shader = new D3DShader(d3d.Device, ModelShader.GetShaderEffect, shaderName);
 
             graph.Add(d3d);
@@ -86,7 +82,7 @@ namespace Ch01_01EmptyProject.Graphic
 
             var wwp = ComputeWorldViewProjectionMatrix();
 
-            model.SetDeviceContent(d3d.DeviceContext);
+            //model.SetDeviceContent(d3d.DeviceContext);
             model.Render();
 
             shader.CameraPosition = camera.Position;

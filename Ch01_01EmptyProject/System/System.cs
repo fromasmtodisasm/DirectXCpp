@@ -25,7 +25,7 @@ namespace Ch01_01EmptyProject
         private Form1 form;
         private D3DGraphic graphic;
         private Input input;
-        private WindowConfiguration wc;
+        private SystemConfiguration wc;
         private FPS fps;
         private SystemTime timer;
         private Position position;
@@ -40,7 +40,7 @@ namespace Ch01_01EmptyProject
             form.Height = FORM_HEIGHT_SMALL;
             form.FormBorderStyle = FormBorderStyle.FixedToolWindow;
 
-            wc = new WindowConfiguration();
+            wc = new SystemConfiguration();
             wc.Width = FORM_WIDTH;
             wc.Height = FORM_HEIGHT;
             wc.FormWindowHandle = form.Handle;

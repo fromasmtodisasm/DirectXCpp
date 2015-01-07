@@ -16,7 +16,7 @@ namespace Ch01_01EmptyProject.Inputs
     
     public class Input : IDisposable
     {
-        private WindowConfiguration wc;
+        private SystemConfiguration wc;
         private int screenWidth;
         private int screenHeight;
         private int mouseX;
@@ -28,7 +28,7 @@ namespace Ch01_01EmptyProject.Inputs
         private int mouseXlastFrame;
         private int mouseYlastFrame;
 
-        public Input(WindowConfiguration wc)
+        public Input(SystemConfiguration wc)
         {
             this.wc = wc;
         }

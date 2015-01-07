@@ -120,6 +120,7 @@
     <Compile Include="Graphic\Cameras\ICamera.cs" />
     <Compile Include="Graphic\Cameras\RastertekCamera.cs" />
     <Compile Include="Graphic\Bitmap.cs" />
+    <Compile Include="Graphic\FontShader.cs" />
     <Compile Include="Graphic\Model\Box.cs" />
     <Compile Include="Graphic\InputLayoutFactory.cs" />
     <Compile Include="Graphic\ModelShader.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Graphic\Shaders\EffectFactory\SpecularLighting.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\TestShader.cs" />
     <Compile Include="Graphic\Shaders\EffectFactory\TextureMapping.cs" />
+    <Compile Include="Graphic\Shaders\Font.cs" />
     <Compile Include="Graphic\Shaders\ModelShaderFactory.cs" />
     <Compile Include="Graphic\Model\Square.cs" />
     <Compile Include="Graphic\Model\Triangle.cs" />
@@ -158,10 +160,12 @@
     <Compile Include="Graphic\Shaders\ShaderFactory.cs" />
     <Compile Include="Graphic\Shaders\ShaderEffectBase.cs" />
     <Compile Include="Graphic\Model\Shape.cs" />
+    <Compile Include="Graphic\Shaders\Texture.cs" />
     <Compile Include="Graphic\Shaders\TextureTypes.cs" />
     <Compile Include="Graphic\Shaders\Textures.cs" />
     <Compile Include="Graphic\Structures\IVertex.cs" />
-    <Compile Include="Graphic\Shaders\Texture.cs" />
+    <Compile Include="Graphic\Shaders\TextureLoader.cs" />
+    <Compile Include="Graphic\Text.cs" />
     <Compile Include="Inputs\Input.cs" />
     <Compile Include="Inputs\InputExample.cs" />
     <Compile Include="Inputs\Positiob.cs" />
@@ -181,6 +185,11 @@
     <Compile Include="System\WindowConfiguration.cs" />
     <Compile Include="week8.cs" />
     <Content Include="Graphic\Model\Cube.txt" />
+    <Content Include="Graphic\Model\fontdata.txt" />
+    <Content Include="Graphic\Shaders\Effects\Font.fx">
+      <Generator>VertexShaderFunction</Generator>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Graphic\Shaders\Effects\DepthShader.fx">
       <Generator>VertexShaderFunction</Generator>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -267,6 +276,7 @@
     <Content Include="Graphic\Shaders\Effects\ColorShader.old.fx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <None Include="Graphic\font.dds" />
     <None Include="Graphic\Textures\bump01.dds" />
     <None Include="Graphic\Textures\dirt01.dds" />
     <None Include="Graphic\Textures\rock_colormap.dds" />

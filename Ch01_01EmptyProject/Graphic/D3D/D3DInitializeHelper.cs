@@ -16,9 +16,9 @@ namespace Ch01_01EmptyProject
 {
     public class D3DInitializeHelper
     {
-        private WindowConfiguration windowConfig;
+        private SystemConfiguration windowConfig;
        
-        public D3DInitializeHelper(WindowConfiguration windowConfig)
+        public D3DInitializeHelper(SystemConfiguration windowConfig)
         {
             this.windowConfig = windowConfig;
         }

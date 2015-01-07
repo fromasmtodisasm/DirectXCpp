@@ -13,8 +13,14 @@ using System.Windows.Forms;
 
 namespace Ch01_01EmptyProject
 {
-    public class WindowConfiguration
+    public class SystemConfiguration
     {
+        public SystemConfiguration()
+        {
+            DataFilePath = @"..\..\Data\";
+            ModelFilePath = @"..\..\Models\";
+        }
+        
         IntPtr formWindowHandle;
 
         public IntPtr FormWindowHandle
@@ -37,5 +43,9 @@ namespace Ch01_01EmptyProject
             get { return height; }
             set { height = value; }
         }
+
+        public static string DataFilePath { get; set; }
+
+        public static string ModelFilePath { get; set; }
     }
 }

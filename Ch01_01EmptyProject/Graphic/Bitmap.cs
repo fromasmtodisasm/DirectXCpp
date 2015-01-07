@@ -58,7 +58,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         public Vector3 CameraPosition { get; set; }
         public ShaderResourceView[] TextureCollection { get; private set; }
 
-        public Bitmap(Device device, IShaderEffect shaderEffect, ShaderName shader, WindowConfiguration winCfg, Vector2 bitmapDimensions)
+        public Bitmap(Device device, IShaderEffect shaderEffect, ShaderName shader, SystemConfiguration winCfg, Vector2 bitmapDimensions)
         {
             screenHeight = winCfg.Height;
             screenWidth = winCfg.Width;
@@ -74,7 +74,6 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
             //loadTexture
             //new D3DShader();
-    
         }
 
         private void InitializeBuffers()
@@ -111,7 +110,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
             // Create the index buffer.
              indexBuffer = Buffer.Create(device, BindFlags.IndexBuffer, indices);
-         }
+        }
 
         private void UpdateBuffers(DeviceContext deviceContext, Vector2 positions)
         {
@@ -188,7 +187,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
         public void SetShaderParameters(DeviceContext deviceContext, BufferTypes.WorldViewProj WWPComputed, int indexCount)
         {
-   
+            throw new NotImplementedException();
         }
      
         public void Render(DeviceContext deviceContext, Vector2 positions)
@@ -212,7 +211,6 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
         
         public void Dispose()
         {
-           
             if (constantLightBuffer != null)
             {
                 constantLightBuffer.Dispose();

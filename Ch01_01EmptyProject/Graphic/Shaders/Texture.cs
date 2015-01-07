@@ -7,19 +7,18 @@ using System.Threading.Tasks;
 
 namespace Ch01_01EmptyProject.Graphic.Shaders
 {
-   public static class Texture
+    class Texture : IDisposable
     {
-        public static ShaderResourceView Load(Device device, string textureFileName)
+        public ShaderResourceView TextueResource { get; private set; }
+
+        public Texture(Device device, string textureFileName)
         {
-            try
-            {
-                return ShaderResourceView.FromFile(device, textureFileName);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("textureLoad: " + ex);
-            }
+            TextueResource = ShaderResourceView.FromFile(device, textureFileName);
         }
 
-    }
+        public void Dispose()
+        {
+            TextueResource.Dispose();
+        }
+     }
 }

@@ -41,7 +41,7 @@ namespace Ch01_01EmptyProject.Graphic
             set { deviceContext = value; }
         }
 
-        public D3D11(WindowConfiguration windowConfig)
+        public D3D11(SystemConfiguration windowConfig)
         {
             try
             {

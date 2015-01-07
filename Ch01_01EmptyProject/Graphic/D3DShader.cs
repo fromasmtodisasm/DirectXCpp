@@ -123,7 +123,6 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
             {
                 constantLightBuffer = GetConstantMatrixBuffer<BufferTypes.AmbientLightBufferType>(device);
             }
-
             if (shader == ShaderName.Specular || shader == ShaderName.DirectionalLightingParallaxMapping)
             {
                 constantLightBuffer = GetConstantMatrixBuffer<BufferTypes.SpecularLightBufferType>(device);
@@ -201,7 +200,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
                 //deviceContext.VertexShader.SetConstantBuffer(2, constantLightBuffer);
             }
 
-            if (shader == ShaderName.ParallaxMapping ||  shader == ShaderName.Diffuse || shader == ShaderName.Bumpmaping || shader == ShaderName.LightingEffect) //|| shader == ShaderName.DirectionalLightingParallaxMapping
+            if (shader == ShaderName.ParallaxMapping || shader == ShaderName.Diffuse || shader == ShaderName.Bumpmaping || shader == ShaderName.LightingEffect) //|| shader == ShaderName.DirectionalLightingParallaxMapping
             {
                 //another ugly part
                 if (shader == ShaderName.Diffuse)

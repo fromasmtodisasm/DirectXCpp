@@ -23,7 +23,7 @@ namespace Ch01_01EmptyProject.Graphic.Shaders
 
             foreach (TextureType textureType in fileNames)
             {
-                ShaderResourceView srw = Texture.Load(device, td[textureType]);
+                ShaderResourceView srw = TextureLoader.Load(device, td[textureType]);
                 this.Add(srw);
             }
         } 

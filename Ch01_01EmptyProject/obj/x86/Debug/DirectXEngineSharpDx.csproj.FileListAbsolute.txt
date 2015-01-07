@@ -40,3 +40,4 @@ D:\GitHub\DirectXCpp\Ch01_01EmptyProject\bin\x86\Debug\Graphic\Shaders\Effects\p
 D:\GitHub\DirectXCpp\Ch01_01EmptyProject\bin\x86\Debug\Graphic\Shaders\Effects\parallaxMappingTBNMatrix.fx
 D:\GitHub\DirectXCpp\Ch01_01EmptyProject\bin\x86\Debug\Graphic\Shaders\Effects\parallaxMapping.fx
 D:\GitHub\DirectXCpp\Ch01_01EmptyProject\bin\x86\Debug\Graphic\Shaders\Effects\DepthShader.fx
+D:\GitHub\DirectXCpp\Ch01_01EmptyProject\bin\x86\Debug\Graphic\Shaders\Effects\Font.fx
