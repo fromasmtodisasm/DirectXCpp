@@ -52,3 +52,6 @@ bin/
 *.suo
 *.suo
 *.suo
+*.log
+/Engine/Debug/Engine.tlog/*.tlog
+/Engine/Debug

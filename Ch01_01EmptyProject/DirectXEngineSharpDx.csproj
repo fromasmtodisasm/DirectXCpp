@@ -122,7 +122,7 @@
     <Compile Include="Graphic\Bitmap.cs" />
     <Compile Include="Graphic\FontShader.cs" />
     <Compile Include="Graphic\Model\Box.cs" />
-    <Compile Include="Graphic\InputLayoutFactory.cs" />
+    <Compile Include="InputLayoutFactory.cs" />
     <Compile Include="Graphic\ModelShader.cs" />
     <Compile Include="Graphic\Model\IModel.cs" />
     <Compile Include="Graphic\Model\Model.cs" />
