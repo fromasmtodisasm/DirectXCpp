@@ -20,7 +20,7 @@ bool ModelClass::Initialize(ID3D11Device *device)
 {
 	bool result;
 	result = InitializeBuffers(device);
-	if (result)
+	if (!result)
 	{
 		return false;
 	}
@@ -79,7 +79,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device *device)
 	indices[2] = 2;  // Bottom right.
 
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-	vertexBufferDesc.ByteWidth = sizeof(VertexType) *vertexCount;
+	vertexBufferDesc.ByteWidth = sizeof(VertexType) * vertexCount;
 	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 	vertexBufferDesc.CPUAccessFlags = 0;
 	vertexBufferDesc.MiscFlags = 0;
@@ -89,8 +89,8 @@ bool ModelClass::InitializeBuffers(ID3D11Device *device)
 	vertexData.SysMemPitch = 0;
 	vertexData.SysMemSlicePitch = 0;
 
-	//create an indexBuffer
-	result = device->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer);
+	//create an vertexBuffer
+	result = device->CreateBuffer(&vertexBufferDesc, &vertexData, &vertexBuffer);
 	if (FAILED(result))
 	{
 		return false;
@@ -109,16 +109,17 @@ bool ModelClass::InitializeBuffers(ID3D11Device *device)
 	indexData.SysMemPitch = 0;
 	indexData.SysMemSlicePitch = 0;
 
+	//create index buffer
 	result = device->CreateBuffer(&indexBufferDesc, &indexData, &indexBuffer);
 	if (FAILED(result))
 	{
 		return false;
 	}
 	
-	delete[] vertices;
+	delete [] vertices;
 	vertices = 0;
 
-	delete[] indices;
+	delete [] indices;
 	indices = 0;
 
 	return true;

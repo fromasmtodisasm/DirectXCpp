@@ -1,5 +1,5 @@
 #include "graphicsclass.h"
-
+#include <stdlib.h>
 
 GraphicsClass::GraphicsClass()
 {
@@ -119,7 +119,7 @@ bool GraphicsClass::Render()
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
 	bool result;
 	//clear buffers
-	direct3D->BeginScene(0.0f, 0.0f, 0.0f,1.0f);
+	direct3D->BeginScene(1.0f, 1.0f, 1.0f,1.0f);
 
 	camera->Render();
 
