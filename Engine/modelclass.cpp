@@ -6,6 +6,7 @@ ModelClass::ModelClass()
 {
 	vertexBuffer = 0;
 	indexBuffer = 0;
+	texture = 0;
 }
 
 ModelClass::ModelClass(const ModelClass &)
@@ -16,7 +17,7 @@ ModelClass::~ModelClass()
 {
 }
 
-bool ModelClass::Initialize(ID3D11Device *device)
+bool ModelClass::Initialize(ID3D11Device *device, ID3D11DeviceContext *deviceContext, char *textureFilename)
 {
 	bool result;
 	result = InitializeBuffers(device);
@@ -24,12 +25,18 @@ bool ModelClass::Initialize(ID3D11Device *device)
 	{
 		return false;
 	}
+	result = LoadTexture(device, deviceContext, textureFilename);
+	if (!result)
+	{
+		return false;
+	}
+
 	return true;
 }
 
 void ModelClass::Shutdown()
 {
-	ShuutdownBuffers();
+	ShutdownBuffers();
 }
 
 void ModelClass::Render(ID3D11DeviceContext *deviceContext)
@@ -65,13 +72,15 @@ bool ModelClass::InitializeBuffers(ID3D11Device *device)
 	}
 
 	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);
-	vertices[0].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[0].texture = XMFLOAT2(0.0f, 1.0f);
+
+	//vertices[0].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
 
 	vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);  // Top middle.
-	vertices[1].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[1].texture = XMFLOAT2(0.5f, 0.0f);
 
 	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
-	vertices[2].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
+	vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
 
 	// Load the index array with data.
 	indices[0] = 0;  // Bottom left.
@@ -115,16 +124,16 @@ bool ModelClass::InitializeBuffers(ID3D11Device *device)
 	{
 		return false;
 	}
-	
-	delete [] vertices;
+
+	delete[] vertices;
 	vertices = 0;
 
-	delete [] indices;
+	delete[] indices;
 	indices = 0;
 
 	return true;
 }
-void ModelClass::ShuutdownBuffers()
+void ModelClass::ShutdownBuffers()
 {
 	if (indexBuffer)
 	{
@@ -136,6 +145,9 @@ void ModelClass::ShuutdownBuffers()
 		vertexBuffer->Release();
 		vertexBuffer = 0;
 	}
+
+
+
 }
 
 void ModelClass::RenderBuffers(ID3D11DeviceContext *deviceContext)
@@ -149,4 +161,38 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext *deviceContext)
 	deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer, &stride, &offset);
 	deviceContext->IASetIndexBuffer(indexBuffer, DXGI_FORMAT_R32_UINT, 0);
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+}
+
+bool ModelClass::LoadTexture(ID3D11Device * device, ID3D11DeviceContext * deviceContext, char * filename)
+{
+	bool result;
+
+	texture = new TextureClass();
+	if (!texture)
+	{
+		return false;
+	}
+
+	result = texture->Initialize(device, deviceContext, filename);
+	if (!result)
+	{
+		return false;
+	}
+	return true;
+}
+
+
+void ModelClass::ReleaseTexture()
+{
+	if (texture)
+	{
+		texture->Shutdown();
+		delete texture;
+		texture = 0;
+	}
+}
+
+ID3D11ShaderResourceView* ModelClass::GetTexture()
+{
+	return texture->GetTexture();
 }

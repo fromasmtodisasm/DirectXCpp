@@ -404,7 +404,6 @@ void D3DClass::Shutdown()
 		m_swapChain = 0;
 	}
 
-	return;
 }
 
 
@@ -455,21 +454,21 @@ ID3D11DeviceContext* D3DClass::GetDeviceContext()
 
 void D3DClass::GetProjectionMatrix(XMMATRIX& projectionMatrix)
 {
-	projectionMatrix = projectionMatrix;
+	projectionMatrix = this->projectionMatrix;
 	return;
 }
 
 
 void D3DClass::GetWorldMatrix(XMMATRIX& worldMatrix)
 {
-	worldMatrix = worldMatrix;
+	worldMatrix = this->worldMatrix;
 	return;
 }
 
 
 void D3DClass::GetOrthoMatrix(XMMATRIX& orthoMatrix)
 {
-	orthoMatrix = orthoMatrix;
+	orthoMatrix = this->orthoMatrix;
 	return;
 }
 
