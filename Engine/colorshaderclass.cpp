@@ -211,7 +211,6 @@ void ColorShaderClass::ShutdownShader()
 		vertexShader = 0;
 	}
 
-	return;
 }
 
 

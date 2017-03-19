@@ -7,6 +7,8 @@ GraphicsClass::GraphicsClass()
 	camera = 0;
 	model = 0;
 	textureShader = 0;
+	lightShader = 0;
+	light = 0;
 }
 
 
@@ -71,12 +73,48 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
+	lightShader = new LightShaderClass();
+	if (!lightShader)
+	{
+		return false;
+	}
+	result = lightShader->Initialize(direct3D->GetDevice(), hwnd);
+
+	if (!result)
+	{
+		MessageBox(hwnd, L"Could not Initialize the light shader object",L"ERROR", MB_OK);
+		return false;
+	}
+
+	light = new LightClass();
+	if (!light)
+	{
+		return false;
+	}
+
+	light->SetDiffuseColor(1.0f, 0.0f, 1.0f, 1.0f);
+	light->SetDirection(0.0f, 0.0f, 1.0f);
+
+
 	return true;
 }
 
 
 void GraphicsClass::Shutdown()
 {
+	if (light)
+	{
+		delete light;
+		light = 0;
+	}
+
+	if (lightShader)
+	{
+		lightShader->Shutdown();
+		delete lightShader;
+		lightShader = 0;
+	}
+
 	if (textureShader)
 	{
 		textureShader->Shutdown();
@@ -109,8 +147,16 @@ void GraphicsClass::Shutdown()
 bool GraphicsClass::Frame()
 {
 	bool result;
+	static float rotation = 0.0f;
+
+	rotation += (float)XM_PI * 0.01f;;
+	if (rotation > 360.0f)
+	{
+		rotation -= 360.0f;
+	}
+
 	// Render the graphics scene.
-	result = Render();
+	result = Render(rotation);
 	if (!result)
 	{
 		return false;
@@ -120,7 +166,7 @@ bool GraphicsClass::Frame()
 }
 
 
-bool GraphicsClass::Render()
+bool GraphicsClass::Render(float rotation)
 {
 	XMMATRIX worldMatrix, viewMatrix, projectionMatrix;
 	bool result;
@@ -133,9 +179,12 @@ bool GraphicsClass::Render()
 	camera->GetViewMatrix(viewMatrix);
 	direct3D->GetProjectionMatrix(projectionMatrix);
 
+	//Multiply the world matrix by the rotation.
+	worldMatrix = XMMatrixRotationY(rotation);
+
 	model->Render(direct3D->GetDeviceContext());
 
-	result = textureShader->Render(direct3D->GetDeviceContext(), model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, model->GetTexture());
+	result = lightShader->Render(direct3D->GetDeviceContext(), model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, model->GetTexture(), light->GetDirection(), light->GetDiffuseColor());
 
 	if (!result)
 	{
