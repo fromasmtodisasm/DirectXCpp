@@ -47,16 +47,16 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 	{
 		return false;
 	}
-	camera->SetPosition(0.0f, 0.0f, -5.0f);
+	camera->SetPosition(0.0f, 0.0f, -10.0f);
 	model = new ModelClass();
 	if (!model)
 	{
 		return false;
 	}
-	result = model->Initialize(direct3D->GetDevice(), direct3D->GetDeviceContext(), "../Engine/data/stone01.tga");
+	result = model->Initialize(direct3D->GetDevice() ,direct3D->GetDeviceContext(), "../Engine/data/cube.txt" , "../Engine/data/stone01.tga");
 	if (!result)
 	{
-		MessageBox(hwnd, L"Mdel failed to initialize", L"Error", MB_OK);
+		MessageBox(hwnd, L"Model failed to initialize", L"Error", MB_OK);
 		return false;
 	}
 
@@ -92,7 +92,7 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	light->SetDiffuseColor(1.0f, 0.0f, 1.0f, 1.0f);
+	light->SetDiffuseColor(1.0f, 10.0f, 1.0f, 1.0f);//light->SetDiffuseColor(1.0f, 0.0f, 1.0f, 1.0f);
 	light->SetDirection(0.0f, 0.0f, 1.0f);
 
 

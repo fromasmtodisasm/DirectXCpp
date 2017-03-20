@@ -7,6 +7,7 @@ ModelClass::ModelClass()
 	vertexBuffer = 0;
 	indexBuffer = 0;
 	texture = 0;
+	model = 0;
 }
 
 ModelClass::ModelClass(const ModelClass &)
@@ -17,26 +18,36 @@ ModelClass::~ModelClass()
 {
 }
 
-bool ModelClass::Initialize(ID3D11Device *device, ID3D11DeviceContext *deviceContext, char *textureFilename)
+bool ModelClass::Initialize(ID3D11Device *device, ID3D11DeviceContext *deviceContext, char *modelFilename, char *textureFilename)
 {
 	bool result;
-	result = InitializeBuffers(device);
+
+	result = LoadModel(modelFilename);
 	if (!result)
 	{
 		return false;
 	}
+
+	result = InitializeBuffers(device);
+
+	if (!result)
+	{
+		return false;
+	}
+
 	result = LoadTexture(device, deviceContext, textureFilename);
 	if (!result)
 	{
 		return false;
 	}
-
 	return true;
 }
 
 void ModelClass::Shutdown()
 {
+	ReleaseTexture();
 	ShutdownBuffers();
+	ReleaseModel();
 }
 
 void ModelClass::Render(ID3D11DeviceContext *deviceContext)
@@ -56,9 +67,7 @@ bool ModelClass::InitializeBuffers(ID3D11Device *device)
 	D3D11_BUFFER_DESC vertexBufferDesc, indexBufferDesc;
 	D3D11_SUBRESOURCE_DATA vertexData, indexData;
 	HRESULT result;
-
-	vertexCount = 3;
-	indexCount = 3;
+	int i;
 
 	vertices = new VertexType[vertexCount];
 	if (!vertices)
@@ -71,24 +80,15 @@ bool ModelClass::InitializeBuffers(ID3D11Device *device)
 		return false;
 	}
 
-	vertices[0].position = XMFLOAT3(-1.0f, -1.0f, 0.0f);
-	vertices[0].texture = XMFLOAT2(0.0f, 1.0f);
-	vertices[0].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
+	for (int i = 0; i < vertexCount; i++)
+	{
+		auto currVertex = model[i];
+		vertices[i].position = XMFLOAT3(currVertex.x, currVertex.y, currVertex.z);
+		vertices[i].texture = XMFLOAT2(currVertex.tu, currVertex.tv);
+		vertices[i].normal = XMFLOAT3(currVertex.nx, currVertex.ny, currVertex.nz);
 
-	//vertices[0].color = XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f);
-
-	vertices[1].position = XMFLOAT3(0.0f, 1.0f, 0.0f);  // Top middle.
-	vertices[1].texture = XMFLOAT2(0.5f, 0.0f);
-	vertices[1].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
-
-	vertices[2].position = XMFLOAT3(1.0f, -1.0f, 0.0f);  // Bottom right.
-	vertices[2].texture = XMFLOAT2(1.0f, 1.0f);
-	vertices[2].normal = XMFLOAT3(0.0f, 0.0f, -1.0f);
-
-	// Load the index array with data.
-	indices[0] = 0;  // Bottom left.
-	indices[1] = 1;  // Top middle.
-	indices[2] = 2;  // Bottom right.
+		indices[i] = i;
+	}
 
 	vertexBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 	vertexBufferDesc.ByteWidth = sizeof(VertexType) * vertexCount;
@@ -148,9 +148,6 @@ void ModelClass::ShutdownBuffers()
 		vertexBuffer->Release();
 		vertexBuffer = 0;
 	}
-
-
-
 }
 
 void ModelClass::RenderBuffers(ID3D11DeviceContext *deviceContext)
@@ -166,7 +163,7 @@ void ModelClass::RenderBuffers(ID3D11DeviceContext *deviceContext)
 	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 }
 
-bool ModelClass::LoadTexture(ID3D11Device * device, ID3D11DeviceContext * deviceContext, char * filename)
+bool ModelClass::LoadTexture(ID3D11Device * device, ID3D11DeviceContext *deviceContext, char * filename)
 {
 	bool result;
 
@@ -192,6 +189,66 @@ void ModelClass::ReleaseTexture()
 		texture->Shutdown();
 		delete texture;
 		texture = 0;
+	}
+}
+
+bool ModelClass::LoadModel(char *filename)
+{
+	std::ifstream fin;
+	char input;
+	int i;
+
+	fin.open(filename);
+
+	if (fin.fail())
+	{
+		return false;
+	}
+
+	fin.get(input);
+	//Read up the vertex cout
+	while (input != ':')
+	{
+		fin.get(input);
+	}
+
+	fin >> vertexCount;
+	indexCount = vertexCount;
+
+	model = new ModelType[vertexCount];
+	if (!model)
+	{
+		return false;
+	}
+
+	//read the beggining of the data
+	fin.get(input);
+	while (input != ':')
+	{
+		fin.get(input);
+	}
+	//read empty lines
+	fin.get(input);
+	fin.get(input);
+
+	//read the vertex data
+	for (int i = 0; i < vertexCount; i++)
+	{
+		fin >> model[i].x >> model[i].y >> model[i].z;
+		fin >> model[i].tu >> model[i].tv;
+		fin >> model[i].nx >> model[i].ny >> model[i].nz;
+	}
+	fin.close();
+
+	return true;
+}
+
+void ModelClass::ReleaseModel()
+{
+	if (model)
+	{
+		delete[] model;
+		model = 0;
 	}
 }
 

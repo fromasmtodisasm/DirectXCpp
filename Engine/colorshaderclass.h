@@ -12,7 +12,6 @@ public:
 	ColorShaderClass(const ColorShaderClass&);
 	~ColorShaderClass();
 
-
 	bool Initialize(ID3D11Device *device, HWND hwnd);
 	void Shutdown();
 	bool Render(ID3D11DeviceContext *deviceContext, int indexCount,  XMMATRIX& worldMatrix,  XMMATRIX& viewMatrix,  XMMATRIX& projectionMatrix);

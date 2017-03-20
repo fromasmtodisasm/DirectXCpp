@@ -55,7 +55,7 @@ void CameraClass::Render()
 
 	//Load into structures
 	upVector = XMLoadFloat3(&up);
-	
+
 	//setup the the position of camera
 	position.x = positionX;
 	position.y = positionY;
@@ -71,7 +71,7 @@ void CameraClass::Render()
 	lookAtVector = XMLoadFloat3(&lookAt);
 
 	pitch = rotationX * 0.0174532925f;
-        yaw = rotationY * 0.0174532925f;
+	yaw = rotationY * 0.0174532925f;
 	roll = rotationZ * 0.0174532925f;
 
 	//Create rotation matrix
