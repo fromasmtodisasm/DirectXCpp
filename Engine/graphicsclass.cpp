@@ -26,7 +26,6 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 {
 	bool result;
 
-
 	// Create the Direct3D object.
 	direct3D = new D3DClass();
 	if (!direct3D)
@@ -92,9 +91,9 @@ bool GraphicsClass::Initialize(int screenWidth, int screenHeight, HWND hwnd)
 		return false;
 	}
 
-	light->SetDiffuseColor(1.0f, 10.0f, 1.0f, 1.0f);//light->SetDiffuseColor(1.0f, 0.0f, 1.0f, 1.0f);
-	light->SetDirection(0.0f, 0.0f, 1.0f);
-
+	light->SetAmbientColor(0.15f, 0.15f, 0.15f, 1.0f);
+	light->SetDiffuseColor(1.0f, 1.0f, 1.0f, 1.0f);//light->SetDiffuseColor(1.0f, 0.0f, 1.0f, 1.0f);
+	light->SetDirection(1.0f, 0.0f, 0.0f);
 
 	return true;
 }
@@ -149,7 +148,7 @@ bool GraphicsClass::Frame()
 	bool result;
 	static float rotation = 0.0f;
 
-	rotation += (float)XM_PI * 0.01f;;
+	rotation += (float)XM_PI * 0.005f;
 	if (rotation > 360.0f)
 	{
 		rotation -= 360.0f;
@@ -184,7 +183,7 @@ bool GraphicsClass::Render(float rotation)
 
 	model->Render(direct3D->GetDeviceContext());
 
-	result = lightShader->Render(direct3D->GetDeviceContext(), model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, model->GetTexture(), light->GetDirection(), light->GetDiffuseColor());
+	result = lightShader->Render(direct3D->GetDeviceContext(), model->GetIndexCount(), worldMatrix, viewMatrix, projectionMatrix, model->GetTexture(), light->GetDirection(),light->GetAmbientColor(), light->GetDiffuseColor());
 
 	if (!result)
 	{
