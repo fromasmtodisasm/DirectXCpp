@@ -87,8 +87,4 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="light.vs" />
-    <None Include="light.ps" />
-  </ItemGroup>
 </Project>
